@@ -1,175 +1,228 @@
-async function checkAuthStatus() {
-    const { data: { session } } =
-        await supabaseClient.auth.getSession();
+-- =========================================================
+-- PLACE profiles 설정
+-- =========================================================
 
-    const usernameInput =
-        document.getElementById("usernameInput");
 
-    const messageInput =
-        document.getElementById("messageInput");
+-- ---------------------------------------------------------
+-- 1. profiles 기본 테이블
+-- ---------------------------------------------------------
 
-    const channelSelect =
-        document.getElementById("channelSelect");
+create table if not exists profiles (
+    id uuid references auth.users on delete cascade primary key,
+    username text unique not null,
+    nickname text not null,
+    created_at timestamptz default timezone('utc'::text, now()) not null,
+    nickname_updated_at timestamptz default timezone('utc'::text, now()) not null
+);
 
 
-    // =====================================================
-    // 로그인 상태
-    // =====================================================
+-- ---------------------------------------------------------
+-- 2. 필요한 컬럼 추가
+-- ---------------------------------------------------------
 
-    if (session) {
+alter table profiles
+add column if not exists account_number bigint;
 
-        currentUser = session.user;
+alter table profiles
+add column if not exists is_admin boolean default false;
 
+alter table profiles
+add column if not exists ban_type text default null;
 
-        const { data: profile, error } =
-            await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', currentUser.id)
-                .single();
+alter table profiles
+add column if not exists ban_until timestamptz default null;
 
+alter table profiles
+add column if not exists ban_reason text default null;
 
-        if (error || !profile) {
+alter table profiles
+add column if not exists chatlock_until timestamptz default null;
 
-            console.error("프로필 불러오기 실패:", error);
+alter table profiles
+add column if not exists chatlock_reason text default null;
 
-            currentProfile = null;
-            isAdmin = false;
 
-            return;
-        }
+-- ---------------------------------------------------------
+-- 3. 기존 account_number의 Identity 제거
+-- ---------------------------------------------------------
 
+alter table profiles
+alter column account_number drop identity if exists;
 
-        currentProfile = profile;
 
+-- ---------------------------------------------------------
+-- 4. 기존 계정 번호 정리
+-- ---------------------------------------------------------
 
-        // =================================================
-        // 계정 제재 확인
-        // =================================================
+with numbered as (
+    select
+        id,
+        row_number() over (
+            order by created_at, id
+        ) as new_number
+    from profiles
+)
+update profiles p
+set account_number = numbered.new_number
+from numbered
+where p.id = numbered.id;
 
-        const isBanned = checkBanStatus(profile);
 
-        if (isBanned) {
-            return;
-        }
+-- ---------------------------------------------------------
+-- 5. 가입번호 자동 증가용 Sequence
+-- ---------------------------------------------------------
 
+create sequence if not exists profiles_account_number_seq;
 
-        // =================================================
-        // 사용자 정보
-        // =================================================
 
-        document.getElementById("user-info").innerText =
-            "👤 " + profile.nickname + "님";
+-- 현재 가장 큰 번호로 Sequence 맞추기
+select setval(
+    'profiles_account_number_seq',
+    greatest(
+        coalesce(
+            (select max(account_number) from profiles),
+            0
+        ),
+        1
+    )
+);
 
 
-        usernameInput.value =
-            profile.nickname;
+-- 앞으로 가입하는 계정은 자동으로 번호 증가
+alter table profiles
+alter column account_number
+set default nextval('profiles_account_number_seq');
 
 
-        // =================================================
-        // 관리자 확인
-        // =================================================
+alter sequence profiles_account_number_seq
+owned by profiles.account_number;
 
-        isAdmin = profile.is_admin === true;
 
+-- ---------------------------------------------------------
+-- 6. 관리자 계정 설정
+-- ---------------------------------------------------------
 
-        console.log(
-            "현재 계정:",
-            profile.username,
-            "계정번호:",
-            profile.account_number,
-            "관리자:",
-            isAdmin
-        );
+-- 모든 계정을 일단 일반 유저로 설정
+update profiles
+set is_admin = false;
 
 
-        // =================================================
-        // 로그인 버튼
-        // =================================================
+-- place 계정만 관리자
+update profiles
+set is_admin = true
+where lower(username) = 'place';
 
-        document.getElementById("login-btn")
-            .style.display = "none";
 
-        document.getElementById("signup-btn")
-            .style.display = "none";
+-- ---------------------------------------------------------
+-- 7. profiles RLS
+-- ---------------------------------------------------------
 
-        document.getElementById("logout-btn")
-            .style.display = "inline-block";
+alter table profiles enable row level security;
 
 
-        messageInput.placeholder =
-            "메시지를 입력하세요";
+drop policy if exists "Public profiles read" on profiles;
 
+drop policy if exists "Users insert own profile" on profiles;
 
-    } else {
+drop policy if exists "Users update own profile" on profiles;
 
-        // =================================================
-        // 로그아웃 상태
-        // =================================================
 
-        currentUser = null;
-        currentProfile = null;
-        isAdmin = false;
+-- 누구나 프로필 읽기 가능
+create policy "Public profiles read"
+on profiles
+for select
+to anon, authenticated
+using (true);
 
 
-        document.getElementById("user-info")
-            .innerText = "로그인 필요";
+-- 본인 프로필 생성 가능
+create policy "Users insert own profile"
+on profiles
+for insert
+to authenticated
+with check (
+    auth.uid() = id
+);
 
 
-        document.getElementById("login-btn")
-            .style.display = "inline-block";
+-- 본인 프로필 수정 가능
+create policy "Users update own profile"
+on profiles
+for update
+to authenticated
+using (
+    auth.uid() = id
+)
+with check (
+    auth.uid() = id
+);
 
 
-        document.getElementById("signup-btn")
-            .style.display = "inline-block";
+-- =========================================================
+-- CHATS
+-- =========================================================
 
 
-        document.getElementById("logout-btn")
-            .style.display = "none";
+create table if not exists chats (
+    id bigint generated by default as identity primary key,
+    username text not null,
+    message text not null,
+    channel text default 'all',
+    map text,
+    user_id uuid,
+    sender_username text,
+    target_username text,
+    created_at timestamptz default now()
+);
 
 
-        usernameInput.value = "Guest";
+-- 필요한 컬럼이 없으면 추가
+alter table chats
+add column if not exists channel text default 'all';
 
+alter table chats
+add column if not exists map text;
 
-        messageInput.placeholder =
-            "로그인 후 채팅을 입력할 수 있습니다.";
-    }
+alter table chats
+add column if not exists user_id uuid;
 
+alter table chats
+add column if not exists sender_username text;
 
-    // =====================================================
-    // 관리자 전용 확성기
-    // =====================================================
+alter table chats
+add column if not exists target_username text;
 
-    let shoutOption =
-        channelSelect.querySelector(
-            "option[value='shout']"
-        );
 
+-- ---------------------------------------------------------
+-- chats RLS
+-- ---------------------------------------------------------
 
-    if (isAdmin) {
+alter table chats enable row level security;
 
-        if (!shoutOption) {
 
-            shoutOption =
-                document.createElement("option");
+drop policy if exists "Enable read access for all users"
+on chats;
 
-            shoutOption.value = "shout";
 
-            shoutOption.innerText = "확성기";
+create policy "Enable read access for all users"
+on chats
+for select
+to anon, authenticated
+using (true);
 
-            channelSelect.appendChild(
-                shoutOption
-            );
-        }
 
-    } else {
+drop policy if exists "Enable insert access for all users"
+on chats;
 
-        if (shoutOption) {
-            shoutOption.remove();
-        }
 
-        if (channelSelect.value === "shout") {
-            channelSelect.value = "all";
-        }
-    }
-}
+drop policy if exists "Enable insert for authenticated users only"
+on chats;
+
+
+create policy "Enable insert for authenticated users only"
+on chats
+for insert
+to authenticated
+with check (
+    auth.role() = 'authenticated'
+);
