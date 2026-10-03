@@ -343,13 +343,27 @@ input {
     font-weight: bold;
 }
 
-<div id="footer">
-    PLACE © 2026
-    <span style="margin: 0 8px; color:#aaa;">|</span>
-    <a href="terms.html" style="color:#666; text-decoration:none;">
-        이용약관
-    </a>
-</div>
+/* =========================================================
+   푸터
+========================================================= */
+
+#footer {
+    padding: 12px;
+    text-align: center;
+    border-top: 1px solid #999;
+    background: #eeeeee;
+    color: #666;
+    font-size: 11px;
+}
+
+#footer a {
+    color: #666;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    text-decoration: underline;
+}
 
 /* =========================================================
    정지 화면
@@ -882,8 +896,13 @@ body.account-suspended #suspension-screen {
 
     </div>
 
+    <!-- 홈페이지 맨 아래 -->
     <div id="footer">
         PLACE © 2026
+        <span style="margin: 0 8px; color:#aaa;">|</span>
+        <a href="terms.html">
+            이용약관
+        </a>
     </div>
 
 </div>
@@ -2788,19 +2807,6 @@ async function cleanAllChatSoft() {
 
 async function loadMessages() {
 
-    /*
-       최신 채팅부터 가져옵니다.
-
-       기존:
-       ascending: true
-
-       변경:
-       ascending: false
-
-       이렇게 해야 새로고침했을 때
-       가장 최근 채팅 100개를 가져올 수 있습니다.
-    */
-
     const {
         data,
         error
@@ -2831,20 +2837,10 @@ async function loadMessages() {
         return;
     }
 
-    /*
-       DB에서는 최신 → 오래된 순서이므로
-       화면에서는 오래된 → 최신 순서로
-       다시 뒤집습니다.
-    */
-
     const messages =
         (data || []).reverse();
 
     messagesContainer.innerHTML = "";
-
-    /*
-       마지막 채팅 청소 지점 찾기
-    */
 
     let lastClearedIndex = -1;
 
@@ -2864,20 +2860,12 @@ async function loadMessages() {
         }
     );
 
-    /*
-       마지막 청소 이후의 채팅만 표시
-    */
-
     const visibleMessages =
         lastClearedIndex >= 0
             ? messages.slice(
                 lastClearedIndex + 1
             )
             : messages;
-
-    /*
-       저장된 채팅 표시
-    */
 
     visibleMessages.forEach(
         message => {
@@ -2887,11 +2875,6 @@ async function loadMessages() {
             );
         }
     );
-
-    /*
-       새로고침 후 가장 먼저 보이는
-       시스템 연결 메시지
-    */
 
     const systemMessage =
         document.createElement(
@@ -2910,11 +2893,6 @@ async function loadMessages() {
         messagesContainer.firstChild
     );
 
-    /*
-       최신 채팅이 보이도록
-       스크롤을 가장 아래로 이동
-    */
-
     messagesContainer.scrollTop =
         messagesContainer.scrollHeight;
 }
@@ -2925,10 +2903,6 @@ async function loadMessages() {
 ========================================================= */
 
 function processAndAppendMessage(msg) {
-
-    /*
-       채팅 청소 시스템 메시지
-    */
 
     if (
         msg.message ===
@@ -2949,10 +2923,6 @@ function processAndAppendMessage(msg) {
     const channel =
         msg.channel ||
         "all";
-
-    /*
-       현재 맵이 아닌 전체 채팅은 표시하지 않음
-    */
 
     if (
         channel === "all" &&
@@ -3121,10 +3091,6 @@ async function sendMessage() {
         return;
     }
 
-    /*
-       관리자 명령어
-    */
-
     if (
         text.startsWith("/")
     ) {
@@ -3219,10 +3185,6 @@ document
 ========================================================= */
 
 function subscribeRealtime() {
-
-    /*
-       기존 채널이 있다면 제거
-    */
 
     if (chatRealtimeChannel) {
 
