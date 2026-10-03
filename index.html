@@ -430,7 +430,6 @@ async function handleLogout() {
     checkAuthStatus();
 }
 
-// 로그인 및 계정 제재 상태 체크 함수
 async function checkAuthStatus() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     const usernameInput = document.getElementById("usernameInput");
@@ -449,14 +448,12 @@ async function checkAuthStatus() {
         if (profile) {
             currentProfile = profile;
 
-            // 🚫 계정 밴/제재 검사
             const isBanned = checkBanStatus(profile);
-            if (isBanned) return; // 밴 상태일 경우 로그인 절차 중단
+            if (isBanned) return;
 
             document.getElementById("user-info").innerText = "👤 " + profile.nickname + "님";
             usernameInput.value = profile.nickname;
             
-            // 관리자 조건: username === 'place' 또는 account_number === 1
             isAdmin = (profile.username.toLowerCase() === 'place' || profile.username.toLowerCase() === 'admin' || profile.account_number === 1);
         }
 
@@ -490,18 +487,15 @@ async function checkAuthStatus() {
     }
 }
 
-// 제재 상태 검사 로직 (/idban, /hardban, /softban, /ban, /warning)
 function checkBanStatus(profile) {
     if (!profile.ban_type) return false;
 
     const now = new Date();
     const reason = profile.ban_reason || "사유 미작성";
 
-    // 기간제 밴 검사
     if (profile.ban_until) {
         const banUntil = new Date(profile.ban_until);
         if (now > banUntil) {
-            // 제재 기간이 경과했으면 자동 해제
             supabaseClient.from('profiles').update({ ban_type: null, ban_until: null, ban_reason: null }).eq('id', profile.id);
             return false;
         }
@@ -529,7 +523,6 @@ function checkBanStatus(profile) {
     return false;
 }
 
-// /warning 계정 재활성화 관련 로직
 function toggleReactivateBtn() {
     const agree = document.getElementById("warningAgreeCheckbox").checked;
     document.getElementById("reactivateBtn").disabled = !agree;
@@ -622,7 +615,7 @@ async function changeNickname() {
 }
 
 // ==========================================
-// 관리자 명령어 및 제재 실행 핸들러
+// 관리자 명령어 및 소프트 청소 핸들러
 // ==========================================
 async function handleAdminCommand(fullText) {
     if (!isAdmin) return false;
@@ -635,40 +628,37 @@ async function handleAdminCommand(fullText) {
     const now = new Date();
 
     switch (command) {
-        // 계정 제재
         case '/idban':
             await updateBan(targetUser, 'idban', null, reason);
             break;
-        case '/hardban': // 30일
+        case '/hardban':
             await updateBan(targetUser, 'hardban', new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000), reason);
             break;
-        case '/softban': // 7일
+        case '/softban':
             await updateBan(targetUser, 'softban', new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), reason);
             break;
-        case '/ban': // 1일
+        case '/ban':
             await updateBan(targetUser, 'ban', new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000), reason);
             break;
         case '/warning':
             await updateBan(targetUser, 'warning', null, reason);
             break;
 
-        // 채팅 정지
-        case '/chatlock': // 6시간
+        case '/chatlock':
             await updateChatlock(targetUser, new Date(now.getTime() + 6 * 60 * 60 * 1000), reason);
             break;
-        case '/softchatlock': // 3일
+        case '/softchatlock':
             await updateChatlock(targetUser, new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), reason);
             break;
-        case '/hardchatlock': // 7일
+        case '/hardchatlock':
             await updateChatlock(targetUser, new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), reason);
             break;
-        case '/0chatlock': // 365일
+        case '/0chatlock':
             await updateChatlock(targetUser, new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000), reason);
             break;
 
-        // 채팅 전체 클리어
         case '/cleanchat':
-            await cleanAllChat();
+            await cleanAllChatSoft();
             break;
 
         default:
@@ -679,7 +669,7 @@ async function handleAdminCommand(fullText) {
 }
 
 async function updateBan(targetUsername, banType, banUntil, reason) {
-    if (!targetUsername) return alert("대상 아이디를 입력하세요. 예: /idban testuser 사유");
+    if (!targetUsername) return alert("대상 아이디를 입력하세요.");
 
     const { error } = await supabaseClient
         .from('profiles')
@@ -698,7 +688,7 @@ async function updateBan(targetUsername, banType, banUntil, reason) {
 }
 
 async function updateChatlock(targetUsername, lockUntil, reason) {
-    if (!targetUsername) return alert("대상 아이디를 입력하세요. 예: /chatlock testuser 사유");
+    if (!targetUsername) return alert("대상 아이디를 입력하세요.");
 
     const { error } = await supabaseClient
         .from('profiles')
@@ -715,32 +705,60 @@ async function updateChatlock(targetUsername, lockUntil, reason) {
     }
 }
 
-async function cleanAllChat() {
-    const { error } = await supabaseClient.from('chats').delete().neq('id', 0);
+// 💡 DB 데이터는 남겨두고, 시스템 상태 신호를 보내 클라이언트 화면에서만 초기화하는 로직
+async function cleanAllChatSoft() {
+    const { error } = await supabaseClient.from('chats').insert([{
+        username: 'SYSTEM',
+        message: '__CHAT_CLEARED__',
+        channel: 'all',
+        map: CURRENT_MAP_NAME
+    }]);
+
     if (error) {
         alert("채팅 청소 실패: " + error.message);
     } else {
-        document.getElementById("messages").innerHTML = '<div class="message"><span class="message-name">SYSTEM</span> : 채팅창이 청소되었습니다.</div>';
-        alert("🧹 모든 채팅 메시지를 청소했습니다.");
+        alert("🧹 모든 채팅 화면을 소프트 청소했습니다. (DB 기록은 보존됩니다)");
     }
 }
 
 async function loadMessages() {
+    // DB의 메시지들을 가져옵니다.
     const { data, error } = await supabaseClient
         .from('chats')
         .select('*')
         .order('id', { ascending: true })
-        .limit(60);
+        .limit(100);
 
     if (!error && data) {
         const messagesContainer = document.getElementById("messages");
         messagesContainer.innerHTML = "";
-        data.forEach(msg => processAndAppendMessage(msg));
+
+        // 가장 마지막으로 발생한 __CHAT_CLEARED__ 신호의 index를 찾습니다.
+        let lastClearedIndex = -1;
+        data.forEach((msg, idx) => {
+            if (msg.message === '__CHAT_CLEARED__') {
+                lastClearedIndex = idx;
+            }
+        });
+
+        // 청소 신호 이전의 메시지는 건너뛰고, 그 이후 메시지만 화면에 표시합니다.
+        const visibleMessages = (lastClearedIndex !== -1) ? data.slice(lastClearedIndex + 1) : data;
+
+        if (lastClearedIndex !== -1) {
+            messagesContainer.innerHTML = '<div class="message"><span class="message-name">SYSTEM</span> : 채팅창이 청소되었습니다.</div>';
+        }
+
+        visibleMessages.forEach(msg => processAndAppendMessage(msg));
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 }
 
 function processAndAppendMessage(msg) {
+    if (msg.message === '__CHAT_CLEARED__') {
+        document.getElementById("messages").innerHTML = '<div class="message"><span class="message-name">SYSTEM</span> : 채팅창이 청소되었습니다.</div>';
+        return;
+    }
+
     const channel = msg.channel || 'all';
     if (channel === 'all' && msg.map && msg.map !== CURRENT_MAP_NAME) return;
 
@@ -798,7 +816,6 @@ async function sendMessage() {
 
     if (text === "") return;
 
-    // 💡 1. 관리자 명령어 처리 시도
     if (text.startsWith("/")) {
         const executed = await handleAdminCommand(text);
         if (executed) {
@@ -807,7 +824,6 @@ async function sendMessage() {
         }
     }
 
-    // 💡 2. 채팅 정지 (chatlock) 상태 체크
     if (currentProfile.chatlock_until) {
         const lockUntil = new Date(currentProfile.chatlock_until);
         if (new Date() < lockUntil) {
@@ -848,10 +864,6 @@ function subscribeRealtime() {
         .channel('public:chats')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chats' }, payload => {
             processAndAppendMessage(payload.new);
-        })
-        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'chats' }, () => {
-            // /cleanchat 명령으로 채팅이 전량 삭제되었을 때의 실시간 동기화
-            document.getElementById("messages").innerHTML = '<div class="message"><span class="message-name">SYSTEM</span> : 채팅창이 청소되었습니다.</div>';
         })
         .subscribe();
 }
