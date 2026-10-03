@@ -54,7 +54,7 @@ body {
 
 #notice {
     margin: 10px; padding: 8px; border: 1px solid #d4a300; background: #fffde6;
-    color: #333; display: flex; justify-content: space-between;
+    color: #333; display: flex; justify-between: space-between;
 }
 
 #main { display: flex; gap: 10px; padding: 10px; }
@@ -200,7 +200,7 @@ select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
                     </div>
 
                     <div id="chat-input">
-                        <input id="messageInput" type="text" placeholder="로그인 후 채팅을 입력할 수 있습니다.">
+                        <input id="messageInput" type="text" placeholder="로그인 후 채팅을 입력할 수 있습니다." onclick="checkInputPermission()">
                         <button id="sendButton" onclick="sendMessage()">SEND</button>
                     </div>
                 </div>
@@ -335,6 +335,14 @@ function handleChannelChange() {
     const channel = document.getElementById("channelSelect").value;
     const whisperInput = document.getElementById("whisperTargetInput");
     whisperInput.style.display = (channel === "whisper") ? "inline-block" : "none";
+}
+
+function checkInputPermission() {
+    if (!currentUser || !currentProfile) {
+        alert("로그인이 필요한 기능입니다.");
+        document.getElementById("messageInput").blur();
+        openModal("loginModal");
+    }
 }
 
 async function handleSignup() {
@@ -576,7 +584,7 @@ function escapeHtml(text) {
 }
 
 async function sendMessage() {
-    // 비로그인 상태일 때 거부
+    // 비로그인 사용자는 전송 차단
     if (!currentUser || !currentProfile) {
         alert("로그인이 필요한 기능입니다.");
         openModal("loginModal");
