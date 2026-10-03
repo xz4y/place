@@ -748,7 +748,7 @@ body.account-suspended #suspension-screen {
                         </span>
 
                         :
-                        채팅 서버 연결 중...
+                        채팅 서버 연결 완료
 
                     </div>
 
@@ -1230,6 +1230,7 @@ let isSuspended = false;
 
 let presenceChannel = null;
 let profileRealtimeChannel = null;
+let chatRealtimeChannel = null;
 
 
 /* =========================================================
@@ -1237,11 +1238,16 @@ let profileRealtimeChannel = null;
 ========================================================= */
 
 function openModal(id) {
-    document.getElementById(id).style.display = "block";
+
+    document.getElementById(id).style.display =
+        "block";
 }
 
+
 function closeModal(id) {
-    document.getElementById(id).style.display = "none";
+
+    document.getElementById(id).style.display =
+        "none";
 }
 
 
@@ -1255,13 +1261,15 @@ function formatDateTime(dateValue) {
         return "-";
     }
 
-    const date = new Date(dateValue);
+    const date =
+        new Date(dateValue);
 
     if (isNaN(date.getTime())) {
         return "-";
     }
 
-    const year = date.getFullYear();
+    const year =
+        date.getFullYear();
 
     const month =
         String(date.getMonth() + 1)
@@ -1271,7 +1279,8 @@ function formatDateTime(dateValue) {
         String(date.getDate())
             .padStart(2, "0");
 
-    const hours = date.getHours();
+    const hours =
+        date.getHours();
 
     const minutes =
         String(date.getMinutes())
@@ -2778,11 +2787,20 @@ async function cleanAllChatSoft() {
    채팅 불러오기
 ========================================================= */
 
-/* =========================================================
-   채팅 불러오기
-========================================================= */
-
 async function loadMessages() {
+
+    /*
+       최신 채팅부터 가져옵니다.
+
+       기존:
+       ascending: true
+
+       변경:
+       ascending: false
+
+       이렇게 해야 새로고침했을 때
+       가장 최근 채팅 100개를 가져올 수 있습니다.
+    */
 
     const {
         data,
@@ -2791,7 +2809,7 @@ async function loadMessages() {
         .from("chats")
         .select("*")
         .order("id", {
-            ascending: true
+            ascending: false
         })
         .limit(100);
 
@@ -2814,14 +2832,20 @@ async function loadMessages() {
         return;
     }
 
-    messagesContainer.innerHTML = "";
+    /*
+       DB에서는 최신 → 오래된 순서이므로
+       화면에서는 오래된 → 최신 순서로
+       다시 뒤집습니다.
+    */
 
     const messages =
-        data || [];
+        (data || []).reverse();
 
-    /* -----------------------------------------
+    messagesContainer.innerHTML = "";
+
+    /*
        마지막 채팅 청소 지점 찾기
-    ----------------------------------------- */
+    */
 
     let lastClearedIndex = -1;
 
@@ -2841,9 +2865,9 @@ async function loadMessages() {
         }
     );
 
-    /* -----------------------------------------
+    /*
        마지막 청소 이후의 채팅만 표시
-    ----------------------------------------- */
+    */
 
     const visibleMessages =
         lastClearedIndex >= 0
@@ -2852,24 +2876,9 @@ async function loadMessages() {
             )
             : messages;
 
-    /* -----------------------------------------
-       시스템 메시지
-    ----------------------------------------- */
-
-    if (
-        lastClearedIndex >= 0
-    ) {
-
-        messagesContainer.innerHTML =
-            '<div class="message">' +
-            '<span class="message-name">SYSTEM</span> : ' +
-            '채팅창이 청소되었습니다.' +
-            '</div>';
-    }
-
-    /* -----------------------------------------
-       채팅 표시
-    ----------------------------------------- */
+    /*
+       저장된 채팅 표시
+    */
 
     visibleMessages.forEach(
         message => {
@@ -2879,6 +2888,33 @@ async function loadMessages() {
             );
         }
     );
+
+    /*
+       새로고침 후 가장 먼저 보이는
+       시스템 연결 메시지
+    */
+
+    const systemMessage =
+        document.createElement(
+            "div"
+        );
+
+    systemMessage.className =
+        "message";
+
+    systemMessage.innerHTML =
+        '<span class="message-name">SYSTEM</span> : ' +
+        '채팅 서버 연결 완료';
+
+    messagesContainer.insertBefore(
+        systemMessage,
+        messagesContainer.firstChild
+    );
+
+    /*
+       최신 채팅이 보이도록
+       스크롤을 가장 아래로 이동
+    */
 
     messagesContainer.scrollTop =
         messagesContainer.scrollHeight;
@@ -2890,6 +2926,10 @@ async function loadMessages() {
 ========================================================= */
 
 function processAndAppendMessage(msg) {
+
+    /*
+       채팅 청소 시스템 메시지
+    */
 
     if (
         msg.message ===
@@ -2910,6 +2950,10 @@ function processAndAppendMessage(msg) {
     const channel =
         msg.channel ||
         "all";
+
+    /*
+       현재 맵이 아닌 전체 채팅은 표시하지 않음
+    */
 
     if (
         channel === "all" &&
@@ -3078,6 +3122,10 @@ async function sendMessage() {
         return;
     }
 
+    /*
+       관리자 명령어
+    */
+
     if (
         text.startsWith("/")
     ) {
@@ -3173,29 +3221,43 @@ document
 
 function subscribeRealtime() {
 
-    supabaseClient
-        .channel(
-            "public:chats"
-        )
-        .on(
-            "postgres_changes",
-            {
-                event: "INSERT",
-                schema: "public",
-                table: "chats"
-            },
-            payload => {
+    /*
+       기존 채널이 있다면 제거
+    */
 
-                if (isSuspended) {
-                    return;
+    if (chatRealtimeChannel) {
+
+        supabaseClient.removeChannel(
+            chatRealtimeChannel
+        );
+
+        chatRealtimeChannel = null;
+    }
+
+    chatRealtimeChannel =
+        supabaseClient
+            .channel(
+                "public:chats"
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "chats"
+                },
+                payload => {
+
+                    if (isSuspended) {
+                        return;
+                    }
+
+                    processAndAppendMessage(
+                        payload.new
+                    );
                 }
-
-                processAndAppendMessage(
-                    payload.new
-                );
-            }
-        )
-        .subscribe();
+            )
+            .subscribe();
 }
 
 
