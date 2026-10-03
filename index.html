@@ -108,6 +108,7 @@ body {
     background: linear-gradient(#eeeeee, #cccccc);
 }
 
+
 /* =========================================================
    배너
 ========================================================= */
@@ -119,24 +120,37 @@ body {
     background: #fffde6;
     color: #333;
     display: none;
+    box-sizing: border-box;
 }
 
 #banner-container {
     width: 100%;
+    box-sizing: border-box;
 }
 
 .site-banner {
     position: relative;
-    margin-bottom: 5px;
-    padding: 7px 28px 7px 8px;
-    background: #fffbea;
-    border: 1px solid #d5c36a;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 4px 2px;
+    background: transparent;
+    border: 0;
     color: #333;
+    line-height: 1.5;
+    box-sizing: border-box;
 }
 
-.site-banner:last-child {
-    margin-bottom: 0;
+.site-banner + .site-banner {
+    margin-top: 5px;
+    padding-top: 7px;
+    border-top: 1px dotted #d4c98f;
 }
+
+
+/* =========================================================
+   메인
+========================================================= */
 
 #main {
     display: flex;
@@ -163,6 +177,11 @@ body {
     border: 1px solid #999;
     background: #f7f7f7;
 }
+
+
+/* =========================================================
+   WORLD
+========================================================= */
 
 #world {
     height: 350px;
@@ -256,6 +275,11 @@ body {
     cursor: pointer;
 }
 
+
+/* =========================================================
+   CHAT
+========================================================= */
+
 #messages {
     height: 145px;
     margin: 8px;
@@ -340,6 +364,11 @@ input {
     cursor: pointer;
 }
 
+
+/* =========================================================
+   RIGHT
+========================================================= */
+
 #right {
     width: 210px;
 }
@@ -367,8 +396,9 @@ input {
     font-weight: bold;
 }
 
+
 /* =========================================================
-   푸터
+   FOOTER
 ========================================================= */
 
 #footer {
@@ -388,6 +418,7 @@ input {
 #footer a:hover {
     text-decoration: underline;
 }
+
 
 /* =========================================================
    정지 화면
@@ -470,8 +501,9 @@ input {
     color: #d9381e;
 }
 
+
 /* =========================================================
-   모달
+   MODAL
 ========================================================= */
 
 .modal {
@@ -528,6 +560,7 @@ input {
     margin-bottom: 8px;
     line-height: 1.5;
 }
+
 
 /* =========================================================
    실제 정지 상태
@@ -595,6 +628,7 @@ body.account-suspended #suspension-screen {
         </div>
 
     </div>
+
 
     <div id="menu">
 
@@ -1332,16 +1366,11 @@ let bannerRealtimeChannel = null;
 ========================================================= */
 
 function openModal(id) {
-
-    document.getElementById(id).style.display =
-        "block";
+    document.getElementById(id).style.display = "block";
 }
 
-
 function closeModal(id) {
-
-    document.getElementById(id).style.display =
-        "none";
+    document.getElementById(id).style.display = "none";
 }
 
 
@@ -1355,15 +1384,13 @@ function formatDateTime(dateValue) {
         return "-";
     }
 
-    const date =
-        new Date(dateValue);
+    const date = new Date(dateValue);
 
     if (isNaN(date.getTime())) {
         return "-";
     }
 
-    const year =
-        date.getFullYear();
+    const year = date.getFullYear();
 
     const month =
         String(date.getMonth() + 1)
@@ -1373,8 +1400,7 @@ function formatDateTime(dateValue) {
         String(date.getDate())
             .padStart(2, "0");
 
-    const hours =
-        date.getHours();
+    const hours = date.getHours();
 
     const minutes =
         String(date.getMinutes())
@@ -1429,7 +1455,8 @@ async function loadBanners() {
                 {
                     ascending: true
                 }
-            );
+            )
+            .limit(3);
 
     if (error) {
 
@@ -1482,11 +1509,9 @@ async function loadBanners() {
             element.className =
                 "site-banner";
 
-            element.innerHTML =
+            element.textContent =
                 "📢 " +
-                escapeHtml(
-                    banner.message
-                );
+                (banner.message || "");
 
             container.appendChild(
                 element
@@ -2062,8 +2087,6 @@ async function checkAuthStatus() {
             "logout-btn"
         ).style.display =
             "inline-block";
-
-        /* 관리자 메뉴 */
 
         const adminMenu =
             document.getElementById(
@@ -3515,11 +3538,6 @@ async function trackPresence() {
 
             const count =
                 uniqueUsers.size;
-
-            /*
-             * 기존 NOTICE의 접속자 표시 제거
-             * ONLINE 영역만 사용
-             */
 
             const onlineText =
                 document.getElementById(
