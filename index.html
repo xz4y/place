@@ -2779,61 +2779,50 @@ async function cleanAllChatSoft() {
 ========================================================= */
 
 async function loadMessages() {
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("chats")
-            .select("*")
-            .order(
-                "id",
-                {
-                    ascending: true
-                }
-            )
-            .limit(100);
+    const { data, error } = await supabaseClient
+        .from("chats")
+        .select("*")
+        .order("id", { ascending: false })
+        .limit(100);
 
     if (error) {
-
-        console.error(
-            "채팅 불러오기 실패:",
-            error
-        );
-
+        console.error("채팅 불러오기 오류:", error);
         return;
     }
 
-    if (!data) {
-        return;
-    }
+    const messages = (data || []).reverse();
 
-    const messagesContainer =
-        document.getElementById(
-            "messages"
-        );
+    const messagesContainer = document.getElementById("messages");
 
-    messagesContainer.innerHTML =
-        "";
+    if (!messagesContainer) return;
 
-    let lastClearedIndex =
-        -1;
+    messagesContainer.innerHTML = "";
 
-    data.forEach(
-        (msg, idx) => {
+    // 마지막 채팅 전체 삭제 지점 찾기
+    let lastClearedIndex = -1;
 
-            if (
-                msg.message ===
-                "__CHAT_CLEARED__"
-            ) {
-
-                lastClearedIndex =
-                    idx;
-            }
+    messages.forEach((message, index) => {
+        if (
+            message.message === "__CHAT_CLEARED__" &&
+            message.username === "SYSTEM"
+        ) {
+            lastClearedIndex = index;
         }
-    );
+    });
 
+    // 마지막 삭제 이후의 채팅만 표시
+    const visibleMessages =
+        lastClearedIndex >= 0
+            ? messages.slice(lastClearedIndex + 1)
+            : messages;
+
+    visibleMessages.forEach(message => {
+        processAndAppendMessage(message);
+    });
+
+    messagesContainer.scrollTop =
+        messagesContainer.scrollHeight;
+}
     const visibleMessages =
         lastClearedIndex !== -1
             ? data.slice(
