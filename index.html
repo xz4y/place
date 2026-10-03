@@ -191,16 +191,11 @@ select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
 
                 <div id="chat-input-container">
                     <div id="chat-controls">
-                        <!-- 채널 선택 dropdown -->
                         <select id="channelSelect" onchange="handleChannelChange()">
                             <option value="all">전체</option>
                             <option value="whisper">귓속말</option>
                         </select>
-                        
-                        <!-- 귓속말 대상 아이디 입력창 -->
                         <input id="whisperTargetInput" type="text" placeholder="상대 아이디">
-                        
-                        <!-- 닉네임 표시 -->
                         <input id="usernameInput" type="text" placeholder="닉네임" value="Guest">
                     </div>
 
@@ -272,7 +267,7 @@ select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
             <input type="text" id="signupUsername" placeholder="예: user_123">
         </div>
         <div class="form-group">
-            <label>닉네임 (자유롭게 입력 가능)</label>
+            <label>닉네임 (2~16자, 연속 공백 최대 2개)</label>
             <input type="text" id="signupNickname" placeholder="예: 모험가">
         </div>
         <div class="form-group">
@@ -290,7 +285,7 @@ select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
     </div>
 </div>
 
-<!-- 프로필 확인 / 수정 모달 -->
+<!-- 프로필 모달 -->
 <div id="profileModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">👤 유저 프로필</div>
@@ -302,7 +297,7 @@ select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
         <div id="nicknameChangeBox" style="margin-top:12px; border-top:1px dashed #ccc; padding-top:10px;">
             <div class="form-group">
                 <label>새 닉네임 변경 (30분에 1회 가능)</label>
-                <input type="text" id="newNicknameInput" placeholder="새 닉네임">
+                <input type="text" id="newNicknameInput" placeholder="새 닉네임 (2~16자)">
             </div>
             <button class="auth-btn" onclick="changeNickname()">닉네임 변경하기</button>
         </div>
@@ -318,10 +313,10 @@ const SUPABASE_URL = "https://exeoqvfidmtmnwqejyvg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const CURRENT_MAP_NAME = "main"; // 현재 페이지 맵 명칭
+const CURRENT_MAP_NAME = "main";
 let currentUser = null;
 let currentProfile = null;
-let isAdmin = false; // 운영자 여부
+let isAdmin = false;
 
 function openModal(id) { document.getElementById(id).style.display = "block"; }
 function closeModal(id) { document.getElementById(id).style.display = "none"; }
@@ -330,27 +325,32 @@ function isValidUsername(username) {
     return /^[a-zA-Z0-9_]+$/.test(username);
 }
 
-// 채널 선택 시 UI 변경
+// 닉네임 검사 규칙 (2~16자, 연속 공백 3개 이상 금지)
+function isValidNickname(nickname) {
+    if (nickname.length < 2 || nickname.length > 16) return { valid: false, msg: "닉네임은 2글자 이상 16글자 이하이어야 합니다." };
+    if (/\s{3,}/.test(nickname)) return { valid: false, msg: "공백은 연속해서 최대 2개까지만 사용할 수 있습니다." };
+    return { valid: true };
+}
+
 function handleChannelChange() {
     const channel = document.getElementById("channelSelect").value;
     const whisperInput = document.getElementById("whisperTargetInput");
-    
-    if (channel === "whisper") {
-        whisperInput.style.display = "inline-block";
-    } else {
-        whisperInput.style.display = "none";
-    }
+    whisperInput.style.display = (channel === "whisper") ? "inline-block" : "none";
 }
 
-// 1. 회원가입
+// 회원가입
 async function handleSignup() {
     const username = document.getElementById("signupUsername").value.trim();
-    const nickname = document.getElementById("signupNickname").value.trim();
+    const nickname = document.getElementById("signupNickname").value; // 공백 허용을 위해 trim 제외
     const password = document.getElementById("signupPassword").value;
     const passwordConfirm = document.getElementById("signupPasswordConfirm").value;
 
     if (!username || !nickname || !password) return alert("모든 항목을 입력해 주세요.");
     if (!isValidUsername(username)) return alert("아이디는 영문, 숫자, 언더바(_)만 사용할 수 있습니다.");
+    
+    const nickCheck = isValidNickname(nickname);
+    if (!nickCheck.valid) return alert(nickCheck.msg);
+
     if (password !== passwordConfirm) return alert("비밀번호가 일치하지 않습니다.");
     if (password.length < 6) return alert("비밀번호는 최소 6자리 이상이어야 합니다.");
 
@@ -377,7 +377,7 @@ async function handleSignup() {
     }
 }
 
-// 2. 로그인
+// 로그인
 async function handleLogin() {
     const username = document.getElementById("loginUsername").value.trim();
     const password = document.getElementById("loginPassword").value;
@@ -399,13 +399,11 @@ async function handleLogin() {
     }
 }
 
-// 3. 로그아웃
 async function handleLogout() {
     await supabaseClient.auth.signOut();
     checkAuthStatus();
 }
 
-// 4. 로그인 및 권한 상태 확인
 async function checkAuthStatus() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     const usernameInput = document.getElementById("usernameInput");
@@ -424,8 +422,6 @@ async function checkAuthStatus() {
             currentProfile = profile;
             document.getElementById("user-info").innerText = "👤 " + profile.nickname + "님";
             usernameInput.value = profile.nickname;
-            
-            // 운영자 여부 체크 (아이디가 admin 이거나 계정 번호 1번인 경우)
             isAdmin = (profile.username.toLowerCase() === 'admin' || profile.account_number === 1);
         }
 
@@ -445,7 +441,6 @@ async function checkAuthStatus() {
         usernameInput.readOnly = false;
     }
 
-    // 운영자일 때만 확성기 옵션 추가 생성
     let shoutOption = channelSelect.querySelector("option[value='shout']");
     if (isAdmin) {
         if (!shoutOption) {
@@ -460,7 +455,6 @@ async function checkAuthStatus() {
     }
 }
 
-// 메뉴 바 [PROFILE] 클릭
 function handleMenuProfileClick() {
     if (!currentUser) {
         alert("로그인이 필요한 기능입니다.");
@@ -470,7 +464,6 @@ function handleMenuProfileClick() {
     }
 }
 
-// 5. 프로필 팝업 보기
 async function openProfileModal(targetUserId) {
     if (!targetUserId) return;
 
@@ -480,10 +473,7 @@ async function openProfileModal(targetUserId) {
         .eq('id', targetUserId)
         .single();
 
-    if (error || !profile) {
-        alert("프로필 정보를 불러올 수 없습니다.");
-        return;
-    }
+    if (error || !profile) return alert("프로필 정보를 불러올 수 없습니다.");
 
     document.getElementById("profAccountNumber").innerText = profile.account_number || 1;
     document.getElementById("profUsername").innerText = profile.username;
@@ -491,21 +481,20 @@ async function openProfileModal(targetUserId) {
     document.getElementById("profCreatedAt").innerText = new Date(profile.created_at).toLocaleDateString();
 
     const nickBox = document.getElementById("nicknameChangeBox");
-    if (currentUser && currentUser.id === profile.id) {
-        nickBox.style.display = "block";
-    } else {
-        nickBox.style.display = "none";
-    }
+    nickBox.style.display = (currentUser && currentUser.id === profile.id) ? "block" : "none";
 
     openModal("profileModal");
 }
 
-// 6. 닉네임 변경
+// 닉네임 변경
 async function changeNickname() {
     if (!currentUser || !currentProfile) return;
 
-    const newNick = document.getElementById("newNicknameInput").value.trim();
+    const newNick = document.getElementById("newNicknameInput").value;
     if (!newNick) return alert("새 닉네임을 입력하세요.");
+
+    const nickCheck = isValidNickname(newNick);
+    if (!nickCheck.valid) return alert(nickCheck.msg);
 
     const lastUpdated = new Date(currentProfile.nickname_updated_at).getTime();
     const now = new Date().getTime();
@@ -534,7 +523,6 @@ async function changeNickname() {
     }
 }
 
-// 채팅 기능
 async function loadMessages() {
     const { data, error } = await supabaseClient
         .from('chats')
@@ -552,21 +540,14 @@ async function loadMessages() {
 
 function processAndAppendMessage(msg) {
     const channel = msg.channel || 'all';
-    
-    // 1. 전체 채널 메시지: 내 맵과 같거나 전체 메시지일 때 표시
-    if (channel === 'all' && msg.map && msg.map !== CURRENT_MAP_NAME) {
-        return; // 다른 맵 전체 메시지는 차단
-    }
+    if (channel === 'all' && msg.map && msg.map !== CURRENT_MAP_NAME) return;
 
-    // 2. 귓속말: 보낸 사람 또는 받는 사람 본인에게만 표시
     if (channel === 'whisper') {
         const myUsername = currentProfile ? currentProfile.username.toLowerCase() : '';
         const senderUsername = msg.sender_username ? msg.sender_username.toLowerCase() : '';
         const targetUsername = msg.target_username ? msg.target_username.toLowerCase() : '';
 
-        if (myUsername !== senderUsername && myUsername !== targetUsername) {
-            return; // 귓속말 대상이 아니면 표시 안 함
-        }
+        if (myUsername !== senderUsername && myUsername !== targetUsername) return;
     }
 
     appendMessageUI(msg.username, msg.message, msg.user_id, channel, msg.target_username);
