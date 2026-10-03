@@ -1,228 +1,2499 @@
--- =========================================================
--- PLACE profiles 설정
--- =========================================================
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLACE - 작은 장소</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #d6d6d6;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    font-size: 12px;
+}
+
+body {
+    background:
+        linear-gradient(#eeeeee 1px, transparent 1px),
+        linear-gradient(90deg, #eeeeee 1px, transparent 1px);
+    background-size: 8px 8px;
+}
+
+#site {
+    width: 760px;
+    margin: 25px auto;
+    background: #ffffff;
+    border: 1px solid #555;
+    box-shadow: 2px 2px 0 #888;
+}
+
+#top {
+    height: 70px;
+    background: linear-gradient(#5f8fbd, #315d8b);
+    border-bottom: 3px solid #24496e;
+    color: white;
+    position: relative;
+}
+
+#title {
+    position: absolute;
+    left: 18px;
+    top: 12px;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+#subtitle {
+    position: absolute;
+    left: 20px;
+    top: 45px;
+    font-size: 11px;
+}
+
+#auth-bar {
+    position: absolute;
+    right: 15px;
+    top: 18px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.auth-btn {
+    padding: 3px 8px;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 1px outset #eee;
+    font-size: 11px;
+    cursor: pointer;
+    color: #222;
+}
+
+.auth-btn:active {
+    border-style: inset;
+}
+
+.auth-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#menu {
+    height: 27px;
+    background: #eeeeee;
+    border-bottom: 1px solid #999;
+    padding-left: 8px;
+}
+
+.menu-button {
+    display: inline-block;
+    margin-top: 4px;
+    margin-right: 3px;
+    padding: 3px 12px;
+    color: #222;
+    text-decoration: none;
+    background: linear-gradient(#ffffff, #cfcfcf);
+    border: 1px solid #777;
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 0 white, inset -1px -1px 0 #aaa;
+    cursor: pointer;
+}
+
+#notice {
+    margin: 10px;
+    padding: 8px;
+    border: 1px solid #d4a300;
+    background: #fffde6;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+}
+
+#main {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+#left {
+    width: 500px;
+}
+
+.section-title {
+    height: 22px;
+    line-height: 22px;
+    padding-left: 8px;
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(#6f9bc2, #3c6b99);
+    border: 1px solid #345979;
+}
+
+.section {
+    margin-bottom: 10px;
+    border: 1px solid #999;
+    background: #f7f7f7;
+}
+
+#world {
+    height: 350px;
+    position: relative;
+    overflow: hidden;
+    background: #9fbd7f;
+    border: 3px inset #888;
+}
+
+.tree {
+    position: absolute;
+    width: 35px;
+    height: 55px;
+}
+
+.tree-top {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: #3f7b35;
+    border: 2px solid #275224;
+    border-radius: 50% 50% 45% 45%;
+}
+
+.tree-trunk {
+    position: absolute;
+    left: 13px;
+    top: 34px;
+    width: 9px;
+    height: 20px;
+    background: #76502f;
+    border-left: 2px solid #57391f;
+    border-right: 2px solid #57391f;
+}
+
+.tree1 {
+    left: 35px;
+    top: 30px;
+}
+
+.tree2 {
+    right: 50px;
+    top: 65px;
+}
+
+.tree3 {
+    left: 100px;
+    bottom: 30px;
+}
+
+.tree4 {
+    right: 150px;
+    bottom: 55px;
+}
+
+.tree5 {
+    left: 240px;
+    top: 100px;
+}
+
+.character {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    width: 18px;
+    height: 30px;
+    background: #333;
+    border: 2px solid #111;
+    transform: translate(-50%, -50%);
+}
+
+.character-head {
+    position: absolute;
+    left: 3px;
+    top: -13px;
+    width: 10px;
+    height: 10px;
+    background: #e0b08c;
+    border: 1px solid #774f3b;
+}
+
+#secret {
+    position: absolute;
+    right: 45px;
+    top: 160px;
+    padding: 7px 10px;
+    font-size: 11px;
+    color: #222;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 2px outset #eeeeee;
+    cursor: pointer;
+}
+
+#messages {
+    height: 145px;
+    margin: 8px;
+    overflow-y: auto;
+    background: white;
+    border: 2px inset #aaa;
+    padding: 6px;
+    font-size: 12px;
+}
+
+.message {
+    margin-bottom: 5px;
+}
+
+.message-name {
+    color: #003399;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.message-name:hover {
+    text-decoration: underline;
+}
+
+.msg-shout {
+    color: #d9381e;
+    font-weight: bold;
+}
+
+.msg-whisper {
+    color: #8e44ad;
+    font-style: italic;
+}
+
+#chat-input-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px 8px 8px;
+    gap: 4px;
+}
+
+#chat-controls {
+    display: flex;
+    gap: 4px;
+}
+
+#chat-input {
+    display: flex;
+    gap: 4px;
+}
+
+select,
+input {
+    border: 2px inset #aaa;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+#channelSelect {
+    width: 80px;
+}
+
+#whisperTargetInput {
+    width: 90px;
+    display: none;
+}
+
+#usernameInput {
+    width: 85px;
+    background-color: #eee;
+}
+
+#messageInput {
+    flex: 1;
+}
+
+#sendButton {
+    height: 26px;
+    padding: 0 14px;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 2px outset #eeeeee;
+    cursor: pointer;
+}
+
+#right {
+    width: 210px;
+}
+
+.side-box {
+    margin-bottom: 10px;
+    border: 1px solid #888;
+    background: #eeeeee;
+}
+
+.side-title {
+    padding: 5px;
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(#777777, #444444);
+}
+
+.side-content {
+    padding: 8px;
+    line-height: 1.6;
+}
+
+.online {
+    color: green;
+    font-weight: bold;
+}
+
+#footer {
+    padding: 12px;
+    text-align: center;
+    border-top: 1px solid #999;
+    background: #eeeeee;
+    color: #666;
+    font-size: 11px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 15px;
+    border: 2px solid #555;
+    width: 300px;
+    box-shadow: 3px 3px 0 #333;
+}
+
+.modal-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 8px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.form-group input {
+    width: 93%;
+    padding: 4px;
+    border: 1px solid #777;
+    font-size: 12px;
+}
+
+.modal-buttons {
+    text-align: right;
+    margin-top: 12px;
+}
+
+.profile-row {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div id="site">
+
+    <div id="top">
+        <div id="title">PLACE</div>
+        <div id="subtitle">어딘가에 존재하는 작은 장소</div>
+
+        <div id="auth-bar">
+            <span id="user-info" style="font-size:11px; color:#fff;">로그인 필요</span>
+            <button class="auth-btn" id="login-btn" onclick="openModal('loginModal')">로그인</button>
+            <button class="auth-btn" id="signup-btn" onclick="openModal('signupModal')">회원가입</button>
+            <button class="auth-btn" id="logout-btn" onclick="handleLogout()" style="display:none;">로그아웃</button>
+        </div>
+    </div>
+
+    <div id="menu">
+        <a href="index.html" class="menu-button">HOME</a>
+        <a href="#world" class="menu-button">WORLD</a>
+        <a href="#chat-section" class="menu-button">CHAT</a>
+        <span class="menu-button" onclick="handleMenuProfileClick()">PROFILE</span>
+        <a href="#about" class="menu-button">ABOUT</a>
+    </div>
+
+    <div id="notice">
+        <div>📢 <span id="notice-text">환영합니다! 아이디를 만들어 보세요.</span></div>
+        <div style="font-size:11px; color:#666;">
+            접속자: <b id="user-count">1명</b>
+        </div>
+    </div>
+
+    <div id="main">
+
+        <div id="left">
+
+            <div class="section">
+                <div class="section-title">WORLD</div>
+
+                <div style="padding:8px">
+                    <div id="world">
+
+                        <div class="tree tree1">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree2">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree3">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree4">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree5">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="character">
+                            <div class="character-head"></div>
+                        </div>
+
+                        <button id="secret" onclick="goToRoom()">숨겨진 장소</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="chat-section">
+
+                <div class="section-title">REALTIME CHAT</div>
+
+                <div id="messages">
+                    <div class="message">
+                        <span class="message-name">SYSTEM</span> :
+                        채팅 서버 연결 중...
+                    </div>
+                </div>
+
+                <div id="chat-input-container">
+
+                    <div id="chat-controls">
+
+                        <select id="channelSelect" onchange="handleChannelChange()">
+                            <option value="all">전체</option>
+                            <option value="whisper">귓속말</option>
+                        </select>
+
+                        <input
+                            id="whisperTargetInput"
+                            type="text"
+                            placeholder="상대 아이디"
+                        >
+
+                        <input
+                            id="usernameInput"
+                            type="text"
+                            placeholder="닉네임"
+                            value="Guest"
+                            readonly
+                        >
+
+                    </div>
+
+                    <div id="chat-input">
+
+                        <input
+                            id="messageInput"
+                            type="text"
+                            placeholder="로그인 후 채팅을 입력할 수 있습니다."
+                            onclick="checkInputPermission()"
+                        >
+
+                        <button id="sendButton" onclick="sendMessage()">SEND</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="right">
+
+            <div class="side-box">
+                <div class="side-title">INFORMATION</div>
+                <div class="side-content">
+                    이곳은 사람들이 잠시 머물다 가는 작은 장소입니다.
+                </div>
+            </div>
+
+            <div class="side-box">
+                <div class="side-title">ONLINE</div>
+                <div class="side-content">
+                    <span class="online">● ONLINE</span><br>
+                    <span id="side-online-text">실시간 연결 중</span>
+                </div>
+            </div>
+
+            <div class="side-box">
+                <div class="side-title">MENU</div>
+                <div class="side-content">
+                    <a href="index.html">Home</a><br>
+                    <a href="#world">World</a><br>
+                    <a href="room.html">오래된 방</a><br>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="footer">
+        PLACE © 2026
+    </div>
+
+</div>
+
+
+<!-- 로그인 모달 -->
+
+<div id="loginModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">🔑 로그인</div>
+
+        <div class="form-group">
+            <label>아이디</label>
+            <input
+                type="text"
+                id="loginUsername"
+                placeholder="영어, 숫자, 언더바(_)"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input type="password" id="loginPassword">
+        </div>
+
+        <div class="modal-buttons">
+            <button class="auth-btn" onclick="handleLogin()">로그인</button>
+            <button class="auth-btn" onclick="closeModal('loginModal')">취소</button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 회원가입 모달 -->
+
+<div id="signupModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">📝 계정 생성</div>
+
+        <div class="form-group">
+            <label>아이디 (영어, 숫자, _ 만 가능)</label>
+            <input
+                type="text"
+                id="signupUsername"
+                placeholder="예: user_123"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>닉네임 (2~16자, 연속 공백 최대 2개)</label>
+            <input
+                type="text"
+                id="signupNickname"
+                placeholder="예: 모험가"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input type="password" id="signupPassword">
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호 확인</label>
+            <input type="password" id="signupPasswordConfirm">
+        </div>
+
+        <div class="modal-buttons">
+            <button class="auth-btn" onclick="handleSignup()">가입하기</button>
+            <button class="auth-btn" onclick="closeModal('signupModal')">취소</button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 프로필 모달 -->
+
+<div id="profileModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">👤 유저 프로필</div>
+
+        <div class="profile-row">
+            <b>계정 번호:</b>
+            <span
+                id="profAccountNumber"
+                style="color:#d9381e; font-weight:bold;"
+            >-</span>번 유저
+        </div>
+
+        <div class="profile-row">
+            <b>아이디:</b>
+            <span id="profUsername">-</span>
+        </div>
+
+        <div class="profile-row">
+            <b>닉네임:</b>
+            <span id="profNickname">-</span>
+        </div>
+
+        <div class="profile-row">
+            <b>가입일:</b>
+            <span id="profCreatedAt">-</span>
+        </div>
+
+        <div
+            id="nicknameChangeBox"
+            style="margin-top:12px; border-top:1px dashed #ccc; padding-top:10px;"
+        >
+
+            <div class="form-group">
+                <label>새 닉네임 변경 (30분에 1회 가능)</label>
+                <input
+                    type="text"
+                    id="newNicknameInput"
+                    placeholder="새 닉네임 (2~16자)"
+                >
+            </div>
+
+            <button class="auth-btn" onclick="changeNickname()">
+                닉네임 변경하기
+            </button>
+
+        </div>
+
+        <div class="modal-buttons">
+            <button class="auth-btn" onclick="closeModal('profileModal')">
+                닫기
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 경고 / 계정 비활성화 모달 -->
+
+<div id="warningModal" class="modal">
+
+    <div class="modal-content" style="border-color:#d9381e;">
+
+        <div
+            class="modal-header"
+            style="color:#d9381e;"
+        >
+            ⚠️ 계정이 잠겼습니다
+        </div>
+
+        <p style="font-size:12px; line-height:1.5; color:#333;">
+
+            운영 정책 위반 또는 경고 조치로 인해 계정이 일시적으로 비활성화되었습니다.
+
+            <br><br>
+
+            <b>사유:</b>
+            <span
+                id="warningReasonText"
+                style="color:#d9381e; font-weight:bold;"
+            >-</span>
+
+        </p>
+
+        <div style="margin-top:15px; font-size:11px;">
+
+            <label style="cursor:pointer;">
+
+                <input
+                    type="checkbox"
+                    id="warningAgreeCheckbox"
+                    onchange="toggleReactivateBtn()"
+                >
+
+                위 내용을 확인하였으며, 이에 동의합니다.
+
+            </label>
+
+        </div>
+
+        <div class="modal-buttons" style="margin-top:15px;">
+
+            <button
+                class="auth-btn"
+                id="reactivateBtn"
+                onclick="handleReactivateAccount()"
+                disabled
+            >
+                재활성화
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+    "https://exeoqvfidmtmnwqejyvg.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+const CURRENT_MAP_NAME = "main";
+
+let currentUser = null;
+let currentProfile = null;
+let isAdmin = false;
+
+
+function openModal(id) {
+    document.getElementById(id).style.display = "block";
+}
+
+
+function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+}
+
+
+function isValidUsername(username) {
+    return /^[a-zA-Z0-9_]+$/.test(username);
+}
+
+
+function isValidNickname(nickname) {
+
+    if (nickname.length < 2 || nickname.length > 16) {
+        return {
+            valid: false,
+            msg: "닉네임은 2글자 이상 16글자 이하이어야 합니다."
+        };
+    }
+
+    if (/\s{3,}/.test(nickname)) {
+        return {
+            valid: false,
+            msg: "공백은 연속해서 최대 2개까지만 사용할 수 있습니다."
+        };
+    }
+
+    return {
+        valid: true
+    };
+}
+
+
+function handleChannelChange() {
+
+    const channel =
+        document.getElementById("channelSelect").value;
+
+    const whisperInput =
+        document.getElementById("whisperTargetInput");
+
+    whisperInput.style.display =
+        channel === "whisper"
+            ? "inline-block"
+            : "none";
+}
+
+
+function checkInputPermission() {
+
+    if (!currentUser || !currentProfile) {
+
+        alert("로그인이 필요한 기능입니다.");
+
+        document.getElementById("messageInput").blur();
+
+        openModal("loginModal");
+    }
+}
+
+
+async function handleSignup() {
+
+    const username =
+        document.getElementById("signupUsername").value.trim();
+
+    const nickname =
+        document.getElementById("signupNickname").value;
+
+    const password =
+        document.getElementById("signupPassword").value;
+
+    const passwordConfirm =
+        document.getElementById("signupPasswordConfirm").value;
+
+
+    if (!username || !nickname || !password) {
+        return alert("모든 항목을 입력해 주세요.");
+    }
+
+
+    if (!isValidUsername(username)) {
+        return alert(
+            "아이디는 영문, 숫자, 언더바(_)만 사용할 수 있습니다."
+        );
+    }
+
+
+    const nickCheck =
+        isValidNickname(nickname);
 
+    if (!nickCheck.valid) {
+        return alert(nickCheck.msg);
+    }
 
--- ---------------------------------------------------------
--- 1. profiles 기본 테이블
--- ---------------------------------------------------------
 
-create table if not exists profiles (
-    id uuid references auth.users on delete cascade primary key,
-    username text unique not null,
-    nickname text not null,
-    created_at timestamptz default timezone('utc'::text, now()) not null,
-    nickname_updated_at timestamptz default timezone('utc'::text, now()) not null
-);
+    if (password !== passwordConfirm) {
+        return alert("비밀번호가 일치하지 않습니다.");
+    }
 
 
--- ---------------------------------------------------------
--- 2. 필요한 컬럼 추가
--- ---------------------------------------------------------
+    if (password.length < 6) {
+        return alert("비밀번호는 최소 6자리 이상이어야 합니다.");
+    }
 
-alter table profiles
-add column if not exists account_number bigint;
 
-alter table profiles
-add column if not exists is_admin boolean default false;
+    const fakeEmail =
+        username.toLowerCase() + "@place.local";
 
-alter table profiles
-add column if not exists ban_type text default null;
 
-alter table profiles
-add column if not exists ban_until timestamptz default null;
+    const { data, error } =
+        await supabaseClient.auth.signUp({
+            email: fakeEmail,
+            password: password
+        });
 
-alter table profiles
-add column if not exists ban_reason text default null;
 
-alter table profiles
-add column if not exists chatlock_until timestamptz default null;
+    if (error) {
+        return alert("가입 실패: " + error.message);
+    }
 
-alter table profiles
-add column if not exists chatlock_reason text default null;
 
+    if (data.user) {
 
--- ---------------------------------------------------------
--- 3. 기존 account_number의 Identity 제거
--- ---------------------------------------------------------
+        const { error: profError } =
+            await supabaseClient
+                .from("profiles")
+                .insert([
+                    {
+                        id: data.user.id,
+                        username: username,
+                        nickname: nickname
+                    }
+                ]);
 
-alter table profiles
-alter column account_number drop identity if exists;
 
+        if (profError) {
 
--- ---------------------------------------------------------
--- 4. 기존 계정 번호 정리
--- ---------------------------------------------------------
+            alert(
+                "프로필 생성 오류: " +
+                profError.message
+            );
 
-with numbered as (
-    select
-        id,
-        row_number() over (
-            order by created_at, id
-        ) as new_number
-    from profiles
-)
-update profiles p
-set account_number = numbered.new_number
-from numbered
-where p.id = numbered.id;
+        } else {
 
+            alert(
+                "🎉 회원가입이 완료되었습니다! 로그인해 주세요."
+            );
 
--- ---------------------------------------------------------
--- 5. 가입번호 자동 증가용 Sequence
--- ---------------------------------------------------------
+            closeModal("signupModal");
+        }
+    }
+}
 
-create sequence if not exists profiles_account_number_seq;
 
+async function handleLogin() {
 
--- 현재 가장 큰 번호로 Sequence 맞추기
-select setval(
-    'profiles_account_number_seq',
-    greatest(
-        coalesce(
-            (select max(account_number) from profiles),
-            0
-        ),
-        1
-    )
-);
+    const username =
+        document.getElementById("loginUsername").value.trim();
 
+    const password =
+        document.getElementById("loginPassword").value;
 
--- 앞으로 가입하는 계정은 자동으로 번호 증가
-alter table profiles
-alter column account_number
-set default nextval('profiles_account_number_seq');
 
+    if (!username || !password) {
+        return;
+    }
 
-alter sequence profiles_account_number_seq
-owned by profiles.account_number;
 
+    const fakeEmail =
+        username.toLowerCase() + "@place.local";
 
--- ---------------------------------------------------------
--- 6. 관리자 계정 설정
--- ---------------------------------------------------------
 
--- 모든 계정을 일단 일반 유저로 설정
-update profiles
-set is_admin = false;
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+            email: fakeEmail,
+            password: password
+        });
 
 
--- place 계정만 관리자
-update profiles
-set is_admin = true
-where lower(username) = 'place';
+    if (error) {
 
+        alert(
+            "로그인 실패: 아이디 또는 비밀번호를 확인해 주세요."
+        );
 
--- ---------------------------------------------------------
--- 7. profiles RLS
--- ---------------------------------------------------------
+    } else {
 
-alter table profiles enable row level security;
+        closeModal("loginModal");
 
+        await checkAuthStatus();
+    }
+}
 
-drop policy if exists "Public profiles read" on profiles;
 
-drop policy if exists "Users insert own profile" on profiles;
+async function handleLogout() {
 
-drop policy if exists "Users update own profile" on profiles;
+    await supabaseClient.auth.signOut();
 
+    await checkAuthStatus();
+}
 
--- 누구나 프로필 읽기 가능
-create policy "Public profiles read"
-on profiles
-for select
-to anon, authenticated
-using (true);
 
+async function checkAuthStatus() {
 
--- 본인 프로필 생성 가능
-create policy "Users insert own profile"
-on profiles
-for insert
-to authenticated
-with check (
-    auth.uid() = id
-);
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
 
 
--- 본인 프로필 수정 가능
-create policy "Users update own profile"
-on profiles
-for update
-to authenticated
-using (
-    auth.uid() = id
-)
-with check (
-    auth.uid() = id
-);
+    const usernameInput =
+        document.getElementById("usernameInput");
 
+    const messageInput =
+        document.getElementById("messageInput");
 
--- =========================================================
--- CHATS
--- =========================================================
+    const channelSelect =
+        document.getElementById("channelSelect");
 
 
-create table if not exists chats (
-    id bigint generated by default as identity primary key,
-    username text not null,
-    message text not null,
-    channel text default 'all',
-    map text,
-    user_id uuid,
-    sender_username text,
-    target_username text,
-    created_at timestamptz default now()
-);
+    if (session) {
 
+        currentUser = session.user;
 
--- 필요한 컬럼이 없으면 추가
-alter table chats
-add column if not exists channel text default 'all';
 
-alter table chats
-add column if not exists map text;
+        const {
+            data: profile,
+            error
+        } = await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq("id", currentUser.id)
+            .single();
 
-alter table chats
-add column if not exists user_id uuid;
 
-alter table chats
-add column if not exists sender_username text;
+        if (error || !profile) {
 
-alter table chats
-add column if not exists target_username text;
+            console.error(
+                "프로필 불러오기 실패:",
+                error
+            );
 
+        } else {
 
--- ---------------------------------------------------------
--- chats RLS
--- ---------------------------------------------------------
+            currentProfile = profile;
 
-alter table chats enable row level security;
 
+            const isBanned =
+                checkBanStatus(profile);
 
-drop policy if exists "Enable read access for all users"
-on chats;
+            if (isBanned) {
+                return;
+            }
 
 
-create policy "Enable read access for all users"
-on chats
-for select
-to anon, authenticated
-using (true);
+            document.getElementById("user-info").innerText =
+                "👤 " + profile.nickname + "님";
 
 
-drop policy if exists "Enable insert access for all users"
-on chats;
+            usernameInput.value =
+                profile.nickname;
 
 
-drop policy if exists "Enable insert for authenticated users only"
-on chats;
+            /*
+             * 관리자 판별
+             *
+             * 기존:
+             * username / account_number로 관리자 판별
+             *
+             * 변경:
+             * DB의 is_admin 값으로만 판별
+             */
 
+            isAdmin =
+                profile.is_admin === true;
 
-create policy "Enable insert for authenticated users only"
-on chats
-for insert
-to authenticated
-with check (
-    auth.role() = 'authenticated'
-);
+        }
+
+
+        document.getElementById("login-btn").style.display =
+            "none";
+
+        document.getElementById("signup-btn").style.display =
+            "none";
+
+        document.getElementById("logout-btn").style.display =
+            "inline-block";
+
+        messageInput.placeholder =
+            "메시지를 입력하세요";
+
+
+    } else {
+
+        currentUser = null;
+        currentProfile = null;
+        isAdmin = false;
+
+
+        document.getElementById("user-info").innerText =
+            "로그인 필요";
+
+
+        document.getElementById("login-btn").style.display =
+            "inline-block";
+
+        document.getElementById("signup-btn").style.display =
+            "inline-block";
+
+        document.getElementById("logout-btn").style.display =
+            "none";
+
+
+        usernameInput.value =
+            "Guest";
+
+
+        messageInput.placeholder =
+            "로그인 후 채팅을 입력할 수 있습니다.";
+    }
+
+
+    let shoutOption =
+        channelSelect.querySelector(
+            "option[value='shout']"
+        );
+
+
+    if (isAdmin) {
+
+        if (!shoutOption) {
+
+            shoutOption =
+                document.createElement("option");
+
+            shoutOption.value =
+                "shout";
+
+            shoutOption.innerText =
+                "확성기";
+
+            channelSelect.appendChild(
+                shoutOption
+            );
+        }
+
+    } else {
+
+        if (shoutOption) {
+            shoutOption.remove();
+        }
+
+        if (channelSelect.value === "shout") {
+            channelSelect.value = "all";
+        }
+    }
+}
+
+
+function checkBanStatus(profile) {
+
+    if (!profile.ban_type) {
+        return false;
+    }
+
+
+    const now =
+        new Date();
+
+    const reason =
+        profile.ban_reason ||
+        "사유 미작성";
+
+
+    if (profile.ban_until) {
+
+        const banUntil =
+            new Date(profile.ban_until);
+
+
+        if (now > banUntil) {
+
+            supabaseClient
+                .from("profiles")
+                .update({
+                    ban_type: null,
+                    ban_until: null,
+                    ban_reason: null
+                })
+                .eq("id", profile.id);
+
+
+            return false;
+        }
+    }
+
+
+    if (profile.ban_type === "idban") {
+
+        alert(
+            `🚨 계정이 정지 당했습니다.\n사유: ${reason}`
+        );
+
+        handleLogout();
+
+        return true;
+    }
+
+
+    if (
+        profile.ban_type === "hardban" ||
+        profile.ban_type === "softban" ||
+        profile.ban_type === "ban"
+    ) {
+
+        let periodMsg =
+            "일정 기간 동안";
+
+
+        if (profile.ban_type === "hardban") {
+            periodMsg = "30일 동안";
+        }
+
+        if (profile.ban_type === "softban") {
+            periodMsg = "7일 동안";
+        }
+
+        if (profile.ban_type === "ban") {
+            periodMsg = "1일 동안";
+        }
+
+
+        alert(
+            `🚨 계정이 ${periodMsg} 정지 당했습니다.\n` +
+            `사유: ${reason}\n` +
+            `해제 일시: ${new Date(profile.ban_until).toLocaleString()}`
+        );
+
+
+        handleLogout();
+
+        return true;
+    }
+
+
+    if (profile.ban_type === "warning") {
+
+        document.getElementById(
+            "warningReasonText"
+        ).innerText = reason;
+
+
+        openModal(
+            "warningModal"
+        );
+
+
+        return true;
+    }
+
+
+    return false;
+}
+
+
+function toggleReactivateBtn() {
+
+    const agree =
+        document.getElementById(
+            "warningAgreeCheckbox"
+        ).checked;
+
+
+    document.getElementById(
+        "reactivateBtn"
+    ).disabled = !agree;
+}
+
+
+async function handleReactivateAccount() {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+                ban_type: null,
+                ban_reason: null,
+                ban_until: null
+            })
+            .eq("id", currentUser.id);
+
+
+    if (error) {
+
+        alert(
+            "재활성화 오류: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            "계정이 재활성화되었습니다."
+        );
+
+
+        closeModal(
+            "warningModal"
+        );
+
+
+        document.getElementById(
+            "warningAgreeCheckbox"
+        ).checked = false;
+
+
+        document.getElementById(
+            "reactivateBtn"
+        ).disabled = true;
+
+
+        await checkAuthStatus();
+    }
+}
+
+
+function handleMenuProfileClick() {
+
+    if (!currentUser) {
+
+        alert(
+            "로그인이 필요한 기능입니다."
+        );
+
+        openModal(
+            "loginModal"
+        );
+
+    } else {
+
+        openProfileModal(
+            currentUser.id
+        );
+    }
+}
+
+
+async function openProfileModal(targetUserId) {
+
+    if (!targetUserId) {
+        return;
+    }
+
+
+    const {
+        data: profile,
+        error
+    } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", targetUserId)
+        .single();
+
+
+    if (error || !profile) {
+
+        return alert(
+            "프로필 정보를 불러올 수 없습니다."
+        );
+    }
+
+
+    document.getElementById(
+        "profAccountNumber"
+    ).innerText =
+        profile.account_number || "-";
+
+
+    document.getElementById(
+        "profUsername"
+    ).innerText =
+        profile.username;
+
+
+    document.getElementById(
+        "profNickname"
+    ).innerText =
+        profile.nickname;
+
+
+    document.getElementById(
+        "profCreatedAt"
+    ).innerText =
+        new Date(
+            profile.created_at
+        ).toLocaleDateString();
+
+
+    const nickBox =
+        document.getElementById(
+            "nicknameChangeBox"
+        );
+
+
+    nickBox.style.display =
+        (
+            currentUser &&
+            currentUser.id === profile.id
+        )
+            ? "block"
+            : "none";
+
+
+    openModal(
+        "profileModal"
+    );
+}
+
+
+async function changeNickname() {
+
+    if (!currentUser || !currentProfile) {
+        return;
+    }
+
+
+    const newNick =
+        document.getElementById(
+            "newNicknameInput"
+        ).value;
+
+
+    if (!newNick) {
+        return alert(
+            "새 닉네임을 입력하세요."
+        );
+    }
+
+
+    const nickCheck =
+        isValidNickname(newNick);
+
+
+    if (!nickCheck.valid) {
+        return alert(
+            nickCheck.msg
+        );
+    }
+
+
+    const lastUpdated =
+        new Date(
+            currentProfile.nickname_updated_at
+        ).getTime();
+
+
+    const now =
+        new Date().getTime();
+
+
+    const diffMinutes =
+        (
+            now - lastUpdated
+        ) / (1000 * 60);
+
+
+    if (diffMinutes < 30) {
+
+        const remainMinutes =
+            Math.ceil(
+                30 - diffMinutes
+            );
+
+
+        return alert(
+            `닉네임은 30분에 한 번만 변경할 수 있습니다.\n` +
+            `(${remainMinutes}분 남음)`
+        );
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+                nickname: newNick,
+                nickname_updated_at:
+                    new Date().toISOString()
+            })
+            .eq("id", currentUser.id);
+
+
+    if (error) {
+
+        alert(
+            "닉네임 변경 실패: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            "🎉 닉네임이 성공적으로 변경되었습니다!"
+        );
+
+
+        document.getElementById(
+            "newNicknameInput"
+        ).value = "";
+
+
+        closeModal(
+            "profileModal"
+        );
+
+
+        await checkAuthStatus();
+    }
+}
+
+
+// =========================================================
+// 관리자 명령어
+// =========================================================
+
+async function handleAdminCommand(fullText) {
+
+    if (!isAdmin) {
+        return false;
+    }
+
+
+    const parts =
+        fullText.trim().split(/\s+/);
+
+
+    const command =
+        parts[0];
+
+
+    const targetUser =
+        parts[1];
+
+
+    const reason =
+        parts.slice(2).join(" ") ||
+        "사유 미작성";
+
+
+    const now =
+        new Date();
+
+
+    switch (command) {
+
+        case "/idban":
+
+            await updateBan(
+                targetUser,
+                "idban",
+                null,
+                reason
+            );
+
+            break;
+
+
+        case "/hardban":
+
+            await updateBan(
+                targetUser,
+                "hardban",
+                new Date(
+                    now.getTime() +
+                    30 * 24 * 60 * 60 * 1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/softban":
+
+            await updateBan(
+                targetUser,
+                "softban",
+                new Date(
+                    now.getTime() +
+                    7 * 24 * 60 * 60 * 1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/ban":
+
+            await updateBan(
+                targetUser,
+                "ban",
+                new Date(
+                    now.getTime() +
+                    1 * 24 * 60 * 60 * 1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/warning":
+
+            await updateBan(
+                targetUser,
+                "warning",
+                null,
+                reason
+            );
+
+            break;
+
+
+        case "/unban":
+
+            await unbanUser(
+                targetUser
+            );
+
+            break;
+
+
+        case "/chatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    6 * 60 * 60 * 1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/softchatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    3 * 24 * 60 * 60 * 1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/hardchatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    7 * 24 * 60 * 60 * 1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/0chatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    365 * 24 * 60 * 60 * 1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/cleanchat":
+
+            await cleanAllChatSoft();
+
+            break;
+
+
+        default:
+
+            return false;
+    }
+
+
+    return true;
+}
+
+
+// =========================================================
+// 밴 처리
+// =========================================================
+
+async function updateBan(
+    targetUsername,
+    banType,
+    banUntil,
+    reason
+) {
+
+    if (!targetUsername) {
+
+        return alert(
+            "대상 아이디를 입력하세요."
+        );
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+                ban_type: banType,
+                ban_until:
+                    banUntil
+                        ? banUntil.toISOString()
+                        : null,
+                ban_reason: reason
+            })
+            .eq(
+                "username",
+                targetUsername
+            );
+
+
+    if (error) {
+
+        alert(
+            "제재 처리 실패: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            `🚨 [${targetUsername}] 유저에게 ` +
+            `[${banType}] 제재를 적용했습니다.`
+        );
+    }
+}
+
+
+// =========================================================
+// 밴 해제
+// =========================================================
+
+async function unbanUser(targetUsername) {
+
+    if (!targetUsername) {
+
+        return alert(
+            "사용법: /unban 아이디"
+        );
+    }
+
+
+    const {
+        data: target,
+        error: findError
+    } = await supabaseClient
+        .from("profiles")
+        .select("username")
+        .eq(
+            "username",
+            targetUsername
+        )
+        .maybeSingle();
+
+
+    if (findError) {
+
+        console.error(
+            findError
+        );
+
+        return alert(
+            "사용자 조회에 실패했습니다."
+        );
+    }
+
+
+    if (!target) {
+
+        return alert(
+            `'${targetUsername}' 사용자를 찾을 수 없습니다.`
+        );
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+                ban_type: null,
+                ban_until: null,
+                ban_reason: null
+            })
+            .eq(
+                "username",
+                targetUsername
+            );
+
+
+    if (error) {
+
+        console.error(
+            error
+        );
+
+        alert(
+            "밴 해제 실패: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            `🔓 [${targetUsername}] 유저의 밴을 해제했습니다.`
+        );
+    }
+}
+
+
+// =========================================================
+// 채팅 잠금
+// =========================================================
+
+async function updateChatlock(
+    targetUsername,
+    lockUntil,
+    reason
+) {
+
+    if (!targetUsername) {
+
+        return alert(
+            "대상 아이디를 입력하세요."
+        );
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+                chatlock_until:
+                    lockUntil.toISOString(),
+
+                chatlock_reason:
+                    reason
+            })
+            .eq(
+                "username",
+                targetUsername
+            );
+
+
+    if (error) {
+
+        alert(
+            "채팅 정지 실패: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            `🤐 [${targetUsername}] 유저에게 ` +
+            `채팅 정지를 적용했습니다.`
+        );
+    }
+}
+
+
+// =========================================================
+// 채팅 소프트 청소
+// =========================================================
+
+async function cleanAllChatSoft() {
+
+    const { error } =
+        await supabaseClient
+            .from("chats")
+            .insert([
+                {
+                    username: "SYSTEM",
+                    message: "__CHAT_CLEARED__",
+                    channel: "all",
+                    map: CURRENT_MAP_NAME
+                }
+            ]);
+
+
+    if (error) {
+
+        alert(
+            "채팅 청소 실패: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            "🧹 모든 채팅 화면을 소프트 청소했습니다. " +
+            "(DB 기록은 보존됩니다)"
+        );
+    }
+}
+
+
+// =========================================================
+// 채팅 불러오기
+// =========================================================
+
+async function loadMessages() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("chats")
+        .select("*")
+        .order(
+            "id",
+            {
+                ascending: true
+            }
+        )
+        .limit(100);
+
+
+    if (!error && data) {
+
+        const messagesContainer =
+            document.getElementById(
+                "messages"
+            );
+
+
+        messagesContainer.innerHTML =
+            "";
+
+
+        let lastClearedIndex =
+            -1;
+
+
+        data.forEach(
+            (msg, idx) => {
+
+                if (
+                    msg.message ===
+                    "__CHAT_CLEARED__"
+                ) {
+
+                    lastClearedIndex =
+                        idx;
+                }
+            }
+        );
+
+
+        const visibleMessages =
+            (
+                lastClearedIndex !== -1
+            )
+                ? data.slice(
+                    lastClearedIndex + 1
+                )
+                : data;
+
+
+        if (
+            lastClearedIndex !== -1
+        ) {
+
+            messagesContainer.innerHTML =
+                '<div class="message">' +
+                '<span class="message-name">SYSTEM</span> : ' +
+                '채팅창이 청소되었습니다.' +
+                '</div>';
+        }
+
+
+        visibleMessages.forEach(
+            msg =>
+                processAndAppendMessage(msg)
+        );
+
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
+    }
+}
+
+
+function processAndAppendMessage(msg) {
+
+    if (
+        msg.message ===
+        "__CHAT_CLEARED__"
+    ) {
+
+        document.getElementById(
+            "messages"
+        ).innerHTML =
+            '<div class="message">' +
+            '<span class="message-name">SYSTEM</span> : ' +
+            '채팅창이 청소되었습니다.' +
+            '</div>';
+
+        return;
+    }
+
+
+    const channel =
+        msg.channel || "all";
+
+
+    if (
+        channel === "all" &&
+        msg.map &&
+        msg.map !== CURRENT_MAP_NAME
+    ) {
+
+        return;
+    }
+
+
+    if (
+        channel === "whisper"
+    ) {
+
+        const myUsername =
+            currentProfile
+                ? currentProfile.username.toLowerCase()
+                : "";
+
+
+        const senderUsername =
+            msg.sender_username
+                ? msg.sender_username.toLowerCase()
+                : "";
+
+
+        const targetUsername =
+            msg.target_username
+                ? msg.target_username.toLowerCase()
+                : "";
+
+
+        if (
+            myUsername !== senderUsername &&
+            myUsername !== targetUsername
+        ) {
+
+            return;
+        }
+    }
+
+
+    appendMessageUI(
+        msg.username,
+        msg.message,
+        msg.user_id,
+        channel,
+        msg.target_username
+    );
+}
+
+
+function appendMessageUI(
+    name,
+    text,
+    userId,
+    channel,
+    targetUsername
+) {
+
+    const messages =
+        document.getElementById(
+            "messages"
+        );
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+
+    message.className =
+        "message";
+
+
+    let channelTag =
+        "";
+
+
+    if (
+        channel === "shout"
+    ) {
+
+        channelTag =
+            '<b class="msg-shout">' +
+            '[📢 확성기]' +
+            '</b> ';
+
+    } else if (
+        channel === "whisper"
+    ) {
+
+        channelTag =
+            `<b class="msg-whisper">` +
+            `[귓속말 ➔ ${escapeHtml(
+                targetUsername || "?"
+            )}]` +
+            `</b> `;
+    }
+
+
+    let nameHtml;
+
+
+    if (userId) {
+
+        nameHtml =
+            `<span class="message-name" ` +
+            `onclick="openProfileModal('${userId}')">` +
+            `${escapeHtml(name)}` +
+            `</span>`;
+
+    } else {
+
+        nameHtml =
+            `<span class="message-name">` +
+            `${escapeHtml(name)}` +
+            `</span>`;
+    }
+
+
+    message.innerHTML =
+        `${channelTag}${nameHtml} : ${escapeHtml(text)}`;
+
+
+    messages.appendChild(
+        message
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+}
+
+
+function escapeHtml(text) {
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+// =========================================================
+// 메시지 전송
+// =========================================================
+
+async function sendMessage() {
+
+    if (
+        !currentUser ||
+        !currentProfile
+    ) {
+
+        alert(
+            "로그인이 필요한 기능입니다."
+        );
+
+        openModal(
+            "loginModal"
+        );
+
+        return;
+    }
+
+
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
+
+
+    const channelSelect =
+        document.getElementById(
+            "channelSelect"
+        );
+
+
+    const whisperTargetInput =
+        document.getElementById(
+            "whisperTargetInput"
+        );
+
+
+    const username =
+        currentProfile.nickname;
+
+
+    const text =
+        input.value.trim();
+
+
+    const channel =
+        channelSelect.value;
+
+
+    const targetUsername =
+        whisperTargetInput.value.trim();
+
+
+    if (text === "") {
+        return;
+    }
+
+
+    // 운영자 명령어 처리
+    if (text.startsWith("/")) {
+
+        const executed =
+            await handleAdminCommand(text);
+
+
+        if (executed) {
+
+            input.value = "";
+
+            return;
+        }
+    }
+
+
+    // 채팅 잠금 확인
+    if (
+        currentProfile.chatlock_until
+    ) {
+
+        const lockUntil =
+            new Date(
+                currentProfile.chatlock_until
+            );
+
+
+        if (
+            new Date() < lockUntil
+        ) {
+
+            const reason =
+                currentProfile.chatlock_reason ||
+                "사유 미작성";
+
+
+            alert(
+                `🤐 채팅이 정지된 상태입니다.\n` +
+                `사유: ${reason}\n` +
+                `해제 일시: ${lockUntil.toLocaleString()}`
+            );
+
+
+            return;
+        }
+    }
+
+
+    if (
+        channel === "whisper" &&
+        !targetUsername
+    ) {
+
+        alert(
+            "귓속말할 상대방의 아이디를 입력해 주세요."
+        );
+
+        return;
+    }
+
+
+    input.value =
+        "";
+
+
+    const payload = {
+
+        username:
+            username,
+
+        message:
+            text,
+
+        channel:
+            channel,
+
+        map:
+            CURRENT_MAP_NAME,
+
+        user_id:
+            currentUser.id,
+
+        sender_username:
+            currentProfile.username
+    };
+
+
+    if (
+        channel === "whisper"
+    ) {
+
+        payload.target_username =
+            targetUsername;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("chats")
+            .insert([
+                payload
+            ]);
+
+
+    if (error) {
+
+        alert(
+            "메시지 전송 실패: " +
+            error.message
+        );
+    }
+}
+
+
+document
+    .getElementById("messageInput")
+    .addEventListener(
+        "keydown",
+        (e) => {
+
+            if (
+                e.key === "Enter"
+            ) {
+
+                sendMessage();
+            }
+        }
+    );
+
+
+// =========================================================
+// 실시간 채팅
+// =========================================================
+
+function subscribeRealtime() {
+
+    supabaseClient
+        .channel("public:chats")
+
+        .on(
+            "postgres_changes",
+            {
+                event: "INSERT",
+                schema: "public",
+                table: "chats"
+            },
+
+            payload => {
+
+                processAndAppendMessage(
+                    payload.new
+                );
+            }
+        )
+
+        .subscribe();
+}
+
+
+// =========================================================
+// 접속자 수
+// =========================================================
+
+function trackPresence() {
+
+    const room =
+        supabaseClient.channel(
+            "online-users"
+        );
+
+
+    room.on(
+        "presence",
+        {
+            event: "sync"
+        },
+
+        () => {
+
+            const state =
+                room.presenceState();
+
+
+            const count =
+                Object.keys(state).length;
+
+
+            document.getElementById(
+                "user-count"
+            ).innerText =
+                count + "명";
+
+
+            document.getElementById(
+                "side-online-text"
+            ).innerText =
+                count + " users online";
+        }
+    );
+
+
+    room.subscribe(
+        async status => {
+
+            if (
+                status === "SUBSCRIBED"
+            ) {
+
+                await room.track({
+                    online_at:
+                        new Date().toISOString()
+                });
+            }
+        }
+    );
+}
+
+
+// =========================================================
+// 시작
+// =========================================================
+
+window.onload = () => {
+
+    checkAuthStatus();
+
+    loadMessages();
+
+    subscribeRealtime();
+
+    trackPresence();
+};
+
+
+function goToRoom() {
+
+    location.href =
+        "room.html";
+}
+
+</script>
+
+</body>
+</html>
