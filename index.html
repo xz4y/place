@@ -104,14 +104,38 @@ body {
     cursor: pointer;
 }
 
+.menu-button:hover {
+    background: linear-gradient(#eeeeee, #cccccc);
+}
+
+/* =========================================================
+   배너
+========================================================= */
+
 #notice {
     margin: 10px;
     padding: 8px;
     border: 1px solid #d4a300;
     background: #fffde6;
     color: #333;
-    display: flex;
-    justify-content: space-between;
+    display: none;
+}
+
+#banner-container {
+    width: 100%;
+}
+
+.site-banner {
+    position: relative;
+    margin-bottom: 5px;
+    padding: 7px 28px 7px 8px;
+    background: #fffbea;
+    border: 1px solid #d5c36a;
+    color: #333;
+}
+
+.site-banner:last-child {
+    margin-bottom: 0;
 }
 
 #main {
@@ -597,13 +621,34 @@ body.account-suspended #suspension-screen {
             ABOUT
         </a>
 
+        <a
+            href="admin.html"
+            class="menu-button"
+            id="admin-menu"
+            style="display:none;"
+        >
+            ADMIN
+        </a>
+
     </div>
 
-<div id="notice">
-    <div id="banner-container">
-        배너를 불러오는 중...
+
+    <!-- =====================================================
+         배너
+    ====================================================== -->
+
+    <div id="notice">
+
+        <div id="banner-container">
+            배너를 불러오는 중...
+        </div>
+
     </div>
-</div>
+
+
+    <!-- =====================================================
+         정지 화면
+    ====================================================== -->
 
     <div id="suspension-screen">
 
@@ -677,6 +722,11 @@ body.account-suspended #suspension-screen {
 
     </div>
 
+
+    <!-- =====================================================
+         메인
+    ====================================================== -->
+
     <div id="main">
 
         <div id="left">
@@ -732,6 +782,11 @@ body.account-suspended #suspension-screen {
                 </div>
 
             </div>
+
+
+            <!-- =================================================
+                 채팅
+            ================================================== -->
 
             <div
                 class="section"
@@ -816,6 +871,11 @@ body.account-suspended #suspension-screen {
 
         </div>
 
+
+        <!-- =====================================================
+             오른쪽
+        ====================================================== -->
+
         <div id="right">
 
             <div class="side-box">
@@ -829,6 +889,7 @@ body.account-suspended #suspension-screen {
                 </div>
 
             </div>
+
 
             <div class="side-box">
 
@@ -851,6 +912,7 @@ body.account-suspended #suspension-screen {
                 </div>
 
             </div>
+
 
             <div class="side-box">
 
@@ -886,18 +948,31 @@ body.account-suspended #suspension-screen {
 
     </div>
 
-    <!-- 홈페이지 맨 아래 -->
+
+    <!-- =====================================================
+         푸터
+    ====================================================== -->
+
     <div id="footer">
+
         PLACE © 2026
-        <span style="margin: 0 8px; color:#aaa;">|</span>
+
+        <span style="margin: 0 8px; color:#aaa;">
+            |
+        </span>
+
         <a href="terms.html">
             이용약관
         </a>
+
     </div>
 
 </div>
 
-<!-- 로그인 -->
+
+<!-- =========================================================
+     로그인
+========================================================= -->
 
 <div id="loginModal" class="modal">
 
@@ -956,7 +1031,10 @@ body.account-suspended #suspension-screen {
 
 </div>
 
-<!-- 회원가입 -->
+
+<!-- =========================================================
+     회원가입
+========================================================= -->
 
 <div id="signupModal" class="modal">
 
@@ -1042,7 +1120,10 @@ body.account-suspended #suspension-screen {
 
 </div>
 
-<!-- 프로필 -->
+
+<!-- =========================================================
+     프로필
+========================================================= -->
 
 <div id="profileModal" class="modal">
 
@@ -1140,7 +1221,10 @@ body.account-suspended #suspension-screen {
 
 </div>
 
-<!-- 경고 -->
+
+<!-- =========================================================
+     경고
+========================================================= -->
 
 <div id="warningModal" class="modal">
 
@@ -1215,6 +1299,7 @@ body.account-suspended #suspension-screen {
 
 </div>
 
+
 <script>
 
 const SUPABASE_URL =
@@ -1239,6 +1324,7 @@ let isSuspended = false;
 let presenceChannel = null;
 let profileRealtimeChannel = null;
 let chatRealtimeChannel = null;
+let bannerRealtimeChannel = null;
 
 
 /* =========================================================
@@ -1311,6 +1397,134 @@ function formatDateTime(dateValue) {
         `${displayHour}:${minutes}:${seconds} ` +
         `${ampm}`
     );
+}
+
+
+/* =========================================================
+   배너
+========================================================= */
+
+async function loadBanners() {
+
+    const now =
+        new Date().toISOString();
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("banners")
+            .select("*")
+            .lte(
+                "starts_at",
+                now
+            )
+            .or(
+                "ends_at.is.null,ends_at.gt." +
+                now
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+    if (error) {
+
+        console.error(
+            "배너 불러오기 오류:",
+            error
+        );
+
+        return;
+    }
+
+    const notice =
+        document.getElementById(
+            "notice"
+        );
+
+    const container =
+        document.getElementById(
+            "banner-container"
+        );
+
+    if (!notice || !container) {
+        return;
+    }
+
+    container.innerHTML = "";
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        notice.style.display =
+            "none";
+
+        return;
+    }
+
+    notice.style.display =
+        "block";
+
+    data.forEach(
+        banner => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.className =
+                "site-banner";
+
+            element.innerHTML =
+                "📢 " +
+                escapeHtml(
+                    banner.message
+                );
+
+            container.appendChild(
+                element
+            );
+        }
+    );
+}
+
+
+function subscribeBannerRealtime() {
+
+    if (bannerRealtimeChannel) {
+
+        supabaseClient.removeChannel(
+            bannerRealtimeChannel
+        );
+
+        bannerRealtimeChannel = null;
+    }
+
+    bannerRealtimeChannel =
+        supabaseClient
+            .channel(
+                "public:banners"
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "banners"
+                },
+                async () => {
+
+                    await loadBanners();
+                }
+            )
+            .subscribe();
 }
 
 
@@ -1787,11 +2001,6 @@ async function checkAuthStatus() {
             "messageInput"
         );
 
-    const channelSelect =
-        document.getElementById(
-            "channelSelect"
-        );
-
     if (session) {
 
         currentUser =
@@ -1854,6 +2063,21 @@ async function checkAuthStatus() {
         ).style.display =
             "inline-block";
 
+        /* 관리자 메뉴 */
+
+        const adminMenu =
+            document.getElementById(
+                "admin-menu"
+            );
+
+        if (adminMenu) {
+
+            adminMenu.style.display =
+                isAdmin
+                    ? "inline-block"
+                    : "none";
+        }
+
         setupAdminChannel();
 
         await subscribeToMyProfile();
@@ -1901,6 +2125,17 @@ async function checkAuthStatus() {
             "logout-btn"
         ).style.display =
             "none";
+
+        const adminMenu =
+            document.getElementById(
+                "admin-menu"
+            );
+
+        if (adminMenu) {
+
+            adminMenu.style.display =
+                "none";
+        }
 
         usernameInput.value =
             "Guest";
@@ -2168,6 +2403,19 @@ async function subscribeToMyProfile() {
                         currentProfile.is_admin === true;
 
                     setupAdminChannel();
+
+                    const adminMenu =
+                        document.getElementById(
+                            "admin-menu"
+                        );
+
+                    if (adminMenu) {
+
+                        adminMenu.style.display =
+                            isAdmin
+                                ? "inline-block"
+                                : "none";
+                    }
 
                     const banned =
                         await checkBanStatus(
@@ -3268,16 +3516,22 @@ async function trackPresence() {
             const count =
                 uniqueUsers.size;
 
-            document.getElementById(
-                "user-count"
-            ).innerText =
-                count + "명";
+            /*
+             * 기존 NOTICE의 접속자 표시 제거
+             * ONLINE 영역만 사용
+             */
 
-            document.getElementById(
-                "side-online-text"
-            ).innerText =
-                count +
-                " users online";
+            const onlineText =
+                document.getElementById(
+                    "side-online-text"
+                );
+
+            if (onlineText) {
+
+                onlineText.innerText =
+                    count +
+                    " users online";
+            }
         }
     );
 
@@ -3378,7 +3632,11 @@ window.onload = async () => {
 
     await loadMessages();
 
+    await loadBanners();
+
     subscribeRealtime();
+
+    subscribeBannerRealtime();
 };
 
 
