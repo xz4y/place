@@ -2778,72 +2778,106 @@ async function cleanAllChatSoft() {
    채팅 불러오기
 ========================================================= */
 
+/* =========================================================
+   채팅 불러오기
+========================================================= */
+
 async function loadMessages() {
-    const { data, error } = await supabaseClient
+
+    const {
+        data,
+        error
+    } = await supabaseClient
         .from("chats")
         .select("*")
-        .order("id", { ascending: false })
+        .order("id", {
+            ascending: true
+        })
         .limit(100);
 
     if (error) {
-        console.error("채팅 불러오기 오류:", error);
+
+        console.error(
+            "채팅 불러오기 오류:",
+            error
+        );
+
         return;
     }
 
-    const messages = (data || []).reverse();
+    const messagesContainer =
+        document.getElementById(
+            "messages"
+        );
 
-    const messagesContainer = document.getElementById("messages");
-
-    if (!messagesContainer) return;
+    if (!messagesContainer) {
+        return;
+    }
 
     messagesContainer.innerHTML = "";
 
-    // 마지막 채팅 전체 삭제 지점 찾기
+    const messages =
+        data || [];
+
+    /* -----------------------------------------
+       마지막 채팅 청소 지점 찾기
+    ----------------------------------------- */
+
     let lastClearedIndex = -1;
 
-    messages.forEach((message, index) => {
-        if (
-            message.message === "__CHAT_CLEARED__" &&
-            message.username === "SYSTEM"
-        ) {
-            lastClearedIndex = index;
-        }
-    });
+    messages.forEach(
+        (message, index) => {
 
-    // 마지막 삭제 이후의 채팅만 표시
+            if (
+                message.message ===
+                    "__CHAT_CLEARED__" &&
+                message.username ===
+                    "SYSTEM"
+            ) {
+
+                lastClearedIndex =
+                    index;
+            }
+        }
+    );
+
+    /* -----------------------------------------
+       마지막 청소 이후의 채팅만 표시
+    ----------------------------------------- */
+
     const visibleMessages =
         lastClearedIndex >= 0
-            ? messages.slice(lastClearedIndex + 1)
-            : messages;
-
-    visibleMessages.forEach(message => {
-        processAndAppendMessage(message);
-    });
-
-    messagesContainer.scrollTop =
-        messagesContainer.scrollHeight;
-}
-    const visibleMessages =
-        lastClearedIndex !== -1
-            ? data.slice(
+            ? messages.slice(
                 lastClearedIndex + 1
             )
-            : data;
+            : messages;
+
+    /* -----------------------------------------
+       시스템 메시지
+    ----------------------------------------- */
 
     if (
-        lastClearedIndex !== -1
+        lastClearedIndex >= 0
     ) {
 
         messagesContainer.innerHTML =
             '<div class="message">' +
             '<span class="message-name">SYSTEM</span> : ' +
-            '채팅서버 연결 완료' +
+            '채팅창이 청소되었습니다.' +
             '</div>';
     }
 
+    /* -----------------------------------------
+       채팅 표시
+    ----------------------------------------- */
+
     visibleMessages.forEach(
-        msg =>
-            processAndAppendMessage(msg)
+        message => {
+
+            processAndAppendMessage(
+                message
+            );
+        }
     );
 
     messagesContainer.scrollTop =
