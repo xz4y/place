@@ -105,7 +105,7 @@ body {
 select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
 #channelSelect { width: 80px; }
 #whisperTargetInput { width: 90px; display: none; }
-#usernameInput { width: 85px; }
+#usernameInput { width: 85px; background-color: #eee; }
 #messageInput { flex: 1; }
 
 #sendButton {
@@ -196,11 +196,11 @@ select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
                             <option value="whisper">귓속말</option>
                         </select>
                         <input id="whisperTargetInput" type="text" placeholder="상대 아이디">
-                        <input id="usernameInput" type="text" placeholder="닉네임" value="Guest">
+                        <input id="usernameInput" type="text" placeholder="닉네임" value="Guest" readonly>
                     </div>
 
                     <div id="chat-input">
-                        <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
+                        <input id="messageInput" type="text" placeholder="로그인 후 채팅을 입력할 수 있습니다.">
                         <button id="sendButton" onclick="sendMessage()">SEND</button>
                     </div>
                 </div>
@@ -325,7 +325,6 @@ function isValidUsername(username) {
     return /^[a-zA-Z0-9_]+$/.test(username);
 }
 
-// 닉네임 검사 규칙 (2~16자, 연속 공백 3개 이상 금지)
 function isValidNickname(nickname) {
     if (nickname.length < 2 || nickname.length > 16) return { valid: false, msg: "닉네임은 2글자 이상 16글자 이하이어야 합니다." };
     if (/\s{3,}/.test(nickname)) return { valid: false, msg: "공백은 연속해서 최대 2개까지만 사용할 수 있습니다." };
@@ -338,10 +337,9 @@ function handleChannelChange() {
     whisperInput.style.display = (channel === "whisper") ? "inline-block" : "none";
 }
 
-// 회원가입
 async function handleSignup() {
     const username = document.getElementById("signupUsername").value.trim();
-    const nickname = document.getElementById("signupNickname").value; // 공백 허용을 위해 trim 제외
+    const nickname = document.getElementById("signupNickname").value;
     const password = document.getElementById("signupPassword").value;
     const passwordConfirm = document.getElementById("signupPasswordConfirm").value;
 
@@ -377,7 +375,6 @@ async function handleSignup() {
     }
 }
 
-// 로그인
 async function handleLogin() {
     const username = document.getElementById("loginUsername").value.trim();
     const password = document.getElementById("loginPassword").value;
@@ -407,6 +404,7 @@ async function handleLogout() {
 async function checkAuthStatus() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     const usernameInput = document.getElementById("usernameInput");
+    const messageInput = document.getElementById("messageInput");
     const channelSelect = document.getElementById("channelSelect");
 
     if (session) {
@@ -428,7 +426,7 @@ async function checkAuthStatus() {
         document.getElementById("login-btn").style.display = "none";
         document.getElementById("signup-btn").style.display = "none";
         document.getElementById("logout-btn").style.display = "inline-block";
-        usernameInput.readOnly = true;
+        messageInput.placeholder = "메시지를 입력하세요";
     } else {
         currentUser = null;
         currentProfile = null;
@@ -438,7 +436,7 @@ async function checkAuthStatus() {
         document.getElementById("signup-btn").style.display = "inline-block";
         document.getElementById("logout-btn").style.display = "none";
         usernameInput.value = "Guest";
-        usernameInput.readOnly = false;
+        messageInput.placeholder = "로그인 후 채팅을 입력할 수 있습니다.";
     }
 
     let shoutOption = channelSelect.querySelector("option[value='shout']");
@@ -486,7 +484,6 @@ async function openProfileModal(targetUserId) {
     openModal("profileModal");
 }
 
-// 닉네임 변경
 async function changeNickname() {
     if (!currentUser || !currentProfile) return;
 
@@ -579,12 +576,18 @@ function escapeHtml(text) {
 }
 
 async function sendMessage() {
-    const nameInput = document.getElementById("usernameInput");
+    // 비로그인 상태일 때 거부
+    if (!currentUser || !currentProfile) {
+        alert("로그인이 필요한 기능입니다.");
+        openModal("loginModal");
+        return;
+    }
+
     const input = document.getElementById("messageInput");
     const channelSelect = document.getElementById("channelSelect");
     const whisperTargetInput = document.getElementById("whisperTargetInput");
 
-    const username = nameInput.value.trim() || "Guest";
+    const username = currentProfile.nickname;
     const text = input.value.trim();
     const channel = channelSelect.value;
     const targetUsername = whisperTargetInput.value.trim();
@@ -602,13 +605,11 @@ async function sendMessage() {
         username: username,
         message: text,
         channel: channel,
-        map: CURRENT_MAP_NAME
+        map: CURRENT_MAP_NAME,
+        user_id: currentUser.id,
+        sender_username: currentProfile.username
     };
 
-    if (currentUser) {
-        payload.user_id = currentUser.id;
-        if (currentProfile) payload.sender_username = currentProfile.username;
-    }
     if (channel === "whisper") payload.target_username = targetUsername;
 
     const { error } = await supabaseClient.from('chats').insert([payload]);
