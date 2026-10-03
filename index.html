@@ -352,6 +352,93 @@ input {
     font-size: 11px;
 }
 
+
+/* =========================================================
+   정지 화면
+   ========================================================= */
+
+#suspension-screen {
+    display: none;
+    padding: 55px 60px 70px 60px;
+    min-height: 330px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.suspension-inner {
+    border: 1px solid #999;
+    background: #f7f7f7;
+}
+
+.suspension-header {
+    padding: 9px 12px;
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(#777777, #444444);
+    border-bottom: 1px solid #555;
+}
+
+.suspension-body {
+    padding: 30px 28px 35px 28px;
+}
+
+.suspension-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 24px;
+}
+
+.suspension-text {
+    line-height: 1.8;
+    font-size: 12px;
+    color: #333;
+}
+
+.suspension-info {
+    margin-top: 24px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+
+.suspension-row {
+    display: flex;
+    padding: 9px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.suspension-row:last-child {
+    border-bottom: none;
+}
+
+.suspension-label {
+    width: 80px;
+    color: #666;
+    font-weight: bold;
+}
+
+.suspension-value {
+    flex: 1;
+    color: #222;
+}
+
+.suspension-bottom {
+    margin-top: 24px;
+    line-height: 1.8;
+    color: #444;
+}
+
+.suspension-date {
+    font-weight: bold;
+    color: #d9381e;
+}
+
+
+/* =========================================================
+   모달
+   ========================================================= */
+
 .modal {
     display: none;
     position: fixed;
@@ -406,6 +493,30 @@ input {
     margin-bottom: 8px;
     line-height: 1.5;
 }
+
+
+/* =========================================================
+   실제 정지 상태
+   ========================================================= */
+
+body.account-suspended #notice,
+body.account-suspended #main,
+body.account-suspended #footer {
+    display: none;
+}
+
+body.account-suspended #suspension-screen {
+    display: block;
+}
+
+body.account-suspended #menu .menu-button {
+    pointer-events: none;
+    opacity: 0.45;
+}
+
+body.account-suspended #menu {
+    opacity: 0.8;
+}
 </style>
 </head>
 
@@ -413,41 +524,226 @@ input {
 
 <div id="site">
 
+    <!-- =====================================================
+         상단
+    ====================================================== -->
+
     <div id="top">
+
         <div id="title">PLACE</div>
-        <div id="subtitle">어딘가에 존재하는 작은 장소</div>
+
+        <div id="subtitle">
+            어딘가에 존재하는 작은 장소
+        </div>
 
         <div id="auth-bar">
-            <span id="user-info" style="font-size:11px; color:#fff;">로그인 필요</span>
-            <button class="auth-btn" id="login-btn" onclick="openModal('loginModal')">로그인</button>
-            <button class="auth-btn" id="signup-btn" onclick="openModal('signupModal')">회원가입</button>
-            <button class="auth-btn" id="logout-btn" onclick="handleLogout()" style="display:none;">로그아웃</button>
+
+            <span
+                id="user-info"
+                style="font-size:11px; color:#fff;"
+            >
+                로그인 필요
+            </span>
+
+            <button
+                class="auth-btn"
+                id="login-btn"
+                onclick="openModal('loginModal')"
+            >
+                로그인
+            </button>
+
+            <button
+                class="auth-btn"
+                id="signup-btn"
+                onclick="openModal('signupModal')"
+            >
+                회원가입
+            </button>
+
+            <button
+                class="auth-btn"
+                id="logout-btn"
+                onclick="handleLogout()"
+                style="display:none;"
+            >
+                로그아웃
+            </button>
+
         </div>
+
     </div>
+
+
+    <!-- =====================================================
+         메뉴
+    ====================================================== -->
 
     <div id="menu">
-        <a href="index.html" class="menu-button">HOME</a>
-        <a href="#world" class="menu-button">WORLD</a>
-        <a href="#chat-section" class="menu-button">CHAT</a>
-        <span class="menu-button" onclick="handleMenuProfileClick()">PROFILE</span>
-        <a href="#about" class="menu-button">ABOUT</a>
+
+        <a
+            href="index.html"
+            class="menu-button"
+        >
+            HOME
+        </a>
+
+        <a
+            href="#world"
+            class="menu-button"
+        >
+            WORLD
+        </a>
+
+        <a
+            href="#chat-section"
+            class="menu-button"
+        >
+            CHAT
+        </a>
+
+        <span
+            class="menu-button"
+            onclick="handleMenuProfileClick()"
+        >
+            PROFILE
+        </span>
+
+        <a
+            href="#about"
+            class="menu-button"
+        >
+            ABOUT
+        </a>
+
     </div>
 
+
+    <!-- =====================================================
+         일반 공지
+    ====================================================== -->
+
     <div id="notice">
-        <div>📢 <span id="notice-text">환영합니다! 아이디를 만들어 보세요.</span></div>
-        <div style="font-size:11px; color:#666;">
-            접속자: <b id="user-count">1명</b>
+
+        <div>
+            📢
+            <span id="notice-text">
+                환영합니다! 아이디를 만들어 보세요.
+            </span>
         </div>
+
+        <div style="font-size:11px; color:#666;">
+
+            접속자:
+            <b id="user-count">1명</b>
+
+        </div>
+
     </div>
+
+
+    <!-- =====================================================
+         정지 안내 화면
+    ====================================================== -->
+
+    <div id="suspension-screen">
+
+        <div class="suspension-inner">
+
+            <div class="suspension-header">
+                ACCOUNT STATUS
+            </div>
+
+            <div class="suspension-body">
+
+                <div
+                    id="suspension-title"
+                    class="suspension-title"
+                >
+                    회원님의 계정은 정지 처리되었습니다.
+                </div>
+
+                <div class="suspension-text">
+
+                    콘텐츠 검열 결과,
+                    회원님은 Place 이용 약관을 위반한 것으로
+                    확인 되었습니다.
+
+                </div>
+
+
+                <div class="suspension-info">
+
+                    <div class="suspension-row">
+
+                        <div class="suspension-label">
+                            처리 일시
+                        </div>
+
+                        <div
+                            class="suspension-value"
+                            id="suspension-date"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <div class="suspension-row">
+
+                        <div class="suspension-label">
+                            처리 사유
+                        </div>
+
+                        <div
+                            class="suspension-value"
+                            id="suspension-reason"
+                        >
+                            사유 미작성
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="suspension-bottom"
+                    class="suspension-bottom"
+                >
+                    계정이 비활성화 처리가 되었습니다.
+                    <br>
+
+                    <span id="suspension-until">
+                        -
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         기존 메인
+    ====================================================== -->
 
     <div id="main">
 
         <div id="left">
 
             <div class="section">
-                <div class="section-title">WORLD</div>
+
+                <div class="section-title">
+                    WORLD
+                </div>
 
                 <div style="padding:8px">
+
                     <div id="world">
 
                         <div class="tree tree1">
@@ -479,37 +775,71 @@ input {
                             <div class="character-head"></div>
                         </div>
 
-                        <button id="secret" onclick="goToRoom()">숨겨진 장소</button>
+                        <button
+                            id="secret"
+                            onclick="goToRoom()"
+                        >
+                            숨겨진 장소
+                        </button>
 
                     </div>
+
                 </div>
+
             </div>
 
-            <div class="section" id="chat-section">
 
-                <div class="section-title">REALTIME CHAT</div>
+            <div
+                class="section"
+                id="chat-section"
+            >
+
+                <div class="section-title">
+                    REALTIME CHAT
+                </div>
 
                 <div id="messages">
+
                     <div class="message">
-                        <span class="message-name">SYSTEM</span> :
+
+                        <span class="message-name">
+                            SYSTEM
+                        </span>
+
+                        :
                         채팅 서버 연결 중...
+
                     </div>
+
                 </div>
+
 
                 <div id="chat-input-container">
 
                     <div id="chat-controls">
 
-                        <select id="channelSelect" onchange="handleChannelChange()">
-                            <option value="all">전체</option>
-                            <option value="whisper">귓속말</option>
+                        <select
+                            id="channelSelect"
+                            onchange="handleChannelChange()"
+                        >
+
+                            <option value="all">
+                                전체
+                            </option>
+
+                            <option value="whisper">
+                                귓속말
+                            </option>
+
                         </select>
+
 
                         <input
                             id="whisperTargetInput"
                             type="text"
                             placeholder="상대 아이디"
                         >
+
 
                         <input
                             id="usernameInput"
@@ -521,6 +851,7 @@ input {
 
                     </div>
 
+
                     <div id="chat-input">
 
                         <input
@@ -530,7 +861,13 @@ input {
                             onclick="checkInputPermission()"
                         >
 
-                        <button id="sendButton" onclick="sendMessage()">SEND</button>
+
+                        <button
+                            id="sendButton"
+                            onclick="sendMessage()"
+                        >
+                            SEND
+                        </button>
 
                     </div>
 
@@ -540,35 +877,79 @@ input {
 
         </div>
 
+
         <div id="right">
 
             <div class="side-box">
-                <div class="side-title">INFORMATION</div>
+
+                <div class="side-title">
+                    INFORMATION
+                </div>
+
                 <div class="side-content">
                     이곳은 사람들이 잠시 머물다 가는 작은 장소입니다.
                 </div>
+
             </div>
 
-            <div class="side-box">
-                <div class="side-title">ONLINE</div>
-                <div class="side-content">
-                    <span class="online">● ONLINE</span><br>
-                    <span id="side-online-text">실시간 연결 중</span>
-                </div>
-            </div>
 
             <div class="side-box">
-                <div class="side-title">MENU</div>
-                <div class="side-content">
-                    <a href="index.html">Home</a><br>
-                    <a href="#world">World</a><br>
-                    <a href="room.html">오래된 방</a><br>
+
+                <div class="side-title">
+                    ONLINE
                 </div>
+
+                <div class="side-content">
+
+                    <span class="online">
+                        ● ONLINE
+                    </span>
+
+                    <br>
+
+                    <span id="side-online-text">
+                        실시간 연결 중
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="side-box">
+
+                <div class="side-title">
+                    MENU
+                </div>
+
+                <div class="side-content">
+
+                    <a href="index.html">
+                        Home
+                    </a>
+
+                    <br>
+
+                    <a href="#world">
+                        World
+                    </a>
+
+                    <br>
+
+                    <a href="room.html">
+                        오래된 방
+                    </a>
+
+                    <br>
+
+                </div>
+
             </div>
 
         </div>
 
     </div>
+
 
     <div id="footer">
         PLACE © 2026
@@ -577,31 +958,63 @@ input {
 </div>
 
 
-<!-- 로그인 모달 -->
+<!-- =========================================================
+     로그인
+========================================================= -->
 
 <div id="loginModal" class="modal">
 
     <div class="modal-content">
 
-        <div class="modal-header">🔑 로그인</div>
+        <div class="modal-header">
+            🔑 로그인
+        </div>
 
         <div class="form-group">
-            <label>아이디</label>
+
+            <label>
+                아이디
+            </label>
+
             <input
                 type="text"
                 id="loginUsername"
                 placeholder="영어, 숫자, 언더바(_)"
             >
+
         </div>
+
 
         <div class="form-group">
-            <label>비밀번호</label>
-            <input type="password" id="loginPassword">
+
+            <label>
+                비밀번호
+            </label>
+
+            <input
+                type="password"
+                id="loginPassword"
+            >
+
         </div>
 
+
         <div class="modal-buttons">
-            <button class="auth-btn" onclick="handleLogin()">로그인</button>
-            <button class="auth-btn" onclick="closeModal('loginModal')">취소</button>
+
+            <button
+                class="auth-btn"
+                onclick="handleLogin()"
+            >
+                로그인
+            </button>
+
+            <button
+                class="auth-btn"
+                onclick="closeModal('loginModal')"
+            >
+                취소
+            </button>
+
         </div>
 
     </div>
@@ -609,45 +1022,92 @@ input {
 </div>
 
 
-<!-- 회원가입 모달 -->
+<!-- =========================================================
+     회원가입
+========================================================= -->
 
 <div id="signupModal" class="modal">
 
     <div class="modal-content">
 
-        <div class="modal-header">📝 계정 생성</div>
+        <div class="modal-header">
+            📝 계정 생성
+        </div>
 
         <div class="form-group">
-            <label>아이디 (영어, 숫자, _ 만 가능)</label>
+
+            <label>
+                아이디 (영어, 숫자, _ 만 가능)
+            </label>
+
             <input
                 type="text"
                 id="signupUsername"
                 placeholder="예: user_123"
             >
+
         </div>
 
+
         <div class="form-group">
-            <label>닉네임 (2~16자, 연속 공백 최대 2개)</label>
+
+            <label>
+                닉네임 (2~16자, 연속 공백 최대 2개)
+            </label>
+
             <input
                 type="text"
                 id="signupNickname"
                 placeholder="예: 모험가"
             >
+
         </div>
 
-        <div class="form-group">
-            <label>비밀번호</label>
-            <input type="password" id="signupPassword">
-        </div>
 
         <div class="form-group">
-            <label>비밀번호 확인</label>
-            <input type="password" id="signupPasswordConfirm">
+
+            <label>
+                비밀번호
+            </label>
+
+            <input
+                type="password"
+                id="signupPassword"
+            >
+
         </div>
+
+
+        <div class="form-group">
+
+            <label>
+                비밀번호 확인
+            </label>
+
+            <input
+                type="password"
+                id="signupPasswordConfirm"
+            >
+
+        </div>
+
 
         <div class="modal-buttons">
-            <button class="auth-btn" onclick="handleSignup()">가입하기</button>
-            <button class="auth-btn" onclick="closeModal('signupModal')">취소</button>
+
+            <button
+                class="auth-btn"
+                onclick="handleSignup()"
+            >
+                가입하기
+            </button>
+
+            <button
+                class="auth-btn"
+                onclick="closeModal('signupModal')"
+            >
+                취소
+            </button>
+
         </div>
 
     </div>
@@ -655,36 +1115,67 @@ input {
 </div>
 
 
-<!-- 프로필 모달 -->
+<!-- =========================================================
+     프로필
+========================================================= -->
 
 <div id="profileModal" class="modal">
 
     <div class="modal-content">
 
-        <div class="modal-header">👤 유저 프로필</div>
+        <div class="modal-header">
+            👤 유저 프로필
+        </div>
+
 
         <div class="profile-row">
+
             <b>계정 번호:</b>
+
             <span
                 id="profAccountNumber"
                 style="color:#d9381e; font-weight:bold;"
-            >-</span>번 유저
+            >
+                -
+            </span>
+
+            번 유저
+
         </div>
 
+
         <div class="profile-row">
+
             <b>아이디:</b>
-            <span id="profUsername">-</span>
+
+            <span id="profUsername">
+                -
+            </span>
+
         </div>
 
+
         <div class="profile-row">
+
             <b>닉네임:</b>
-            <span id="profNickname">-</span>
+
+            <span id="profNickname">
+                -
+            </span>
+
         </div>
 
+
         <div class="profile-row">
+
             <b>가입일:</b>
-            <span id="profCreatedAt">-</span>
+
+            <span id="profCreatedAt">
+                -
+            </span>
+
         </div>
+
 
         <div
             id="nicknameChangeBox"
@@ -692,24 +1183,39 @@ input {
         >
 
             <div class="form-group">
-                <label>새 닉네임 변경 (30분에 1회 가능)</label>
+
+                <label>
+                    새 닉네임 변경 (30분에 1회 가능)
+                </label>
+
                 <input
                     type="text"
                     id="newNicknameInput"
                     placeholder="새 닉네임 (2~16자)"
                 >
+
             </div>
 
-            <button class="auth-btn" onclick="changeNickname()">
+
+            <button
+                class="auth-btn"
+                onclick="changeNickname()"
+            >
                 닉네임 변경하기
             </button>
 
         </div>
 
+
         <div class="modal-buttons">
-            <button class="auth-btn" onclick="closeModal('profileModal')">
+
+            <button
+                class="auth-btn"
+                onclick="closeModal('profileModal')"
+            >
                 닫기
             </button>
+
         </div>
 
     </div>
@@ -717,11 +1223,16 @@ input {
 </div>
 
 
-<!-- 경고 / 계정 비활성화 모달 -->
+<!-- =========================================================
+     기존 경고 모달
+========================================================= -->
 
 <div id="warningModal" class="modal">
 
-    <div class="modal-content" style="border-color:#d9381e;">
+    <div
+        class="modal-content"
+        style="border-color:#d9381e;"
+    >
 
         <div
             class="modal-header"
@@ -730,21 +1241,31 @@ input {
             ⚠️ 계정이 잠겼습니다
         </div>
 
-        <p style="font-size:12px; line-height:1.5; color:#333;">
 
-            운영 정책 위반 또는 경고 조치로 인해 계정이 일시적으로 비활성화되었습니다.
+        <p
+            style="font-size:12px; line-height:1.5; color:#333;"
+        >
+
+            운영 정책 위반 또는 경고 조치로 인해
+            계정이 일시적으로 비활성화되었습니다.
 
             <br><br>
 
             <b>사유:</b>
+
             <span
                 id="warningReasonText"
                 style="color:#d9381e; font-weight:bold;"
-            >-</span>
+            >
+                -
+            </span>
 
         </p>
 
-        <div style="margin-top:15px; font-size:11px;">
+
+        <div
+            style="margin-top:15px; font-size:11px;"
+        >
 
             <label style="cursor:pointer;">
 
@@ -754,13 +1275,18 @@ input {
                     onchange="toggleReactivateBtn()"
                 >
 
-                위 내용을 확인하였으며, 이에 동의합니다.
+                위 내용을 확인하였으며,
+                이에 동의합니다.
 
             </label>
 
         </div>
 
-        <div class="modal-buttons" style="margin-top:15px;">
+
+        <div
+            class="modal-buttons"
+            style="margin-top:15px;"
+        >
 
             <button
                 class="auth-btn"
@@ -792,12 +1318,22 @@ const supabaseClient =
         SUPABASE_ANON_KEY
     );
 
+
 const CURRENT_MAP_NAME = "main";
 
 let currentUser = null;
 let currentProfile = null;
 let isAdmin = false;
 
+/*
+ * 현재 계정이 실제 정지 상태인지 저장
+ */
+let isSuspended = false;
+
+
+/* =========================================================
+   기본 UI
+========================================================= */
 
 function openModal(id) {
     document.getElementById(id).style.display = "block";
@@ -809,26 +1345,258 @@ function closeModal(id) {
 }
 
 
+/* =========================================================
+   정지 화면
+========================================================= */
+
+function formatDateTime(dateValue) {
+
+    if (!dateValue) {
+        return "-";
+    }
+
+    const date =
+        new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+        return "-";
+    }
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(date.getMonth() + 1)
+            .padStart(2, "0");
+
+    const day =
+        String(date.getDate())
+            .padStart(2, "0");
+
+    const hours =
+        date.getHours();
+
+    const minutes =
+        String(date.getMinutes())
+            .padStart(2, "0");
+
+    const seconds =
+        String(date.getSeconds())
+            .padStart(2, "0");
+
+    const ampm =
+        hours < 12
+            ? "오전"
+            : "오후";
+
+    const displayHour =
+        hours % 12 || 12;
+
+    return (
+        `${year}/${month}/${day} ` +
+        `${displayHour}:${minutes}:${seconds} ` +
+        `${ampm}`
+    );
+}
+
+
+function getBanPeriodText(banType) {
+
+    switch (banType) {
+
+        case "ban":
+            return "1일 정지";
+
+        case "softban":
+            return "7일 정지";
+
+        case "hardban":
+            return "30일 정지";
+
+        case "idban":
+            return "영구 정지";
+
+        default:
+            return "계정 정지";
+    }
+}
+
+
+function showSuspensionScreen(profile) {
+
+    isSuspended = true;
+
+    document.body.classList.add(
+        "account-suspended"
+    );
+
+
+    const periodText =
+        getBanPeriodText(
+            profile.ban_type
+        );
+
+
+    document.getElementById(
+        "suspension-title"
+    ).innerText =
+        `회원님의 계정은 ${periodText} 처리되었습니다.`;
+
+
+    document.getElementById(
+        "suspension-date"
+    ).innerText =
+        formatDateTime(
+            new Date()
+        );
+
+
+    document.getElementById(
+        "suspension-reason"
+    ).innerText =
+        profile.ban_reason ||
+        "사유 미작성";
+
+
+    const untilElement =
+        document.getElementById(
+            "suspension-until"
+        );
+
+
+    if (
+        profile.ban_type === "idban" ||
+        !profile.ban_until
+    ) {
+
+        untilElement.innerHTML =
+            "영구적으로 계정이 비활성화된 상태입니다.";
+
+    } else {
+
+        const untilDate =
+            new Date(
+                profile.ban_until
+            );
+
+
+        untilElement.innerHTML =
+            `계정이 비활성화 처리가 되었습니다. ` +
+            `<span class="suspension-date">` +
+            `${formatDateTime(untilDate)}` +
+            `</span> 이후로 재활성화가 가능합니다.`;
+    }
+
+
+    /*
+     * 정지 중에는 채팅 입력을 완전히 막음
+     */
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    const sendButton =
+        document.getElementById(
+            "sendButton"
+        );
+
+    const channelSelect =
+        document.getElementById(
+            "channelSelect"
+        );
+
+    const whisperTargetInput =
+        document.getElementById(
+            "whisperTargetInput"
+        );
+
+
+    messageInput.disabled = true;
+    sendButton.disabled = true;
+    channelSelect.disabled = true;
+    whisperTargetInput.disabled = true;
+
+
+    messageInput.placeholder =
+        "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
+}
+
+
+function hideSuspensionScreen() {
+
+    isSuspended = false;
+
+    document.body.classList.remove(
+        "account-suspended"
+    );
+
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    const sendButton =
+        document.getElementById(
+            "sendButton"
+        );
+
+    const channelSelect =
+        document.getElementById(
+            "channelSelect"
+        );
+
+    const whisperTargetInput =
+        document.getElementById(
+            "whisperTargetInput"
+        );
+
+
+    messageInput.disabled = false;
+    sendButton.disabled = false;
+    channelSelect.disabled = false;
+    whisperTargetInput.disabled = false;
+}
+
+
+/* =========================================================
+   입력 검사
+========================================================= */
+
 function isValidUsername(username) {
-    return /^[a-zA-Z0-9_]+$/.test(username);
+
+    return /^[a-zA-Z0-9_]+$/.test(
+        username
+    );
 }
 
 
 function isValidNickname(nickname) {
 
-    if (nickname.length < 2 || nickname.length > 16) {
+    if (
+        nickname.length < 2 ||
+        nickname.length > 16
+    ) {
+
         return {
             valid: false,
-            msg: "닉네임은 2글자 이상 16글자 이하이어야 합니다."
+            msg:
+                "닉네임은 2글자 이상 16글자 이하이어야 합니다."
         };
     }
 
+
     if (/\s{3,}/.test(nickname)) {
+
         return {
             valid: false,
-            msg: "공백은 연속해서 최대 2개까지만 사용할 수 있습니다."
+            msg:
+                "공백은 연속해서 최대 2개까지만 사용할 수 있습니다."
         };
     }
+
 
     return {
         valid: true
@@ -836,13 +1604,28 @@ function isValidNickname(nickname) {
 }
 
 
+/* =========================================================
+   채널
+========================================================= */
+
 function handleChannelChange() {
 
+    if (isSuspended) {
+        return;
+    }
+
+
     const channel =
-        document.getElementById("channelSelect").value;
+        document.getElementById(
+            "channelSelect"
+        ).value;
+
 
     const whisperInput =
-        document.getElementById("whisperTargetInput");
+        document.getElementById(
+            "whisperTargetInput"
+        );
+
 
     whisperInput.style.display =
         channel === "whisper"
@@ -853,38 +1636,76 @@ function handleChannelChange() {
 
 function checkInputPermission() {
 
-    if (!currentUser || !currentProfile) {
+    if (isSuspended) {
+        return;
+    }
 
-        alert("로그인이 필요한 기능입니다.");
 
-        document.getElementById("messageInput").blur();
+    if (
+        !currentUser ||
+        !currentProfile
+    ) {
 
-        openModal("loginModal");
+        alert(
+            "로그인이 필요한 기능입니다."
+        );
+
+        document
+            .getElementById("messageInput")
+            .blur();
+
+        openModal(
+            "loginModal"
+        );
     }
 }
 
 
+/* =========================================================
+   회원가입
+========================================================= */
+
 async function handleSignup() {
 
     const username =
-        document.getElementById("signupUsername").value.trim();
+        document
+            .getElementById("signupUsername")
+            .value
+            .trim();
+
 
     const nickname =
-        document.getElementById("signupNickname").value;
+        document
+            .getElementById("signupNickname")
+            .value;
+
 
     const password =
-        document.getElementById("signupPassword").value;
+        document
+            .getElementById("signupPassword")
+            .value;
+
 
     const passwordConfirm =
-        document.getElementById("signupPasswordConfirm").value;
+        document
+            .getElementById("signupPasswordConfirm")
+            .value;
 
 
-    if (!username || !nickname || !password) {
-        return alert("모든 항목을 입력해 주세요.");
+    if (
+        !username ||
+        !nickname ||
+        !password
+    ) {
+
+        return alert(
+            "모든 항목을 입력해 주세요."
+        );
     }
 
 
     if (!isValidUsername(username)) {
+
         return alert(
             "아이디는 영문, 숫자, 언더바(_)만 사용할 수 있습니다."
         );
@@ -892,28 +1713,47 @@ async function handleSignup() {
 
 
     const nickCheck =
-        isValidNickname(nickname);
+        isValidNickname(
+            nickname
+        );
+
 
     if (!nickCheck.valid) {
-        return alert(nickCheck.msg);
+
+        return alert(
+            nickCheck.msg
+        );
     }
 
 
-    if (password !== passwordConfirm) {
-        return alert("비밀번호가 일치하지 않습니다.");
+    if (
+        password !==
+        passwordConfirm
+    ) {
+
+        return alert(
+            "비밀번호가 일치하지 않습니다."
+        );
     }
 
 
     if (password.length < 6) {
-        return alert("비밀번호는 최소 6자리 이상이어야 합니다.");
+
+        return alert(
+            "비밀번호는 최소 6자리 이상이어야 합니다."
+        );
     }
 
 
     const fakeEmail =
-        username.toLowerCase() + "@place.local";
+        username.toLowerCase() +
+        "@place.local";
 
 
-    const { data, error } =
+    const {
+        data,
+        error
+    } =
         await supabaseClient.auth.signUp({
             email: fakeEmail,
             password: password
@@ -921,13 +1761,19 @@ async function handleSignup() {
 
 
     if (error) {
-        return alert("가입 실패: " + error.message);
+
+        return alert(
+            "가입 실패: " +
+            error.message
+        );
     }
 
 
     if (data.user) {
 
-        const { error: profError } =
+        const {
+            error: profError
+        } =
             await supabaseClient
                 .from("profiles")
                 .insert([
@@ -952,19 +1798,31 @@ async function handleSignup() {
                 "🎉 회원가입이 완료되었습니다! 로그인해 주세요."
             );
 
-            closeModal("signupModal");
+            closeModal(
+                "signupModal"
+            );
         }
     }
 }
 
 
+/* =========================================================
+   로그인
+========================================================= */
+
 async function handleLogin() {
 
     const username =
-        document.getElementById("loginUsername").value.trim();
+        document
+            .getElementById("loginUsername")
+            .value
+            .trim();
+
 
     const password =
-        document.getElementById("loginPassword").value;
+        document
+            .getElementById("loginPassword")
+            .value;
 
 
     if (!username || !password) {
@@ -973,10 +1831,14 @@ async function handleLogin() {
 
 
     const fakeEmail =
-        username.toLowerCase() + "@place.local";
+        username.toLowerCase() +
+        "@place.local";
 
 
-    const { data, error } =
+    const {
+        data,
+        error
+    } =
         await supabaseClient.auth.signInWithPassword({
             email: fakeEmail,
             password: password
@@ -991,12 +1853,18 @@ async function handleLogin() {
 
     } else {
 
-        closeModal("loginModal");
+        closeModal(
+            "loginModal"
+        );
 
         await checkAuthStatus();
     }
 }
 
+
+/* =========================================================
+   로그아웃
+========================================================= */
 
 async function handleLogout() {
 
@@ -1006,90 +1874,125 @@ async function handleLogout() {
 }
 
 
+/* =========================================================
+   인증 상태
+========================================================= */
+
 async function checkAuthStatus() {
 
     const {
-        data: { session }
-    } = await supabaseClient.auth.getSession();
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth.getSession();
 
 
     const usernameInput =
-        document.getElementById("usernameInput");
+        document.getElementById(
+            "usernameInput"
+        );
 
     const messageInput =
-        document.getElementById("messageInput");
+        document.getElementById(
+            "messageInput"
+        );
 
     const channelSelect =
-        document.getElementById("channelSelect");
+        document.getElementById(
+            "channelSelect"
+        );
 
 
     if (session) {
 
-        currentUser = session.user;
+        currentUser =
+            session.user;
 
 
         const {
             data: profile,
             error
-        } = await supabaseClient
-            .from("profiles")
-            .select("*")
-            .eq("id", currentUser.id)
-            .single();
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+                .single();
 
 
-        if (error || !profile) {
+        if (
+            error ||
+            !profile
+        ) {
 
             console.error(
                 "프로필 불러오기 실패:",
                 error
             );
 
-        } else {
-
-            currentProfile = profile;
-
-
-            const isBanned =
-                checkBanStatus(profile);
-
-            if (isBanned) {
-                return;
-            }
-
-
-            document.getElementById("user-info").innerText =
-                "👤 " + profile.nickname + "님";
-
-
-            usernameInput.value =
-                profile.nickname;
-
-
-            /*
-             * 관리자 판별
-             *
-             * 기존:
-             * username / account_number로 관리자 판별
-             *
-             * 변경:
-             * DB의 is_admin 값으로만 판별
-             */
-
-            isAdmin =
-                profile.is_admin === true;
-
+            return;
         }
 
 
-        document.getElementById("login-btn").style.display =
+        currentProfile =
+            profile;
+
+
+        document.getElementById(
+            "user-info"
+        ).innerText =
+            "👤 " +
+            profile.nickname +
+            "님";
+
+
+        usernameInput.value =
+            profile.nickname;
+
+
+        isAdmin =
+            profile.is_admin === true;
+
+
+        document.getElementById(
+            "login-btn"
+        ).style.display =
             "none";
 
-        document.getElementById("signup-btn").style.display =
+
+        document.getElementById(
+            "signup-btn"
+        ).style.display =
             "none";
 
-        document.getElementById("logout-btn").style.display =
+
+        document.getElementById(
+            "logout-btn"
+        ).style.display =
             "inline-block";
+
+
+        /*
+         * 밴 여부 확인
+         */
+
+        const banned =
+            await checkBanStatus(
+                profile
+            );
+
+
+        if (banned) {
+            return;
+        }
+
+
+        hideSuspensionScreen();
+
 
         messageInput.placeholder =
             "메시지를 입력하세요";
@@ -1097,22 +2000,40 @@ async function checkAuthStatus() {
 
     } else {
 
-        currentUser = null;
-        currentProfile = null;
-        isAdmin = false;
+        currentUser =
+            null;
+
+        currentProfile =
+            null;
+
+        isAdmin =
+            false;
 
 
-        document.getElementById("user-info").innerText =
+        hideSuspensionScreen();
+
+
+        document.getElementById(
+            "user-info"
+        ).innerText =
             "로그인 필요";
 
 
-        document.getElementById("login-btn").style.display =
+        document.getElementById(
+            "login-btn"
+        ).style.display =
             "inline-block";
 
-        document.getElementById("signup-btn").style.display =
+
+        document.getElementById(
+            "signup-btn"
+        ).style.display =
             "inline-block";
 
-        document.getElementById("logout-btn").style.display =
+
+        document.getElementById(
+            "logout-btn"
+        ).style.display =
             "none";
 
 
@@ -1125,6 +2046,10 @@ async function checkAuthStatus() {
     }
 
 
+    /*
+     * 관리자 확성기
+     */
+
     let shoutOption =
         channelSelect.querySelector(
             "option[value='shout']"
@@ -1136,7 +2061,9 @@ async function checkAuthStatus() {
         if (!shoutOption) {
 
             shoutOption =
-                document.createElement("option");
+                document.createElement(
+                    "option"
+                );
 
             shoutOption.value =
                 "shout";
@@ -1155,16 +2082,29 @@ async function checkAuthStatus() {
             shoutOption.remove();
         }
 
-        if (channelSelect.value === "shout") {
-            channelSelect.value = "all";
+
+        if (
+            channelSelect.value ===
+            "shout"
+        ) {
+
+            channelSelect.value =
+                "all";
         }
     }
 }
 
 
-function checkBanStatus(profile) {
+/* =========================================================
+   밴 상태 확인
+========================================================= */
+
+async function checkBanStatus(profile) {
 
     if (!profile.ban_type) {
+
+        hideSuspensionScreen();
+
         return false;
     }
 
@@ -1172,87 +2112,89 @@ function checkBanStatus(profile) {
     const now =
         new Date();
 
+
     const reason =
         profile.ban_reason ||
         "사유 미작성";
 
 
+    /*
+     * 기간이 끝났으면 자동 해제
+     */
+
     if (profile.ban_until) {
 
         const banUntil =
-            new Date(profile.ban_until);
+            new Date(
+                profile.ban_until
+            );
 
 
-        if (now > banUntil) {
+        if (
+            now >= banUntil
+        ) {
 
-            supabaseClient
+            await supabaseClient
                 .from("profiles")
                 .update({
                     ban_type: null,
                     ban_until: null,
                     ban_reason: null
                 })
-                .eq("id", profile.id);
+                .eq(
+                    "id",
+                    profile.id
+                );
 
+
+            currentProfile.ban_type =
+                null;
+
+            currentProfile.ban_until =
+                null;
+
+            currentProfile.ban_reason =
+                null;
+
+
+            hideSuspensionScreen();
 
             return false;
         }
     }
 
 
-    if (profile.ban_type === "idban") {
-
-        alert(
-            `🚨 계정이 정지 당했습니다.\n사유: ${reason}`
-        );
-
-        handleLogout();
-
-        return true;
-    }
-
+    /*
+     * 일반 정지
+     */
 
     if (
+        profile.ban_type === "idban" ||
         profile.ban_type === "hardban" ||
         profile.ban_type === "softban" ||
         profile.ban_type === "ban"
     ) {
 
-        let periodMsg =
-            "일정 기간 동안";
-
-
-        if (profile.ban_type === "hardban") {
-            periodMsg = "30일 동안";
-        }
-
-        if (profile.ban_type === "softban") {
-            periodMsg = "7일 동안";
-        }
-
-        if (profile.ban_type === "ban") {
-            periodMsg = "1일 동안";
-        }
-
-
-        alert(
-            `🚨 계정이 ${periodMsg} 정지 당했습니다.\n` +
-            `사유: ${reason}\n` +
-            `해제 일시: ${new Date(profile.ban_until).toLocaleString()}`
+        showSuspensionScreen(
+            profile
         );
-
-
-        handleLogout();
 
         return true;
     }
 
 
-    if (profile.ban_type === "warning") {
+    /*
+     * 경고
+     */
+
+    if (
+        profile.ban_type === "warning"
+    ) {
 
         document.getElementById(
             "warningReasonText"
-        ).innerText = reason;
+        ).innerText =
+            reason;
 
 
         openModal(
@@ -1268,6 +2210,10 @@ function checkBanStatus(profile) {
 }
 
 
+/* =========================================================
+   경고 재활성화
+========================================================= */
+
 function toggleReactivateBtn() {
 
     const agree =
@@ -1278,7 +2224,8 @@ function toggleReactivateBtn() {
 
     document.getElementById(
         "reactivateBtn"
-    ).disabled = !agree;
+    ).disabled =
+        !agree;
 }
 
 
@@ -1289,7 +2236,9 @@ async function handleReactivateAccount() {
     }
 
 
-    const { error } =
+    const {
+        error
+    } =
         await supabaseClient
             .from("profiles")
             .update({
@@ -1297,7 +2246,10 @@ async function handleReactivateAccount() {
                 ban_reason: null,
                 ban_until: null
             })
-            .eq("id", currentUser.id);
+            .eq(
+                "id",
+                currentUser.id
+            );
 
 
     if (error) {
@@ -1321,12 +2273,14 @@ async function handleReactivateAccount() {
 
         document.getElementById(
             "warningAgreeCheckbox"
-        ).checked = false;
+        ).checked =
+            false;
 
 
         document.getElementById(
             "reactivateBtn"
-        ).disabled = true;
+        ).disabled =
+            true;
 
 
         await checkAuthStatus();
@@ -1334,7 +2288,16 @@ async function handleReactivateAccount() {
 }
 
 
+/* =========================================================
+   프로필
+========================================================= */
+
 function handleMenuProfileClick() {
+
+    if (isSuspended) {
+        return;
+    }
+
 
     if (!currentUser) {
 
@@ -1355,7 +2318,9 @@ function handleMenuProfileClick() {
 }
 
 
-async function openProfileModal(targetUserId) {
+async function openProfileModal(
+    targetUserId
+) {
 
     if (!targetUserId) {
         return;
@@ -1365,14 +2330,21 @@ async function openProfileModal(targetUserId) {
     const {
         data: profile,
         error
-    } = await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", targetUserId)
-        .single();
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq(
+                "id",
+                targetUserId
+            )
+            .single();
 
 
-    if (error || !profile) {
+    if (
+        error ||
+        !profile
+    ) {
 
         return alert(
             "프로필 정보를 불러올 수 없습니다."
@@ -1383,7 +2355,8 @@ async function openProfileModal(targetUserId) {
     document.getElementById(
         "profAccountNumber"
     ).innerText =
-        profile.account_number || "-";
+        profile.account_number ||
+        "-";
 
 
     document.getElementById(
@@ -1415,7 +2388,8 @@ async function openProfileModal(targetUserId) {
     nickBox.style.display =
         (
             currentUser &&
-            currentUser.id === profile.id
+            currentUser.id ===
+            profile.id
         )
             ? "block"
             : "none";
@@ -1427,9 +2401,18 @@ async function openProfileModal(targetUserId) {
 }
 
 
+/* =========================================================
+   닉네임 변경
+========================================================= */
+
 async function changeNickname() {
 
-    if (!currentUser || !currentProfile) {
+    if (
+        !currentUser ||
+        !currentProfile ||
+        isSuspended
+    ) {
+
         return;
     }
 
@@ -1441,6 +2424,7 @@ async function changeNickname() {
 
 
     if (!newNick) {
+
         return alert(
             "새 닉네임을 입력하세요."
         );
@@ -1448,10 +2432,13 @@ async function changeNickname() {
 
 
     const nickCheck =
-        isValidNickname(newNick);
+        isValidNickname(
+            newNick
+        );
 
 
     if (!nickCheck.valid) {
+
         return alert(
             nickCheck.msg
         );
@@ -1470,15 +2457,20 @@ async function changeNickname() {
 
     const diffMinutes =
         (
-            now - lastUpdated
-        ) / (1000 * 60);
+            now -
+            lastUpdated
+        ) /
+        (1000 * 60);
 
 
-    if (diffMinutes < 30) {
+    if (
+        diffMinutes < 30
+    ) {
 
         const remainMinutes =
             Math.ceil(
-                30 - diffMinutes
+                30 -
+                diffMinutes
             );
 
 
@@ -1489,15 +2481,22 @@ async function changeNickname() {
     }
 
 
-    const { error } =
+    const {
+        error
+    } =
         await supabaseClient
             .from("profiles")
             .update({
-                nickname: newNick,
+                nickname:
+                    newNick,
+
                 nickname_updated_at:
                     new Date().toISOString()
             })
-            .eq("id", currentUser.id);
+            .eq(
+                "id",
+                currentUser.id
+            );
 
 
     if (error) {
@@ -1516,7 +2515,8 @@ async function changeNickname() {
 
         document.getElementById(
             "newNicknameInput"
-        ).value = "";
+        ).value =
+            "";
 
 
         closeModal(
@@ -1529,11 +2529,13 @@ async function changeNickname() {
 }
 
 
-// =========================================================
-// 관리자 명령어
-// =========================================================
+/* =========================================================
+   관리자 명령어
+========================================================= */
 
-async function handleAdminCommand(fullText) {
+async function handleAdminCommand(
+    fullText
+) {
 
     if (!isAdmin) {
         return false;
@@ -1541,7 +2543,9 @@ async function handleAdminCommand(fullText) {
 
 
     const parts =
-        fullText.trim().split(/\s+/);
+        fullText
+            .trim()
+            .split(/\s+/);
 
 
     const command =
@@ -1553,7 +2557,9 @@ async function handleAdminCommand(fullText) {
 
 
     const reason =
-        parts.slice(2).join(" ") ||
+        parts
+            .slice(2)
+            .join(" ") ||
         "사유 미작성";
 
 
@@ -1582,7 +2588,11 @@ async function handleAdminCommand(fullText) {
                 "hardban",
                 new Date(
                     now.getTime() +
-                    30 * 24 * 60 * 60 * 1000
+                    30 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
                 ),
                 reason
             );
@@ -1597,7 +2607,11 @@ async function handleAdminCommand(fullText) {
                 "softban",
                 new Date(
                     now.getTime() +
-                    7 * 24 * 60 * 60 * 1000
+                    7 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
                 ),
                 reason
             );
@@ -1612,7 +2626,10 @@ async function handleAdminCommand(fullText) {
                 "ban",
                 new Date(
                     now.getTime() +
-                    1 * 24 * 60 * 60 * 1000
+                    24 *
+                    60 *
+                    60 *
+                    1000
                 ),
                 reason
             );
@@ -1647,7 +2664,10 @@ async function handleAdminCommand(fullText) {
                 targetUser,
                 new Date(
                     now.getTime() +
-                    6 * 60 * 60 * 1000
+                    6 *
+                    60 *
+                    60 *
+                    1000
                 ),
                 reason
             );
@@ -1661,7 +2681,11 @@ async function handleAdminCommand(fullText) {
                 targetUser,
                 new Date(
                     now.getTime() +
-                    3 * 24 * 60 * 60 * 1000
+                    3 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
                 ),
                 reason
             );
@@ -1675,7 +2699,11 @@ async function handleAdminCommand(fullText) {
                 targetUser,
                 new Date(
                     now.getTime() +
-                    7 * 24 * 60 * 60 * 1000
+                    7 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
                 ),
                 reason
             );
@@ -1689,7 +2717,11 @@ async function handleAdminCommand(fullText) {
                 targetUser,
                 new Date(
                     now.getTime() +
-                    365 * 24 * 60 * 60 * 1000
+                    365 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
                 ),
                 reason
             );
@@ -1714,9 +2746,9 @@ async function handleAdminCommand(fullText) {
 }
 
 
-// =========================================================
-// 밴 처리
-// =========================================================
+/* =========================================================
+   밴 적용
+========================================================= */
 
 async function updateBan(
     targetUsername,
@@ -1733,16 +2765,52 @@ async function updateBan(
     }
 
 
-    const { error } =
+    const {
+        data: targetProfile,
+        error: findError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("id, username")
+            .eq(
+                "username",
+                targetUsername
+            )
+            .maybeSingle();
+
+
+    if (findError) {
+
+        return alert(
+            "대상 계정을 찾는 중 오류가 발생했습니다."
+        );
+    }
+
+
+    if (!targetProfile) {
+
+        return alert(
+            `'${targetUsername}' 사용자를 찾을 수 없습니다.`
+        );
+    }
+
+
+    const {
+        error
+    } =
         await supabaseClient
             .from("profiles")
             .update({
-                ban_type: banType,
+                ban_type:
+                    banType,
+
                 ban_until:
                     banUntil
                         ? banUntil.toISOString()
                         : null,
-                ban_reason: reason
+
+                ban_reason:
+                    reason
             })
             .eq(
                 "username",
@@ -1757,21 +2825,76 @@ async function updateBan(
             error.message
         );
 
-    } else {
-
-        alert(
-            `🚨 [${targetUsername}] 유저에게 ` +
-            `[${banType}] 제재를 적용했습니다.`
-        );
+        return;
     }
+
+
+    /*
+     * 현재 로그인한 계정을 직접 정지한 경우
+     * 즉시 정지 화면을 보여줌
+     */
+
+    if (
+        currentUser &&
+        currentUser.id ===
+        targetProfile.id
+    ) {
+
+        currentProfile.ban_type =
+            banType;
+
+        currentProfile.ban_until =
+            banUntil
+                ? banUntil.toISOString()
+                : null;
+
+        currentProfile.ban_reason =
+            reason;
+
+
+        if (
+            banType === "idban" ||
+            banType === "hardban" ||
+            banType === "softban" ||
+            banType === "ban"
+        ) {
+
+            showSuspensionScreen(
+                currentProfile
+            );
+
+        } else if (
+            banType === "warning"
+        ) {
+
+            document.getElementById(
+                "warningReasonText"
+            ).innerText =
+                reason;
+
+            openModal(
+                "warningModal"
+            );
+        }
+
+        return;
+    }
+
+
+    alert(
+        `🚨 [${targetUsername}] 유저에게 ` +
+        `[${banType}] 제재를 적용했습니다.`
+    );
 }
 
 
-// =========================================================
-// 밴 해제
-// =========================================================
+/* =========================================================
+   밴 해제
+========================================================= */
 
-async function unbanUser(targetUsername) {
+async function unbanUser(
+    targetUsername
+) {
 
     if (!targetUsername) {
 
@@ -1784,14 +2907,15 @@ async function unbanUser(targetUsername) {
     const {
         data: target,
         error: findError
-    } = await supabaseClient
-        .from("profiles")
-        .select("username")
-        .eq(
-            "username",
-            targetUsername
-        )
-        .maybeSingle();
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("id, username")
+            .eq(
+                "username",
+                targetUsername
+            )
+            .maybeSingle();
 
 
     if (findError) {
@@ -1814,7 +2938,9 @@ async function unbanUser(targetUsername) {
     }
 
 
-    const { error } =
+    const {
+        error
+    } =
         await supabaseClient
             .from("profiles")
             .update({
@@ -1844,13 +2970,33 @@ async function unbanUser(targetUsername) {
         alert(
             `🔓 [${targetUsername}] 유저의 밴을 해제했습니다.`
         );
+
+
+        if (
+            currentUser &&
+            currentUser.id ===
+            target.id
+        ) {
+
+            currentProfile.ban_type =
+                null;
+
+            currentProfile.ban_until =
+                null;
+
+            currentProfile.ban_reason =
+                null;
+
+
+            await checkAuthStatus();
+        }
     }
 }
 
 
-// =========================================================
-// 채팅 잠금
-// =========================================================
+/* =========================================================
+   채팅 잠금
+========================================================= */
 
 async function updateChatlock(
     targetUsername,
@@ -1866,7 +3012,9 @@ async function updateChatlock(
     }
 
 
-    const { error } =
+    const {
+        error
+    } =
         await supabaseClient
             .from("profiles")
             .update({
@@ -1899,21 +3047,30 @@ async function updateChatlock(
 }
 
 
-// =========================================================
-// 채팅 소프트 청소
-// =========================================================
+/* =========================================================
+   채팅 청소
+========================================================= */
 
 async function cleanAllChatSoft() {
 
-    const { error } =
+    const {
+        error
+    } =
         await supabaseClient
             .from("chats")
             .insert([
                 {
-                    username: "SYSTEM",
-                    message: "__CHAT_CLEARED__",
-                    channel: "all",
-                    map: CURRENT_MAP_NAME
+                    username:
+                        "SYSTEM",
+
+                    message:
+                        "__CHAT_CLEARED__",
+
+                    channel:
+                        "all",
+
+                    map:
+                        CURRENT_MAP_NAME
                 }
             ]);
 
@@ -1935,25 +3092,26 @@ async function cleanAllChatSoft() {
 }
 
 
-// =========================================================
-// 채팅 불러오기
-// =========================================================
+/* =========================================================
+   채팅 불러오기
+========================================================= */
 
 async function loadMessages() {
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from("chats")
-        .select("*")
-        .order(
-            "id",
-            {
-                ascending: true
-            }
-        )
-        .limit(100);
+    } =
+        await supabaseClient
+            .from("chats")
+            .select("*")
+            .order(
+                "id",
+                {
+                    ascending: true
+                }
+            )
+            .limit(100);
 
 
     if (!error && data) {
@@ -1988,9 +3146,7 @@ async function loadMessages() {
 
 
         const visibleMessages =
-            (
-                lastClearedIndex !== -1
-            )
+            lastClearedIndex !== -1
                 ? data.slice(
                     lastClearedIndex + 1
                 )
@@ -2041,7 +3197,8 @@ function processAndAppendMessage(msg) {
 
 
     const channel =
-        msg.channel || "all";
+        msg.channel ||
+        "all";
 
 
     if (
@@ -2060,25 +3217,30 @@ function processAndAppendMessage(msg) {
 
         const myUsername =
             currentProfile
-                ? currentProfile.username.toLowerCase()
+                ? currentProfile.username
+                    .toLowerCase()
                 : "";
 
 
         const senderUsername =
             msg.sender_username
-                ? msg.sender_username.toLowerCase()
+                ? msg.sender_username
+                    .toLowerCase()
                 : "";
 
 
         const targetUsername =
             msg.target_username
-                ? msg.target_username.toLowerCase()
+                ? msg.target_username
+                    .toLowerCase()
                 : "";
 
 
         if (
-            myUsername !== senderUsername &&
-            myUsername !== targetUsername
+            myUsername !==
+            senderUsername &&
+            myUsername !==
+            targetUsername
         ) {
 
             return;
@@ -2183,19 +3345,43 @@ function appendMessageUI(
 function escapeHtml(text) {
 
     return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
-// =========================================================
-// 메시지 전송
-// =========================================================
+/* =========================================================
+   메시지 전송
+========================================================= */
 
 async function sendMessage() {
+
+    /*
+     * 정지 계정은 무조건 차단
+     */
+
+    if (isSuspended) {
+        return;
+    }
+
 
     if (
         !currentUser ||
@@ -2248,28 +3434,42 @@ async function sendMessage() {
         whisperTargetInput.value.trim();
 
 
-    if (text === "") {
+    if (
+        text === ""
+    ) {
+
         return;
     }
 
 
-    // 운영자 명령어 처리
-    if (text.startsWith("/")) {
+    /*
+     * 관리자 명령어
+     */
+
+    if (
+        text.startsWith("/")
+    ) {
 
         const executed =
-            await handleAdminCommand(text);
+            await handleAdminCommand(
+                text
+            );
 
 
         if (executed) {
 
-            input.value = "";
+            input.value =
+                "";
 
             return;
         }
     }
 
 
-    // 채팅 잠금 확인
+    /*
+     * 채팅 잠금
+     */
+
     if (
         currentProfile.chatlock_until
     ) {
@@ -2281,7 +3481,8 @@ async function sendMessage() {
 
 
         if (
-            new Date() < lockUntil
+            new Date() <
+            lockUntil
         ) {
 
             const reason =
@@ -2349,7 +3550,9 @@ async function sendMessage() {
     }
 
 
-    const { error } =
+    const {
+        error
+    } =
         await supabaseClient
             .from("chats")
             .insert([
@@ -2367,8 +3570,14 @@ async function sendMessage() {
 }
 
 
+/* =========================================================
+   엔터 채팅
+========================================================= */
+
 document
-    .getElementById("messageInput")
+    .getElementById(
+        "messageInput"
+    )
     .addEventListener(
         "keydown",
         (e) => {
@@ -2383,14 +3592,16 @@ document
     );
 
 
-// =========================================================
-// 실시간 채팅
-// =========================================================
+/* =========================================================
+   실시간 채팅
+========================================================= */
 
 function subscribeRealtime() {
 
     supabaseClient
-        .channel("public:chats")
+        .channel(
+            "public:chats"
+        )
 
         .on(
             "postgres_changes",
@@ -2402,6 +3613,15 @@ function subscribeRealtime() {
 
             payload => {
 
+                /*
+                 * 정지 상태에서는 채팅을 표시할 필요 없음
+                 */
+
+                if (isSuspended) {
+                    return;
+                }
+
+
                 processAndAppendMessage(
                     payload.new
                 );
@@ -2412,9 +3632,9 @@ function subscribeRealtime() {
 }
 
 
-// =========================================================
-// 접속자 수
-// =========================================================
+/* =========================================================
+   접속자
+========================================================= */
 
 function trackPresence() {
 
@@ -2437,7 +3657,9 @@ function trackPresence() {
 
 
             const count =
-                Object.keys(state).length;
+                Object.keys(
+                    state
+                ).length;
 
 
             document.getElementById(
@@ -2449,7 +3671,8 @@ function trackPresence() {
             document.getElementById(
                 "side-online-text"
             ).innerText =
-                count + " users online";
+                count +
+                " users online";
         }
     );
 
@@ -2458,7 +3681,8 @@ function trackPresence() {
         async status => {
 
             if (
-                status === "SUBSCRIBED"
+                status ===
+                "SUBSCRIBED"
             ) {
 
                 await room.track({
@@ -2471,9 +3695,9 @@ function trackPresence() {
 }
 
 
-// =========================================================
-// 시작
-// =========================================================
+/* =========================================================
+   시작
+========================================================= */
 
 window.onload = () => {
 
@@ -2487,7 +3711,16 @@ window.onload = () => {
 };
 
 
+/* =========================================================
+   숨겨진 장소
+========================================================= */
+
 function goToRoom() {
+
+    if (isSuspended) {
+        return;
+    }
+
 
     location.href =
         "room.html";
