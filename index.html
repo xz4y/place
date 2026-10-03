@@ -244,6 +244,7 @@ body {
     border: 2px outset #eeeeee;
 
     cursor: pointer;
+    text-decoration: none;
 }
 
 #secret:active {
@@ -385,10 +386,10 @@ a {
     </div>
 
     <div id="menu">
-        <a href="#" class="menu-button">HOME</a>
-        <a href="#" class="menu-button">WORLD</a>
-        <a href="#" class="menu-button">CHAT</a>
-        <a href="#" class="menu-button">ABOUT</a>
+        <a href="index.html" class="menu-button">HOME</a>
+        <a href="#world" class="menu-button">WORLD</a>
+        <a href="#chat-section" class="menu-button">CHAT</a>
+        <a href="#about" class="menu-button">ABOUT</a>
     </div>
 
     <div id="notice">
@@ -439,7 +440,8 @@ a {
                             <div class="character-head"></div>
                         </div>
 
-                        <button id="secret" onclick="discoverPlace()">
+                        <!-- 클릭 시 room.html 페이지로 직접 이동 -->
+                        <button id="secret" onclick="goToRoom()">
                             숨겨진 장소
                         </button>
 
@@ -449,7 +451,7 @@ a {
 
             </div>
 
-            <div class="section">
+            <div class="section" id="chat-section">
 
                 <div class="section-title">
                     CHAT
@@ -519,10 +521,9 @@ a {
                 </div>
 
                 <div class="side-content">
-                    <a href="#">Home</a><br>
-                    <a href="#">World</a><br>
-                    <a href="#">Messages</a><br>
-                    <a href="#">Guestbook</a>
+                    <a href="index.html">Home</a><br>
+                    <a href="#world">World</a><br>
+                    <a href="room.html">오래된 방</a><br>
                 </div>
 
             </div>
@@ -578,13 +579,8 @@ document
 
     });
 
-function discoverPlace() {
-
-    alert(
-        "숨겨진 장소를 발견했습니다.\n\n" +
-        "아직 아무도 이곳에 글을 남기지 않았습니다."
-    );
-
+function goToRoom() {
+    location.href = "room.html";
 }
 
 </script>
