@@ -42,6 +42,7 @@ body {
     border: 1px outset #eee; font-size: 11px; cursor: pointer; color: #222;
 }
 .auth-btn:active { border-style: inset; }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 #menu { height: 27px; background: #eeeeee; border-bottom: 1px solid #999; padding-left: 8px; }
 
@@ -54,7 +55,7 @@ body {
 
 #notice {
     margin: 10px; padding: 8px; border: 1px solid #d4a300; background: #fffde6;
-    color: #333; display: flex; justify-between: space-between;
+    color: #333; display: flex; justify-content: space-between;
 }
 
 #main { display: flex; gap: 10px; padding: 10px; }
@@ -308,6 +309,26 @@ select, input { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
     </div>
 </div>
 
+<!-- /warning 경고 / 계정 비활성화 모달 -->
+<div id="warningModal" class="modal">
+    <div class="modal-content" style="border-color: #d9381e;">
+        <div class="modal-header" style="color: #d9381e;">⚠️ 계정이 잠겼습니다</div>
+        <p style="font-size: 12px; line-height: 1.5; color: #333;">
+            운영 정책 위반 또는 경고 조치로 인해 계정이 일시적으로 비활성화되었습니다.<br><br>
+            <b>사유:</b> <span id="warningReasonText" style="color: #d9381e; font-weight: bold;">-</span>
+        </p>
+        <div style="margin-top: 15px; font-size: 11px;">
+            <label style="cursor: pointer;">
+                <input type="checkbox" id="warningAgreeCheckbox" onchange="toggleReactivateBtn()">
+                위 내용을 확인하였으며, 이에 동의합니다.
+            </label>
+        </div>
+        <div class="modal-buttons" style="margin-top: 15px;">
+            <button class="auth-btn" id="reactivateBtn" onclick="handleReactivateAccount()" disabled>재활성화</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const SUPABASE_URL = "https://exeoqvfidmtmnwqejyvg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
@@ -409,6 +430,7 @@ async function handleLogout() {
     checkAuthStatus();
 }
 
+// 로그인 및 계정 제재 상태 체크 함수
 async function checkAuthStatus() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     const usernameInput = document.getElementById("usernameInput");
@@ -426,9 +448,16 @@ async function checkAuthStatus() {
 
         if (profile) {
             currentProfile = profile;
+
+            // 🚫 계정 밴/제재 검사
+            const isBanned = checkBanStatus(profile);
+            if (isBanned) return; // 밴 상태일 경우 로그인 절차 중단
+
             document.getElementById("user-info").innerText = "👤 " + profile.nickname + "님";
             usernameInput.value = profile.nickname;
-            isAdmin = (profile.username.toLowerCase() === 'admin' || profile.account_number === 1);
+            
+            // 관리자 조건: username === 'place' 또는 account_number === 1
+            isAdmin = (profile.username.toLowerCase() === 'place' || profile.username.toLowerCase() === 'admin' || profile.account_number === 1);
         }
 
         document.getElementById("login-btn").style.display = "none";
@@ -458,6 +487,70 @@ async function checkAuthStatus() {
     } else {
         if (shoutOption) shoutOption.remove();
         if (channelSelect.value === "shout") channelSelect.value = "all";
+    }
+}
+
+// 제재 상태 검사 로직 (/idban, /hardban, /softban, /ban, /warning)
+function checkBanStatus(profile) {
+    if (!profile.ban_type) return false;
+
+    const now = new Date();
+    const reason = profile.ban_reason || "사유 미작성";
+
+    // 기간제 밴 검사
+    if (profile.ban_until) {
+        const banUntil = new Date(profile.ban_until);
+        if (now > banUntil) {
+            // 제재 기간이 경과했으면 자동 해제
+            supabaseClient.from('profiles').update({ ban_type: null, ban_until: null, ban_reason: null }).eq('id', profile.id);
+            return false;
+        }
+    }
+
+    if (profile.ban_type === 'idban') {
+        alert(`🚨 계정이 정지 당했습니다.\n사유: ${reason}`);
+        handleLogout();
+        return true;
+    } else if (profile.ban_type === 'hardban' || profile.ban_type === 'softban' || profile.ban_type === 'ban') {
+        let periodMsg = "일정 기간 동안";
+        if (profile.ban_type === 'hardban') periodMsg = "30일 동안";
+        if (profile.ban_type === 'softban') periodMsg = "7일 동안";
+        if (profile.ban_type === 'ban') periodMsg = "1일 동안";
+
+        alert(`🚨 계정이 ${periodMsg} 정지 당했습니다.\n사유: ${reason}\n해제 일시: ${new Date(profile.ban_until).toLocaleString()}`);
+        handleLogout();
+        return true;
+    } else if (profile.ban_type === 'warning') {
+        document.getElementById("warningReasonText").innerText = reason;
+        openModal("warningModal");
+        return true;
+    }
+
+    return false;
+}
+
+// /warning 계정 재활성화 관련 로직
+function toggleReactivateBtn() {
+    const agree = document.getElementById("warningAgreeCheckbox").checked;
+    document.getElementById("reactivateBtn").disabled = !agree;
+}
+
+async function handleReactivateAccount() {
+    if (!currentUser) return;
+
+    const { error } = await supabaseClient
+        .from('profiles')
+        .update({ ban_type: null, ban_reason: null, ban_until: null })
+        .eq('id', currentUser.id);
+
+    if (error) {
+        alert("재활성화 오류: " + error.message);
+    } else {
+        alert("계정이 재활성화되었습니다.");
+        closeModal("warningModal");
+        document.getElementById("warningAgreeCheckbox").checked = false;
+        document.getElementById("reactivateBtn").disabled = true;
+        checkAuthStatus();
     }
 }
 
@@ -528,6 +621,110 @@ async function changeNickname() {
     }
 }
 
+// ==========================================
+// 관리자 명령어 및 제재 실행 핸들러
+// ==========================================
+async function handleAdminCommand(fullText) {
+    if (!isAdmin) return false;
+
+    const parts = fullText.trim().split(" ");
+    const command = parts[0];
+    const targetUser = parts[1];
+    const reason = parts.slice(2).join(" ") || "사유 미작성";
+
+    const now = new Date();
+
+    switch (command) {
+        // 계정 제재
+        case '/idban':
+            await updateBan(targetUser, 'idban', null, reason);
+            break;
+        case '/hardban': // 30일
+            await updateBan(targetUser, 'hardban', new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000), reason);
+            break;
+        case '/softban': // 7일
+            await updateBan(targetUser, 'softban', new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), reason);
+            break;
+        case '/ban': // 1일
+            await updateBan(targetUser, 'ban', new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000), reason);
+            break;
+        case '/warning':
+            await updateBan(targetUser, 'warning', null, reason);
+            break;
+
+        // 채팅 정지
+        case '/chatlock': // 6시간
+            await updateChatlock(targetUser, new Date(now.getTime() + 6 * 60 * 60 * 1000), reason);
+            break;
+        case '/softchatlock': // 3일
+            await updateChatlock(targetUser, new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), reason);
+            break;
+        case '/hardchatlock': // 7일
+            await updateChatlock(targetUser, new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000), reason);
+            break;
+        case '/0chatlock': // 365일
+            await updateChatlock(targetUser, new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000), reason);
+            break;
+
+        // 채팅 전체 클리어
+        case '/cleanchat':
+            await cleanAllChat();
+            break;
+
+        default:
+            return false;
+    }
+
+    return true;
+}
+
+async function updateBan(targetUsername, banType, banUntil, reason) {
+    if (!targetUsername) return alert("대상 아이디를 입력하세요. 예: /idban testuser 사유");
+
+    const { error } = await supabaseClient
+        .from('profiles')
+        .update({
+            ban_type: banType,
+            ban_until: banUntil ? banUntil.toISOString() : null,
+            ban_reason: reason
+        })
+        .eq('username', targetUsername);
+
+    if (error) {
+        alert("제재 처리 실패: " + error.message);
+    } else {
+        alert(`🚨 [${targetUsername}] 유저에게 [${banType}] 제재를 적용했습니다.`);
+    }
+}
+
+async function updateChatlock(targetUsername, lockUntil, reason) {
+    if (!targetUsername) return alert("대상 아이디를 입력하세요. 예: /chatlock testuser 사유");
+
+    const { error } = await supabaseClient
+        .from('profiles')
+        .update({
+            chatlock_until: lockUntil.toISOString(),
+            chatlock_reason: reason
+        })
+        .eq('username', targetUsername);
+
+    if (error) {
+        alert("채팅 정지 실패: " + error.message);
+    } else {
+        alert(`🤐 [${targetUsername}] 유저에게 채팅 정지를 적용했습니다.`);
+    }
+}
+
+async function cleanAllChat() {
+    const { error } = await supabaseClient.from('chats').delete().neq('id', 0);
+    if (error) {
+        alert("채팅 청소 실패: " + error.message);
+    } else {
+        document.getElementById("messages").innerHTML = '<div class="message"><span class="message-name">SYSTEM</span> : 채팅창이 청소되었습니다.</div>';
+        alert("🧹 모든 채팅 메시지를 청소했습니다.");
+    }
+}
+
 async function loadMessages() {
     const { data, error } = await supabaseClient
         .from('chats')
@@ -584,7 +781,6 @@ function escapeHtml(text) {
 }
 
 async function sendMessage() {
-    // 비로그인 사용자는 전송 차단
     if (!currentUser || !currentProfile) {
         alert("로그인이 필요한 기능입니다.");
         openModal("loginModal");
@@ -601,6 +797,25 @@ async function sendMessage() {
     const targetUsername = whisperTargetInput.value.trim();
 
     if (text === "") return;
+
+    // 💡 1. 관리자 명령어 처리 시도
+    if (text.startsWith("/")) {
+        const executed = await handleAdminCommand(text);
+        if (executed) {
+            input.value = "";
+            return;
+        }
+    }
+
+    // 💡 2. 채팅 정지 (chatlock) 상태 체크
+    if (currentProfile.chatlock_until) {
+        const lockUntil = new Date(currentProfile.chatlock_until);
+        if (new Date() < lockUntil) {
+            const reason = currentProfile.chatlock_reason || "사유 미작성";
+            alert(`🤐 채팅이 정지된 상태입니다.\n사유: ${reason}\n해제 일시: ${lockUntil.toLocaleString()}`);
+            return;
+        }
+    }
 
     if (channel === "whisper" && !targetUsername) {
         alert("귓속말할 상대방의 아이디를 입력해 주세요.");
@@ -633,6 +848,10 @@ function subscribeRealtime() {
         .channel('public:chats')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chats' }, payload => {
             processAndAppendMessage(payload.new);
+        })
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'chats' }, () => {
+            // /cleanchat 명령으로 채팅이 전량 삭제되었을 때의 실시간 동기화
+            document.getElementById("messages").innerHTML = '<div class="message"><span class="message-name">SYSTEM</span> : 채팅창이 청소되었습니다.</div>';
         })
         .subscribe();
 }
