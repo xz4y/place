@@ -3,14 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>PLACE - 작은 장소</title>
 
-<!-- Supabase JS 라이브러리 불러오기 -->
+<!-- Supabase JS 라이브러리 -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 html, body {
     margin: 0;
     padding: 0;
@@ -27,8 +25,6 @@ body {
     background-size: 8px 8px;
 }
 
-/* 전체 사이트 */
-
 #site {
     width: 760px;
     margin: 25px auto;
@@ -36,8 +32,6 @@ body {
     border: 1px solid #555;
     box-shadow: 2px 2px 0 #888;
 }
-
-/* 위쪽 */
 
 #top {
     height: 70px;
@@ -48,340 +42,106 @@ body {
 }
 
 #title {
-    position: absolute;
-    left: 18px;
-    top: 12px;
-    font-size: 28px;
-    font-weight: bold;
-    letter-spacing: -1px;
+    position: absolute; left: 18px; top: 12px; font-size: 28px; font-weight: bold; letter-spacing: -1px;
+}
+#subtitle { position: absolute; left: 20px; top: 45px; font-size: 11px; }
+
+/* Auth 상태 바 */
+#auth-bar {
+    position: absolute; right: 15px; top: 18px; display: flex; gap: 6px; align-items: center;
 }
 
-#subtitle {
-    position: absolute;
-    left: 20px;
-    top: 45px;
-    font-size: 11px;
+.auth-btn {
+    padding: 3px 8px; background: linear-gradient(#ffffff, #cccccc);
+    border: 1px outset #eee; font-size: 11px; cursor: pointer; color: #222;
 }
-
-/* 메뉴 */
+.auth-btn:active { border-style: inset; }
 
 #menu {
-    height: 27px;
-    background: #eeeeee;
-    border-bottom: 1px solid #999;
-    padding-left: 8px;
+    height: 27px; background: #eeeeee; border-bottom: 1px solid #999; padding-left: 8px;
 }
 
 .menu-button {
-    display: inline-block;
-    margin-top: 4px;
-    margin-right: 3px;
-    padding: 3px 12px;
-
-    color: #222;
-    text-decoration: none;
-
-    background: linear-gradient(#ffffff, #cfcfcf);
-    border: 1px solid #777;
-    border-radius: 2px;
-
-    box-shadow:
-        inset 1px 1px 0 white,
-        inset -1px -1px 0 #aaa;
+    display: inline-block; margin-top: 4px; margin-right: 3px; padding: 3px 12px;
+    color: #222; text-decoration: none; background: linear-gradient(#ffffff, #cfcfcf);
+    border: 1px solid #777; border-radius: 2px; box-shadow: inset 1px 1px 0 white, inset -1px -1px 0 #aaa;
 }
-
-.menu-button:active {
-    background: #cccccc;
-    box-shadow: inset 1px 1px 2px #777;
-}
-
-/* 안내 */
 
 #notice {
-    margin: 10px;
-    padding: 6px 8px;
-
-    border: 1px solid #999;
-    background: #ffffcc;
-
-    color: #444;
+    margin: 10px; padding: 8px; border: 1px solid #d4a300; background: #fffde6;
+    color: #333; display: flex; justify-content: space-between;
 }
 
-#notice a {
-    color: #0000cc;
-    text-decoration: underline;
-}
-
-/* 메인 */
-
-#main {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-}
-
-/* 왼쪽 */
-
-#left {
-    width: 500px;
-}
+#main { display: flex; gap: 10px; padding: 10px; }
+#left { width: 500px; }
 
 .section-title {
-    height: 22px;
-    line-height: 22px;
-
-    padding-left: 8px;
-
-    color: white;
-    font-weight: bold;
-
-    background: linear-gradient(#6f9bc2, #3c6b99);
-
-    border: 1px solid #345979;
+    height: 22px; line-height: 22px; padding-left: 8px; color: white; font-weight: bold;
+    background: linear-gradient(#6f9bc2, #3c6b99); border: 1px solid #345979;
 }
 
-.section {
-    margin-bottom: 10px;
-    border: 1px solid #999;
-    background: #f7f7f7;
-}
-
-/* 맵 */
+.section { margin-bottom: 10px; border: 1px solid #999; background: #f7f7f7; }
 
 #world {
-    height: 350px;
-    position: relative;
-    overflow: hidden;
-
-    background: #9fbd7f;
-
-    border: 3px inset #888;
+    height: 350px; position: relative; overflow: hidden; background: #9fbd7f; border: 3px inset #888;
 }
 
-.tree {
-    position: absolute;
-    width: 35px;
-    height: 55px;
-}
-
-.tree-top {
-    position: absolute;
-
-    width: 35px;
-    height: 35px;
-
-    background: #3f7b35;
-
-    border: 2px solid #275224;
-
-    border-radius: 50% 50% 45% 45%;
-}
-
-.tree-trunk {
-    position: absolute;
-
-    left: 13px;
-    top: 34px;
-
-    width: 9px;
-    height: 20px;
-
-    background: #76502f;
-
-    border-left: 2px solid #57391f;
-    border-right: 2px solid #57391f;
-}
-
+.tree { position: absolute; width: 35px; height: 55px; }
+.tree-top { position: absolute; width: 35px; height: 35px; background: #3f7b35; border: 2px solid #275224; border-radius: 50% 50% 45% 45%; }
+.tree-trunk { position: absolute; left: 13px; top: 34px; width: 9px; height: 20px; background: #76502f; border-left: 2px solid #57391f; border-right: 2px solid #57391f; }
 .tree1 { left: 35px; top: 30px; }
 .tree2 { right: 50px; top: 65px; }
 .tree3 { left: 100px; bottom: 30px; }
 .tree4 { right: 150px; bottom: 55px; }
 .tree5 { left: 240px; top: 100px; }
 
-.character {
-    position: absolute;
-
-    left: 50%;
-    top: 48%;
-
-    width: 18px;
-    height: 30px;
-
-    background: #333;
-
-    border: 2px solid #111;
-
-    transform: translate(-50%, -50%);
-}
-
-.character-head {
-    position: absolute;
-
-    left: 3px;
-    top: -13px;
-
-    width: 10px;
-    height: 10px;
-
-    background: #e0b08c;
-
-    border: 1px solid #774f3b;
-}
-
-/* 숨겨진 장소 */
+.character { position: absolute; left: 50%; top: 48%; width: 18px; height: 30px; background: #333; border: 2px solid #111; transform: translate(-50%, -50%); }
+.character-head { position: absolute; left: 3px; top: -13px; width: 10px; height: 10px; background: #e0b08c; border: 1px solid #774f3b; }
 
 #secret {
-    position: absolute;
-
-    right: 45px;
-    top: 160px;
-
-    padding: 7px 10px;
-
-    font-size: 11px;
-
-    color: #222;
-
-    background: linear-gradient(#ffffff, #cccccc);
-
-    border: 2px outset #eeeeee;
-
-    cursor: pointer;
+    position: absolute; right: 45px; top: 160px; padding: 7px 10px; font-size: 11px;
+    color: #222; background: linear-gradient(#ffffff, #cccccc); border: 2px outset #eeeeee; cursor: pointer;
 }
-
-#secret:active {
-    border-style: inset;
-}
-
-/* 채팅 */
 
 #messages {
-    height: 145px;
-
-    margin: 8px;
-
-    overflow-y: auto;
-
-    background: white;
-
-    border: 2px inset #aaa;
-
-    padding: 6px;
-
-    font-size: 12px;
+    height: 145px; margin: 8px; overflow-y: auto; background: white; border: 2px inset #aaa; padding: 6px; font-size: 12px;
 }
 
-.message {
-    margin-bottom: 5px;
-}
+.message { margin-bottom: 5px; }
+.message-name { color: #003399; font-weight: bold; cursor: pointer; }
+.message-name:hover { text-decoration: underline; }
 
-.message-name {
-    color: #003399;
-    font-weight: bold;
-}
-
-/* 입력 */
-
-#chat-input {
-    display: flex;
-    padding: 0 8px 8px 8px;
-    gap: 4px;
-}
-
-#usernameInput {
-    width: 70px;
-    height: 24px;
-    border: 2px inset #aaa;
-    padding: 2px 5px;
-    font-size: 12px;
-}
-
-#messageInput {
-    flex: 1;
-
-    height: 24px;
-
-    border: 2px inset #aaa;
-
-    padding: 2px 5px;
-
-    font-size: 12px;
-}
+#chat-input { display: flex; padding: 0 8px 8px 8px; gap: 4px; }
+#usernameInput, #messageInput { border: 2px inset #aaa; padding: 2px 5px; font-size: 12px; }
+#usernameInput { width: 80px; }
+#messageInput { flex: 1; }
 
 #sendButton {
-    height: 30px;
-
-    padding: 0 14px;
-
-    background: linear-gradient(#ffffff, #cccccc);
-
-    border: 2px outset #eeeeee;
-
-    cursor: pointer;
+    height: 30px; padding: 0 14px; background: linear-gradient(#ffffff, #cccccc);
+    border: 2px outset #eeeeee; cursor: pointer;
 }
 
-#sendButton:active {
-    border-style: inset;
+#right { width: 210px; }
+.side-box { margin-bottom: 10px; border: 1px solid #888; background: #eeeeee; }
+.side-title { padding: 5px; color: white; font-weight: bold; background: linear-gradient(#777777, #444444); }
+.side-content { padding: 8px; line-height: 1.6; }
+.online { color: green; font-weight: bold; }
+
+#footer { padding: 12px; text-align: center; border-top: 1px solid #999; background: #eeeeee; color: #666; font-size: 11px; }
+
+/* 팝업 모달 */
+.modal {
+    display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4);
 }
-
-/* 오른쪽 */
-
-#right {
-    width: 210px;
+.modal-content {
+    background-color: #fefefe; margin: 10% auto; padding: 15px; border: 2px solid #555; width: 300px; box-shadow: 3px 3px 0 #333;
 }
-
-.side-box {
-    margin-bottom: 10px;
-
-    border: 1px solid #888;
-
-    background: #eeeeee;
-}
-
-.side-title {
-    padding: 5px;
-
-    color: white;
-    font-weight: bold;
-
-    background: linear-gradient(#777777, #444444);
-}
-
-.side-content {
-    padding: 8px;
-    line-height: 1.6;
-}
-
-.online {
-    color: green;
-    font-weight: bold;
-}
-
-/* 하단 */
-
-#footer {
-    padding: 12px;
-
-    text-align: center;
-
-    border-top: 1px solid #999;
-
-    background: #eeeeee;
-
-    color: #666;
-
-    font-size: 11px;
-}
-
-#counter {
-    margin-top: 5px;
-    color: #888;
-}
-
-a {
-    color: #0000cc;
-}
-
+.modal-header { font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+.form-group { margin-bottom: 8px; }
+.form-group label { display: block; margin-bottom: 3px; font-weight: bold; font-size: 11px; }
+.form-group input { width: 93%; padding: 4px; border: 1px solid #777; font-size: 12px; }
+.modal-buttons { text-align: right; margin-top: 12px; }
+.profile-row { margin-bottom: 8px; line-height: 1.5; }
 </style>
 </head>
 
@@ -392,6 +152,14 @@ a {
     <div id="top">
         <div id="title">PLACE</div>
         <div id="subtitle">어딘가에 존재하는 작은 장소</div>
+        
+        <div id="auth-bar">
+            <span id="user-info" style="font-size:11px; color:#fff;">로그인 필요</span>
+            <button class="auth-btn" id="login-btn" onclick="openModal('loginModal')">로그인</button>
+            <button class="auth-btn" id="signup-btn" onclick="openModal('signupModal')">회원가입</button>
+            <button class="auth-btn" id="profile-btn" onclick="openProfileModal()" style="display:none;">내 프로필</button>
+            <button class="auth-btn" id="logout-btn" onclick="handleLogout()" style="display:none;">로그아웃</button>
+        </div>
     </div>
 
     <div id="menu">
@@ -402,160 +170,355 @@ a {
     </div>
 
     <div id="notice">
-        현재 이곳에는 <b id="user-count">1명</b>이 접속해 있습니다.
-        <a href="#">이용 안내</a>
+        <div>📢 <span id="notice-text">환영합니다! 아이디를 만들어 보세요.</span></div>
+        <div style="font-size:11px; color:#666;">접속자: <b id="user-count">1명</b></div>
     </div>
 
     <div id="main">
 
         <div id="left">
-
             <div class="section">
-
-                <div class="section-title">
-                    WORLD
-                </div>
-
+                <div class="section-title">WORLD</div>
                 <div style="padding:8px">
-
                     <div id="world">
-
-                        <div class="tree tree1">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree2">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree3">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree4">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree5">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="character">
-                            <div class="character-head"></div>
-                        </div>
-
-                        <button id="secret" onclick="goToRoom()">
-                            숨겨진 장소
-                        </button>
-
+                        <div class="tree tree1"><div class="tree-top"></div><div class="tree-trunk"></div></div>
+                        <div class="tree tree2"><div class="tree-top"></div><div class="tree-trunk"></div></div>
+                        <div class="tree tree3"><div class="tree-top"></div><div class="tree-trunk"></div></div>
+                        <div class="tree tree4"><div class="tree-top"></div><div class="tree-trunk"></div></div>
+                        <div class="tree tree5"><div class="tree-top"></div><div class="tree-trunk"></div></div>
+                        <div class="character"><div class="character-head"></div></div>
+                        <button id="secret" onclick="goToRoom()">숨겨진 장소</button>
                     </div>
-
                 </div>
-
             </div>
 
             <div class="section" id="chat-section">
-
-                <div class="section-title">
-                    REALTIME CHAT
-                </div>
+                <div class="section-title">REALTIME CHAT</div>
 
                 <div id="messages">
                     <div class="message">
-                        <span class="message-name">SYSTEM</span> :
-                        실시간 채팅 서버에 연결하는 중입니다...
+                        <span class="message-name">SYSTEM</span> : 채팅 서버 연결 중...
                     </div>
                 </div>
 
                 <div id="chat-input">
                     <input id="usernameInput" type="text" placeholder="닉네임" value="Guest">
-                    <input
-                        id="messageInput"
-                        type="text"
-                        placeholder="메시지를 입력하세요"
-                    >
-
-                    <button id="sendButton" onclick="sendMessage()">
-                        SEND
-                    </button>
-
+                    <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
+                    <button id="sendButton" onclick="sendMessage()">SEND</button>
                 </div>
-
             </div>
-
         </div>
 
         <div id="right">
-
             <div class="side-box">
-
-                <div class="side-title">
-                    INFORMATION
-                </div>
-
+                <div class="side-title">INFORMATION</div>
                 <div class="side-content">
                     이곳은 사람들이 잠시 머물다 가는 작은 장소입니다.
-                    <br><br>
-                    숨겨진 장소를 찾아보세요.
                 </div>
-
             </div>
 
             <div class="side-box">
-
-                <div class="side-title">
-                    ONLINE
-                </div>
-
+                <div class="side-title">ONLINE</div>
                 <div class="side-content">
-                    <span class="online">● ONLINE</span>
-                    <br>
+                    <span class="online">● ONLINE</span><br>
                     <span id="side-online-text">실시간 연결 중</span>
                 </div>
-
             </div>
 
             <div class="side-box">
-
-                <div class="side-title">
-                    MENU
-                </div>
-
+                <div class="side-title">MENU</div>
                 <div class="side-content">
                     <a href="index.html">Home</a><br>
                     <a href="#world">World</a><br>
                     <a href="room.html">오래된 방</a><br>
                 </div>
-
             </div>
-
         </div>
 
     </div>
 
-    <div id="footer">
-        PLACE © 2026
-        <div id="counter">
-            VISITOR : 000001
-        </div>
-    </div>
+    <div id="footer">PLACE © 2026</div>
 
 </div>
 
-<script>
+<!-- 로그인 모달 -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">🔑 로그인</div>
+        <div class="form-group">
+            <label>아이디</label>
+            <input type="text" id="loginUsername" placeholder="영어, 숫자, 언더바(_)">
+        </div>
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input type="password" id="loginPassword">
+        </div>
+        <div class="modal-buttons">
+            <button class="auth-btn" onclick="handleLogin()">로그인</button>
+            <button class="auth-btn" onclick="closeModal('loginModal')">취소</button>
+        </div>
+    </div>
+</div>
 
-// Supabase 연동 설정
+<!-- 회원가입 모달 -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">📝 계정 생성</div>
+        <div class="form-group">
+            <label>아이디 (영어, 숫자, _ 만 가능)</label>
+            <input type="text" id="signupUsername" placeholder="예: user_123">
+        </div>
+        <div class="form-group">
+            <label>닉네임 (자유롭게 입력 가능)</label>
+            <input type="text" id="signupNickname" placeholder="예: 모험가">
+        </div>
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input type="password" id="signupPassword">
+        </div>
+        <div class="form-group">
+            <label>비밀번호 확인</label>
+            <input type="password" id="signupPasswordConfirm">
+        </div>
+        <div class="modal-buttons">
+            <button class="auth-btn" onclick="handleSignup()">가입하기</button>
+            <button class="auth-btn" onclick="closeModal('signupModal')">취소</button>
+        </div>
+    </div>
+</div>
+
+<!-- 프로필 확인 / 수정 모달 -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">👤 유저 프로필</div>
+        <div class="profile-row"><b>아이디:</b> <span id="profUsername">-</span></div>
+        <div class="profile-row"><b>닉네임:</b> <span id="profNickname">-</span></div>
+        <div class="profile-row"><b>가입일:</b> <span id="profCreatedAt">-</span></div>
+        
+        <div id="nicknameChangeBox" style="margin-top:12px; border-top:1px dashed #ccc; padding-top:10px;">
+            <div class="form-group">
+                <label>새 닉네임 변경 (30분에 1회 가능)</label>
+                <input type="text" id="newNicknameInput" placeholder="새 닉네임">
+            </div>
+            <button class="auth-btn" onclick="changeNickname()">닉네임 변경하기</button>
+        </div>
+
+        <div class="modal-buttons">
+            <button class="auth-btn" onclick="closeModal('profileModal')">닫기</button>
+        </div>
+    </div>
+</div>
+
+<script>
 const SUPABASE_URL = "https://exeoqvfidmtmnwqejyvg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
-
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 기존 메시지 불러오기
+let currentUser = null;
+let currentProfile = null;
+
+function openModal(id) { document.getElementById(id).style.display = "block"; }
+function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+// 아이디 정규식 검사 (영어, 숫자, _ 만 허용)
+function isValidUsername(username) {
+    const regex = /^[a-zA-Z0-9_]+$/;
+    return regex.test(username);
+}
+
+// 1. 회원가입
+async function handleSignup() {
+    const username = document.getElementById("signupUsername").value.trim();
+    const nickname = document.getElementById("signupNickname").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const passwordConfirm = document.getElementById("signupPasswordConfirm").value;
+
+    if (!username || !nickname || !password) {
+        alert("모든 항목을 입력해 주세요.");
+        return;
+    }
+    if (!isValidUsername(username)) {
+        alert("아이디는 영문, 숫자, 언더바(_)만 사용할 수 있습니다.");
+        return;
+    }
+    if (password !== passwordConfirm) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+    }
+    if (password.length < 6) {
+        alert("비밀번호는 최소 6자리 이상이어야 합니다.");
+        return;
+    }
+
+    // ID를 가상 이메일 형태로 변환
+    const fakeEmail = username.toLowerCase() + "@place.local";
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: fakeEmail,
+        password: password,
+    });
+
+    if (error) {
+        alert("가입 실패: " + error.message);
+        return;
+    }
+
+    if (data.user) {
+        // 프로필 테이블 데이터 추가
+        const { error: profError } = await supabaseClient
+            .from('profiles')
+            .insert([{
+                id: data.user.id,
+                username: username,
+                nickname: nickname
+            }]);
+
+        if (profError) {
+            alert("프로필 생성 오류: " + profError.message);
+        } else {
+            alert("🎉 회원가입이 완료되었습니다! 로그인해 주세요.");
+            closeModal("signupModal");
+        }
+    }
+}
+
+// 2. 로그인
+async function handleLogin() {
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    if (!username || !password) return;
+
+    const fakeEmail = username.toLowerCase() + "@place.local";
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: fakeEmail,
+        password: password
+    });
+
+    if (error) {
+        alert("로그인 실패: 아이디 또는 비밀번호를 확인해 주세요.");
+    } else {
+        closeModal("loginModal");
+        checkAuthStatus();
+    }
+}
+
+// 3. 로그아웃
+async function handleLogout() {
+    await supabaseClient.auth.signOut();
+    checkAuthStatus();
+}
+
+// 4. 로그인 및 프로필 로딩
+async function checkAuthStatus() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const usernameInput = document.getElementById("usernameInput");
+
+    if (session) {
+        currentUser = session.user;
+        
+        // 내 프로필 정보 가져오기
+        const { data: profile } = await supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('id', currentUser.id)
+            .single();
+
+        if (profile) {
+            currentProfile = profile;
+            document.getElementById("user-info").innerText = "👤 " + profile.nickname + "님";
+            usernameInput.value = profile.nickname;
+        }
+
+        document.getElementById("login-btn").style.display = "none";
+        document.getElementById("signup-btn").style.display = "none";
+        document.getElementById("profile-btn").style.display = "inline-block";
+        document.getElementById("logout-btn").style.display = "inline-block";
+        usernameInput.readOnly = true;
+    } else {
+        currentUser = null;
+        currentProfile = null;
+        document.getElementById("user-info").innerText = "로그인 필요";
+        document.getElementById("login-btn").style.display = "inline-block";
+        document.getElementById("signup-btn").style.display = "inline-block";
+        document.getElementById("profile-btn").style.display = "none";
+        document.getElementById("logout-btn").style.display = "none";
+        usernameInput.value = "Guest";
+        usernameInput.readOnly = false;
+    }
+}
+
+// 5. 프로필 팝업 보기
+async function openProfileModal(targetUserId = null) {
+    const userIdToFetch = targetUserId || (currentUser ? currentUser.id : null);
+    if (!userIdToFetch) return;
+
+    const { data: profile, error } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', userIdToFetch)
+        .single();
+
+    if (error || !profile) {
+        alert("프로필 정보를 불러올 수 없습니다.");
+        return;
+    }
+
+    document.getElementById("profUsername").innerText = profile.username;
+    document.getElementById("profNickname").innerText = profile.nickname;
+    document.getElementById("profCreatedAt").innerText = new Date(profile.created_at).toLocaleDateString();
+
+    const nickBox = document.getElementById("nicknameChangeBox");
+    // 본인 프로필일 때만 닉네임 변경 박스 보이기
+    if (currentUser && currentUser.id === profile.id) {
+        nickBox.style.display = "block";
+    } else {
+        nickBox.style.display = "none";
+    }
+
+    openModal("profileModal");
+}
+
+// 6. 닉네임 변경 (30분 쿨타임)
+async function changeNickname() {
+    if (!currentUser || !currentProfile) return;
+
+    const newNick = document.getElementById("newNicknameInput").value.trim();
+    if (!newNick) {
+        alert("새 닉네임을 입력하세요.");
+        return;
+    }
+
+    const lastUpdated = new Date(currentProfile.nickname_updated_at).getTime();
+    const now = new Date().getTime();
+    const diffMinutes = (now - lastUpdated) / (1000 * 60);
+
+    if (diffMinutes < 30) {
+        const remainMinutes = Math.ceil(30 - diffMinutes);
+        alert(`닉네임은 30분에 한 번만 변경할 수 있습니다.\n(${remainMinutes}분 남음)`);
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from('profiles')
+        .update({
+            nickname: newNick,
+            nickname_updated_at: new Date().toISOString()
+        })
+        .eq('id', currentUser.id);
+
+    if (error) {
+        alert("닉네임 변경 실패: " + error.message);
+    } else {
+        alert("🎉 닉네임이 성공적으로 변경되었습니다!");
+        document.getElementById("newNicknameInput").value = "";
+        closeModal("profileModal");
+        checkAuthStatus();
+    }
+}
+
+// 메시지 기능
 async function loadMessages() {
     const { data, error } = await supabaseClient
         .from('chats')
@@ -563,37 +526,33 @@ async function loadMessages() {
         .order('id', { ascending: true })
         .limit(50);
 
-    if (error) {
-        console.error('메시지 로딩 오류:', error);
-        return;
+    if (!error && data) {
+        const messagesContainer = document.getElementById("messages");
+        messagesContainer.innerHTML = "";
+        data.forEach(msg => appendMessageUI(msg.username, msg.message, msg.user_id));
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-
-    const messagesContainer = document.getElementById("messages");
-    messagesContainer.innerHTML = ""; // 초기화
-
-    data.forEach(msg => {
-        appendMessageUI(msg.username, msg.message);
-    });
-
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// 화면에 메시지 추가하는 함수
-function appendMessageUI(name, text) {
+function appendMessageUI(name, text, userId) {
     const messages = document.getElementById("messages");
     const message = document.createElement("div");
     message.className = "message";
-    message.innerHTML = '<span class="message-name">' + escapeHtml(name) + '</span> : ' + escapeHtml(text);
+    
+    if (userId) {
+        message.innerHTML = `<span class="message-name" onclick="openProfileModal('${userId}')">${escapeHtml(name)}</span> : ${escapeHtml(text)}`;
+    } else {
+        message.innerHTML = `<span class="message-name">${escapeHtml(name)}</span> : ${escapeHtml(text)}`;
+    }
+
     messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight;
 }
 
-// HTML 이스케이프 (보안용)
 function escapeHtml(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-// 메시지 전송 (Supabase DB에 저장)
 async function sendMessage() {
     const nameInput = document.getElementById("usernameInput");
     const input = document.getElementById("messageInput");
@@ -602,39 +561,30 @@ async function sendMessage() {
     const text = input.value.trim();
 
     if (text === "") return;
-
     input.value = "";
 
-    const { error } = await supabaseClient
-        .from('chats')
-        .insert([{ username: username, message: text }]);
+    const payload = { username: username, message: text };
+    if (currentUser) payload.user_id = currentUser.id;
 
-    if (error) {
-        alert('메시지 전송에 실패했습니다: ' + error.message);
-    }
+    const { error } = await supabaseClient.from('chats').insert([payload]);
+    if (error) alert('메시지 전송 실패: ' + error.message);
 }
 
-// 엔터키 입력 처리
-document.getElementById("messageInput").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
+document.getElementById("messageInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendMessage();
 });
 
-// 실시간 구독 (누군가 글을 쓰면 즉시 내 화면에도 뜸)
 function subscribeRealtime() {
     supabaseClient
         .channel('public:chats')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chats' }, payload => {
-            appendMessageUI(payload.new.username, payload.new.message);
+            appendMessageUI(payload.new.username, payload.new.message, payload.new.user_id);
         })
         .subscribe();
 }
 
-// 온라인 사람 수 실시간 접속자 추적 (Presence 기능)
 function trackPresence() {
     const room = supabaseClient.channel('online-users');
-
     room.on('presence', { event: 'sync' }, () => {
         const state = room.presenceState();
         const count = Object.keys(state).length;
@@ -648,17 +598,14 @@ function trackPresence() {
     });
 }
 
-// 페이지 로드 시 실행
 window.onload = () => {
+    checkAuthStatus();
     loadMessages();
     subscribeRealtime();
     trackPresence();
 };
 
-function goToRoom() {
-    location.href = "room.html";
-}
-
+function goToRoom() { location.href = "room.html"; }
 </script>
 
 </body>
