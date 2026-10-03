@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PLACE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef2e8;
+      font-family: Arial, sans-serif;
+      color: #394238;
+    }
+
+    .container {
+      width: min(900px, 92%);
+      margin: 40px auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin: 0;
+      letter-spacing: 4px;
+    }
+
+    header p {
+      color: #7b8478;
+    }
+
+    .world {
+      height: 500px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      background: #b9d39f;
+      border: 4px solid #8ca878;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .tree {
+      position: absolute;
+      font-size: 55px;
+    }
+
+    .tree1 { top: 40px; left: 50px; }
+    .tree2 { top: 100px; right: 80px; }
+    .tree3 { bottom: 50px; left: 100px; }
+    .tree4 { bottom: 80px; right: 120px; }
+
+    .character {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 50px;
+    }
+
+    .secret-place {
+      position: absolute;
+      top: 180px;
+      left: 70%;
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: #fffdf5;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .secret-place:hover {
+      transform: scale(1.05);
+    }
+
+    .status {
+      margin-top: 12px;
+      text-align: center;
+      color: #687264;
+    }
+
+    .chat {
+      margin-top: 25px;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .chat h2 {
+      margin-top: 0;
+    }
+
+    .messages {
+      height: 180px;
+      overflow-y: auto;
+      background: #f4f6f1;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .message {
+      margin-bottom: 8px;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 8px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #d5dbd1;
+      border-radius: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      background: #65785d;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #899184;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <header>
+      <h1>PLACE</h1>
+      <p>어딘가에 존재하는 작은 장소</p>
+    </header>
+
+    <div class="world">
+
+      <div class="tree tree1">🌳</div>
+      <div class="tree tree2">🌲</div>
+      <div class="tree tree3">🌳</div>
+      <div class="tree tree4">🌲</div>
+
+      <div class="character">🧍</div>
+
+      <button class="secret-place" onclick="discoverPlace()">
+        ✨ 숨겨진 장소
+      </button>
+
+    </div>
+
+    <div class="status">
+      ● 현재 1명 온라인
+    </div>
+
+    <div class="chat">
+
+      <h2>💬 Chat</h2>
+
+      <div class="messages" id="messages">
+        <div class="message">
+          <b>PLACE</b> : 이곳에 처음 온 것을 환영합니다
+        </div>
+      </div>
+
+      <div class="input-area">
+        <input
+          id="messageInput"
+          type="text"
+          placeholder="메시지를 입력하세요"
+          onkeydown="handleEnter(event)"
+        >
+
+        <button onclick="sendMessage()">
+          보내기
+        </button>
+      </div>
+
+    </div>
+
+    <footer>
+      A small place on the internet
+    </footer>
+
+  </div>
+
+  <script>
+
+    function sendMessage() {
+
+      const input = document.getElementById("messageInput");
+      const messages = document.getElementById("messages");
+
+      const text = input.value.trim();
+
+      if (text === "") {
+        return;
+      }
+
+      const message = document.createElement("div");
+
+      message.className = "message";
+
+      message.innerHTML = "<b>나</b> : " + text;
+
+      messages.appendChild(message);
+
+      input.value = "";
+
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function handleEnter(event) {
+
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+
+    }
+
+    function discoverPlace() {
+
+      alert(
+        "✨ 숨겨진 장소를 발견했습니다!\n\n" +
+        "이곳에 언젠가 누군가의 이야기가 남겨질지도 모릅니다."
+      );
+
+    }
+
+  </script>
+
+</body>
+</html>
