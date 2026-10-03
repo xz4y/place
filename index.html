@@ -1,254 +1,593 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>PLACE</title>
+<title>PLACE - 작은 장소</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      background: #eef2e8;
-      font-family: Arial, sans-serif;
-      color: #394238;
-    }
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #d6d6d6;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    font-size: 12px;
+}
 
-    .container {
-      width: min(900px, 92%);
-      margin: 40px auto;
-    }
+body {
+    background:
+        linear-gradient(#eeeeee 1px, transparent 1px),
+        linear-gradient(90deg, #eeeeee 1px, transparent 1px);
+    background-size: 8px 8px;
+}
 
-    header {
-      text-align: center;
-      margin-bottom: 25px;
-    }
+/* 전체 사이트 */
 
-    h1 {
-      font-size: 42px;
-      margin: 0;
-      letter-spacing: 4px;
-    }
+#site {
+    width: 760px;
+    margin: 25px auto;
+    background: #ffffff;
+    border: 1px solid #555;
+    box-shadow: 2px 2px 0 #888;
+}
 
-    header p {
-      color: #7b8478;
-    }
+/* 위쪽 */
 
-    .world {
-      height: 500px;
-      position: relative;
-      overflow: hidden;
-      border-radius: 24px;
-      background: #b9d39f;
-      border: 4px solid #8ca878;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    }
+#top {
+    height: 70px;
+    background: linear-gradient(#5f8fbd, #315d8b);
+    border-bottom: 3px solid #24496e;
+    color: white;
+    position: relative;
+}
 
-    .tree {
-      position: absolute;
-      font-size: 55px;
-    }
+#title {
+    position: absolute;
+    left: 18px;
+    top: 12px;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
 
-    .tree1 { top: 40px; left: 50px; }
-    .tree2 { top: 100px; right: 80px; }
-    .tree3 { bottom: 50px; left: 100px; }
-    .tree4 { bottom: 80px; right: 120px; }
+#subtitle {
+    position: absolute;
+    left: 20px;
+    top: 45px;
+    font-size: 11px;
+}
 
-    .character {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 50px;
-    }
+/* 메뉴 */
 
-    .secret-place {
-      position: absolute;
-      top: 180px;
-      left: 70%;
-      padding: 10px 14px;
-      border: 0;
-      border-radius: 12px;
-      background: #fffdf5;
-      cursor: pointer;
-      font-size: 14px;
-    }
+#menu {
+    height: 27px;
+    background: #eeeeee;
+    border-bottom: 1px solid #999;
+    padding-left: 8px;
+}
 
-    .secret-place:hover {
-      transform: scale(1.05);
-    }
+.menu-button {
+    display: inline-block;
+    margin-top: 4px;
+    margin-right: 3px;
+    padding: 3px 12px;
 
-    .status {
-      margin-top: 12px;
-      text-align: center;
-      color: #687264;
-    }
+    color: #222;
+    text-decoration: none;
 
-    .chat {
-      margin-top: 25px;
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-    }
+    background: linear-gradient(#ffffff, #cfcfcf);
+    border: 1px solid #777;
+    border-radius: 2px;
 
-    .chat h2 {
-      margin-top: 0;
-    }
+    box-shadow:
+        inset 1px 1px 0 white,
+        inset -1px -1px 0 #aaa;
+}
 
-    .messages {
-      height: 180px;
-      overflow-y: auto;
-      background: #f4f6f1;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-    }
+.menu-button:active {
+    background: #cccccc;
+    box-shadow: inset 1px 1px 2px #777;
+}
 
-    .message {
-      margin-bottom: 8px;
-    }
+/* 안내 */
 
-    .input-area {
-      display: flex;
-      gap: 8px;
-    }
+#notice {
+    margin: 10px;
+    padding: 6px 8px;
 
-    input {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #d5dbd1;
-      border-radius: 10px;
-    }
+    border: 1px solid #999;
+    background: #ffffcc;
 
-    button {
-      border: 0;
-      border-radius: 10px;
-      padding: 12px 16px;
-      background: #65785d;
-      color: white;
-      cursor: pointer;
-    }
+    color: #444;
+}
 
-    button:hover {
-      opacity: 0.85;
-    }
+#notice a {
+    color: #0000cc;
+    text-decoration: underline;
+}
 
-    footer {
-      text-align: center;
-      margin-top: 25px;
-      color: #899184;
-      font-size: 13px;
-    }
-  </style>
+/* 메인 */
+
+#main {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+/* 왼쪽 */
+
+#left {
+    width: 500px;
+}
+
+.section-title {
+    height: 22px;
+    line-height: 22px;
+
+    padding-left: 8px;
+
+    color: white;
+    font-weight: bold;
+
+    background: linear-gradient(#6f9bc2, #3c6b99);
+
+    border: 1px solid #345979;
+}
+
+.section {
+    margin-bottom: 10px;
+    border: 1px solid #999;
+    background: #f7f7f7;
+}
+
+/* 맵 */
+
+#world {
+    height: 350px;
+    position: relative;
+    overflow: hidden;
+
+    background: #9fbd7f;
+
+    border: 3px inset #888;
+}
+
+.tree {
+    position: absolute;
+    width: 35px;
+    height: 55px;
+}
+
+.tree-top {
+    position: absolute;
+
+    width: 35px;
+    height: 35px;
+
+    background: #3f7b35;
+
+    border: 2px solid #275224;
+
+    border-radius: 50% 50% 45% 45%;
+}
+
+.tree-trunk {
+    position: absolute;
+
+    left: 13px;
+    top: 34px;
+
+    width: 9px;
+    height: 20px;
+
+    background: #76502f;
+
+    border-left: 2px solid #57391f;
+    border-right: 2px solid #57391f;
+}
+
+.tree1 { left: 35px; top: 30px; }
+.tree2 { right: 50px; top: 65px; }
+.tree3 { left: 100px; bottom: 30px; }
+.tree4 { right: 150px; bottom: 55px; }
+.tree5 { left: 240px; top: 100px; }
+
+.character {
+    position: absolute;
+
+    left: 50%;
+    top: 48%;
+
+    width: 18px;
+    height: 30px;
+
+    background: #333;
+
+    border: 2px solid #111;
+
+    transform: translate(-50%, -50%);
+}
+
+.character-head {
+    position: absolute;
+
+    left: 3px;
+    top: -13px;
+
+    width: 10px;
+    height: 10px;
+
+    background: #e0b08c;
+
+    border: 1px solid #774f3b;
+}
+
+/* 숨겨진 장소 */
+
+#secret {
+    position: absolute;
+
+    right: 45px;
+    top: 160px;
+
+    padding: 7px 10px;
+
+    font-size: 11px;
+
+    color: #222;
+
+    background: linear-gradient(#ffffff, #cccccc);
+
+    border: 2px outset #eeeeee;
+
+    cursor: pointer;
+}
+
+#secret:active {
+    border-style: inset;
+}
+
+/* 채팅 */
+
+#messages {
+    height: 145px;
+
+    margin: 8px;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border: 2px inset #aaa;
+
+    padding: 6px;
+
+    font-size: 12px;
+}
+
+.message {
+    margin-bottom: 5px;
+}
+
+.message-name {
+    color: #003399;
+    font-weight: bold;
+}
+
+/* 입력 */
+
+#chat-input {
+    display: flex;
+    padding: 0 8px 8px 8px;
+}
+
+#messageInput {
+    flex: 1;
+
+    height: 24px;
+
+    border: 2px inset #aaa;
+
+    padding: 2px 5px;
+
+    font-size: 12px;
+}
+
+#sendButton {
+    margin-left: 4px;
+
+    height: 30px;
+
+    padding: 0 14px;
+
+    background: linear-gradient(#ffffff, #cccccc);
+
+    border: 2px outset #eeeeee;
+
+    cursor: pointer;
+}
+
+#sendButton:active {
+    border-style: inset;
+}
+
+/* 오른쪽 */
+
+#right {
+    width: 210px;
+}
+
+.side-box {
+    margin-bottom: 10px;
+
+    border: 1px solid #888;
+
+    background: #eeeeee;
+}
+
+.side-title {
+    padding: 5px;
+
+    color: white;
+    font-weight: bold;
+
+    background: linear-gradient(#777777, #444444);
+}
+
+.side-content {
+    padding: 8px;
+    line-height: 1.6;
+}
+
+.online {
+    color: green;
+    font-weight: bold;
+}
+
+/* 하단 */
+
+#footer {
+    padding: 12px;
+
+    text-align: center;
+
+    border-top: 1px solid #999;
+
+    background: #eeeeee;
+
+    color: #666;
+
+    font-size: 11px;
+}
+
+#counter {
+    margin-top: 5px;
+    color: #888;
+}
+
+a {
+    color: #0000cc;
+}
+
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<div id="site">
 
-    <header>
-      <h1>PLACE</h1>
-      <p>어딘가에 존재하는 작은 장소</p>
-    </header>
-
-    <div class="world">
-
-      <div class="tree tree1">🌳</div>
-      <div class="tree tree2">🌲</div>
-      <div class="tree tree3">🌳</div>
-      <div class="tree tree4">🌲</div>
-
-      <div class="character">🧍</div>
-
-      <button class="secret-place" onclick="discoverPlace()">
-        ✨ 숨겨진 장소
-      </button>
-
+    <div id="top">
+        <div id="title">PLACE</div>
+        <div id="subtitle">어딘가에 존재하는 작은 장소</div>
     </div>
 
-    <div class="status">
-      ● 현재 1명 온라인
+    <div id="menu">
+        <a href="#" class="menu-button">HOME</a>
+        <a href="#" class="menu-button">WORLD</a>
+        <a href="#" class="menu-button">CHAT</a>
+        <a href="#" class="menu-button">ABOUT</a>
     </div>
 
-    <div class="chat">
+    <div id="notice">
+        현재 이곳에는 <b>1명</b>이 접속해 있습니다.
+        <a href="#">이용 안내</a>
+    </div>
 
-      <h2>💬 Chat</h2>
+    <div id="main">
 
-      <div class="messages" id="messages">
-        <div class="message">
-          <b>PLACE</b> : 이곳에 처음 온 것을 환영합니다
+        <div id="left">
+
+            <div class="section">
+
+                <div class="section-title">
+                    WORLD
+                </div>
+
+                <div style="padding:8px">
+
+                    <div id="world">
+
+                        <div class="tree tree1">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree2">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree3">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree4">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="tree tree5">
+                            <div class="tree-top"></div>
+                            <div class="tree-trunk"></div>
+                        </div>
+
+                        <div class="character">
+                            <div class="character-head"></div>
+                        </div>
+
+                        <button id="secret" onclick="discoverPlace()">
+                            숨겨진 장소
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <div class="section-title">
+                    CHAT
+                </div>
+
+                <div id="messages">
+
+                    <div class="message">
+                        <span class="message-name">PLACE</span> :
+                        이곳에 처음 온 것을 환영합니다.
+                    </div>
+
+                </div>
+
+                <div id="chat-input">
+
+                    <input
+                        id="messageInput"
+                        type="text"
+                        placeholder="메시지를 입력하세요"
+                    >
+
+                    <button id="sendButton" onclick="sendMessage()">
+                        SEND
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
-      </div>
 
-      <div class="input-area">
-        <input
-          id="messageInput"
-          type="text"
-          placeholder="메시지를 입력하세요"
-          onkeydown="handleEnter(event)"
-        >
+        <div id="right">
 
-        <button onclick="sendMessage()">
-          보내기
-        </button>
-      </div>
+            <div class="side-box">
+
+                <div class="side-title">
+                    INFORMATION
+                </div>
+
+                <div class="side-content">
+                    이곳은 사람들이 잠시 머물다 가는 작은 장소입니다.
+                    <br><br>
+                    숨겨진 장소를 찾아보세요.
+                </div>
+
+            </div>
+
+            <div class="side-box">
+
+                <div class="side-title">
+                    ONLINE
+                </div>
+
+                <div class="side-content">
+                    <span class="online">● ONLINE</span>
+                    <br>
+                    1 user
+                </div>
+
+            </div>
+
+            <div class="side-box">
+
+                <div class="side-title">
+                    MENU
+                </div>
+
+                <div class="side-content">
+                    <a href="#">Home</a><br>
+                    <a href="#">World</a><br>
+                    <a href="#">Messages</a><br>
+                    <a href="#">Guestbook</a>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <footer>
-      A small place on the internet
-    </footer>
+    <div id="footer">
+        PLACE © 2026
+        <div id="counter">
+            VISITOR : 000001
+        </div>
+    </div>
 
-  </div>
+</div>
 
-  <script>
+<script>
 
-    function sendMessage() {
+function sendMessage() {
 
-      const input = document.getElementById("messageInput");
-      const messages = document.getElementById("messages");
+    const input = document.getElementById("messageInput");
+    const messages = document.getElementById("messages");
 
-      const text = input.value.trim();
+    const text = input.value.trim();
 
-      if (text === "") {
+    if (text === "") {
         return;
-      }
-
-      const message = document.createElement("div");
-
-      message.className = "message";
-
-      message.innerHTML = "<b>나</b> : " + text;
-
-      messages.appendChild(message);
-
-      input.value = "";
-
-      messages.scrollTop = messages.scrollHeight;
     }
 
-    function handleEnter(event) {
+    const message = document.createElement("div");
 
-      if (event.key === "Enter") {
-        sendMessage();
-      }
+    message.className = "message";
 
-    }
+    message.innerHTML =
+        '<span class="message-name">Guest</span> : ' +
+        text;
 
-    function discoverPlace() {
+    messages.appendChild(message);
 
-      alert(
-        "✨ 숨겨진 장소를 발견했습니다!\n\n" +
-        "이곳에 언젠가 누군가의 이야기가 남겨질지도 모릅니다."
-      );
+    input.value = "";
 
-    }
+    messages.scrollTop = messages.scrollHeight;
+}
 
-  </script>
+document
+    .getElementById("messageInput")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+
+    });
+
+function discoverPlace() {
+
+    alert(
+        "숨겨진 장소를 발견했습니다.\n\n" +
+        "아직 아무도 이곳에 글을 남기지 않았습니다."
+    );
+
+}
+
+</script>
 
 </body>
 </html>
