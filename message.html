@@ -2,7 +2,10 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PLACE - MESSAGE</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 html, body {
@@ -10,8 +13,8 @@ html, body {
     padding: 0;
     background: #d6d6d6;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
     color: #222;
+    font-size: 12px;
 }
 
 body {
@@ -31,10 +34,10 @@ body {
 
 #top {
     height: 70px;
-    position: relative;
     background: linear-gradient(#5f8fbd, #315d8b);
     border-bottom: 3px solid #24496e;
     color: white;
+    position: relative;
 }
 
 #title {
@@ -43,7 +46,7 @@ body {
     top: 12px;
     font-size: 28px;
     font-weight: bold;
-    letter-spacing: 1px;
+    letter-spacing: -1px;
 }
 
 #subtitle {
@@ -63,62 +66,80 @@ body {
 }
 
 .auth-btn {
-    font-size: 11px;
     padding: 3px 8px;
-    border: 1px outset #ffffff;
-    background: linear-gradient(#ffffff, #d9d9d9);
-    color: #222;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 1px outset #eee;
+    font-size: 11px;
     cursor: pointer;
+    color: #222;
 }
 
 .auth-btn:active {
     border-style: inset;
 }
 
+.auth-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 #menu {
     height: 27px;
-    line-height: 27px;
-    background: #d8d8d8;
+    background: #eeeeee;
     border-bottom: 1px solid #999;
     padding-left: 8px;
 }
 
 .menu-button {
     display: inline-block;
-    margin-right: 4px;
-    padding: 2px 12px;
-    height: 17px;
-    line-height: 17px;
-    text-decoration: none;
+    margin-top: 4px;
+    margin-right: 3px;
+    padding: 3px 12px;
     color: #222;
-    font-weight: bold;
+    text-decoration: none;
     background: linear-gradient(#ffffff, #cfcfcf);
-    border: 1px solid #999;
+    border: 1px solid #777;
     border-radius: 2px;
-    box-shadow:
-        inset 1px 1px 0 #ffffff,
-        inset -1px -1px 0 #aaaaaa;
+    box-shadow: inset 1px 1px 0 white, inset -1px -1px 0 #aaa;
     cursor: pointer;
 }
 
 .menu-button:hover {
-    background: linear-gradient(#ffffff, #dddddd);
-}
-
-.menu-button.active {
-    background: linear-gradient(#bfcfe0, #8fa9c2);
-    color: #ffffff;
-    text-shadow: 1px 1px #555;
+    background: linear-gradient(#eeeeee, #cccccc);
 }
 
 #notice {
     margin: 10px;
     padding: 8px;
-    border: 1px solid #c5a900;
-    background: #fff9c7;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border: 1px solid #d4a300;
+    background: #fffde6;
+    color: #333;
+    display: none;
+    box-sizing: border-box;
+}
+
+#banner-container {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.site-banner {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 4px 2px;
+    background: transparent;
+    border: 0;
+    color: #333;
+    line-height: 1.5;
+    box-sizing: border-box;
+}
+
+.site-banner + .site-banner {
+    margin-top: 5px;
+    padding-top: 7px;
+    border-top: 1px dotted #d4c98f;
 }
 
 #main {
@@ -155,7 +176,7 @@ body {
     padding: 10px;
 }
 
-#login-required {
+#login-required-section {
     padding: 25px 10px;
     text-align: center;
     color: #666;
@@ -260,7 +281,7 @@ body {
     color: #c40000;
 }
 
-#reader {
+#reader-section {
     display: none;
 }
 
@@ -404,29 +425,41 @@ body {
 
         <div id="auth-bar">
 
-            <span id="user-info"></span>
+            <span
+                id="user-info"
+                style="font-size:11px; color:#fff;"
+            >
+                로그인 필요
+            </span>
 
             <button
-                id="login-button"
                 class="auth-btn"
+                id="login-btn"
                 onclick="goLogin()"
             >
-                LOGIN
+                로그인
             </button>
 
             <button
-                id="logout-button"
                 class="auth-btn"
+                id="signup-btn"
+                onclick="goLogin()"
+            >
+                회원가입
+            </button>
+
+            <button
+                class="auth-btn"
+                id="logout-btn"
                 onclick="logout()"
                 style="display:none;"
             >
-                LOGOUT
+                로그아웃
             </button>
 
         </div>
 
     </div>
-
 
     <div id="menu">
 
@@ -438,44 +471,46 @@ body {
             WORLD
         </a>
 
-        <a href="message.html" class="menu-button active">
+        <a href="message.html" class="menu-button">
             MESSAGE
         </a>
 
-        <a href="index.html#profile" class="menu-button">
+        <span
+            class="menu-button"
+            onclick="goProfile()"
+        >
             PROFILE
-        </a>
+        </span>
 
         <a href="index.html#about" class="menu-button">
             ABOUT
         </a>
 
-    </div>
+        <a
+            href="admin.html"
+            class="menu-button"
+            id="admin-menu"
+            style="display:none;"
+        >
+            ADMIN
+        </a>
 
+    </div>
 
     <div id="notice">
 
-        <span>
-            <b>MESSAGE</b>
-            · 작은 편지를 주고받는 공간
-        </span>
-
-        <span id="status">
-            확인 중...
-        </span>
+        <div id="banner-container">
+            배너를 불러오는 중...
+        </div>
 
     </div>
-
 
     <div id="main">
 
         <div id="left">
 
-
-            <!-- 로그인 필요 -->
-
             <div
-                id="login-required"
+                id="login-required-section"
                 class="section"
                 style="display:none;"
             >
@@ -484,7 +519,7 @@ body {
                     MESSAGE
                 </div>
 
-                <div id="login-required">
+                <div class="section-content">
                     MESSAGE를 사용하려면 로그인이 필요합니다
                     <br><br>
 
@@ -492,14 +527,11 @@ body {
                         class="auth-btn"
                         onclick="goLogin()"
                     >
-                        LOGIN
+                        로그인
                     </button>
                 </div>
 
             </div>
-
-
-            <!-- 새 편지 알림 -->
 
             <div
                 id="new-message-notice"
@@ -508,9 +540,6 @@ body {
                 새로운 편지가 도착했습니다
                 · 클릭하여 새로고침
             </div>
-
-
-            <!-- 편지 보내기 -->
 
             <div
                 id="write-section"
@@ -539,7 +568,6 @@ body {
 
                     </div>
 
-
                     <div class="message-write-row">
 
                         <div class="message-write-label">
@@ -556,7 +584,6 @@ body {
 
                     </div>
 
-
                     <div class="message-write-row">
 
                         <div class="message-write-label">
@@ -572,7 +599,6 @@ body {
 
                     </div>
 
-
                     <div class="message-send-row">
 
                         <button
@@ -584,15 +610,11 @@ body {
 
                     </div>
 
-
                     <div id="send-result"></div>
 
                 </div>
 
             </div>
-
-
-            <!-- 관리자 편지 보내기 -->
 
             <div
                 id="admin-message-box"
@@ -609,7 +631,6 @@ body {
                         관리자 전용 · 특정 사용자 또는 EVERYONE에게 발송할 수 있습니다
                     </div>
 
-
                     <div class="message-write-row">
 
                         <div class="message-write-label">
@@ -624,7 +645,6 @@ body {
                         >
 
                     </div>
-
 
                     <div class="message-write-row">
 
@@ -642,7 +662,6 @@ body {
 
                     </div>
 
-
                     <div class="message-write-row">
 
                         <div class="message-write-label">
@@ -658,7 +677,6 @@ body {
 
                     </div>
 
-
                     <div class="message-send-row">
 
                         <button
@@ -670,15 +688,11 @@ body {
 
                     </div>
 
-
                     <div id="admin-send-result"></div>
 
                 </div>
 
             </div>
-
-
-            <!-- 받은 편지함 -->
 
             <div
                 id="inbox-section"
@@ -699,9 +713,6 @@ body {
                 </div>
 
             </div>
-
-
-            <!-- 편지 읽기 -->
 
             <div
                 id="reader-section"
@@ -729,12 +740,10 @@ body {
 
                     </div>
 
-
                     <div
                         id="reader-body"
                         class="reader-body"
                     ></div>
-
 
                     <div class="reader-actions">
 
@@ -753,9 +762,7 @@ body {
 
         </div>
 
-
         <div id="right">
-
 
             <div class="side-box">
 
@@ -780,7 +787,6 @@ body {
 
             </div>
 
-
             <div class="side-box">
 
                 <div class="side-title">
@@ -796,7 +802,6 @@ body {
                 </div>
 
             </div>
-
 
             <div class="side-box">
 
@@ -818,11 +823,9 @@ body {
 
             </div>
 
-
         </div>
 
     </div>
-
 
     <div id="footer">
 
@@ -836,11 +839,7 @@ body {
 
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-
 const SUPABASE_URL =
     "https://exeoqvfidmtmnwqejyvg.supabase.co";
 
@@ -853,25 +852,18 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
-
 let currentUser = null;
 let currentProfile = null;
 let currentMessages = [];
 let messageChannel = null;
 
-
-/* =========================
-   LOGIN
-========================= */
-
 function goLogin() {
     window.location.href = "index.html";
 }
 
-
-/* =========================
-   AUTH
-========================= */
+function goProfile() {
+    window.location.href = "index.html#profile";
+}
 
 async function checkAuth() {
 
@@ -900,9 +892,7 @@ async function checkAuth() {
     await loadMessages();
 
     subscribeMessages();
-
 }
-
 
 async function loadProfile() {
 
@@ -931,66 +921,61 @@ async function loadProfile() {
 
 }
 
-
 function showLoggedOut() {
 
-    document.getElementById(
-        "login-button"
-    ).style.display = "inline-block";
+    document.getElementById("login-btn").style.display =
+        "inline-block";
 
-    document.getElementById(
-        "logout-button"
-    ).style.display = "none";
+    document.getElementById("signup-btn").style.display =
+        "inline-block";
 
-    document.getElementById(
-        "user-info"
-    ).innerText = "";
+    document.getElementById("logout-btn").style.display =
+        "none";
 
-    document.getElementById(
-        "side-account"
-    ).innerText = "로그인되지 않음";
+    document.getElementById("admin-menu").style.display =
+        "none";
 
-    document.getElementById(
-        "status"
-    ).innerText = "로그인 필요";
+    document.getElementById("user-info").innerText =
+        "로그인 필요";
 
-    document.getElementById(
-        "server-status"
-    ).innerText = "offline";
+    document.getElementById("side-account").innerText =
+        "로그인되지 않음";
 
-    document.getElementById(
-        "write-section"
-    ).style.display = "none";
+    document.getElementById("status").innerText =
+        "로그인 필요";
 
-    document.getElementById(
-        "inbox-section"
-    ).style.display = "none";
+    document.getElementById("server-status").innerText =
+        "offline";
 
-    document.getElementById(
-        "admin-message-box"
-    ).style.display = "none";
+    document.getElementById("write-section").style.display =
+        "none";
 
-    document.getElementById(
-        "reader-section"
-    ).style.display = "none";
+    document.getElementById("inbox-section").style.display =
+        "none";
 
-    document.getElementById(
-        "login-required"
-    ).style.display = "block";
+    document.getElementById("admin-message-box").style.display =
+        "none";
 
+    document.getElementById("reader-section").style.display =
+        "none";
+
+    document.getElementById("login-required-section").style.display =
+        "block";
 }
-
 
 function showLoggedIn() {
 
-    document.getElementById(
-        "login-button"
-    ).style.display = "none";
+    document.getElementById("login-btn").style.display =
+        "none";
 
-    document.getElementById(
-        "logout-button"
-    ).style.display = "inline-block";
+    document.getElementById("signup-btn").style.display =
+        "none";
 
+    document.getElementById("logout-btn").style.display =
+        "inline-block";
+
+    document.getElementById("login-required-section").style.display =
+        "none";
 
     const displayName =
         currentProfile?.nickname ||
@@ -998,73 +983,50 @@ function showLoggedIn() {
         currentUser.email ||
         "USER";
 
+    document.getElementById("user-info").innerText =
+        displayName;
 
-    document.getElementById(
-        "user-info"
-    ).innerText = displayName;
-
-
-    document.getElementById(
-        "side-account"
-    ).innerText =
+    document.getElementById("side-account").innerText =
         currentProfile?.username ||
         currentUser.email ||
         "USER";
 
+    document.getElementById("status").innerText =
+        "로그인됨";
 
-    document.getElementById(
-        "status"
-    ).innerText = "로그인됨";
+    document.getElementById("server-status").innerText =
+        "online";
 
+    document.getElementById("write-section").style.display =
+        "block";
 
-    document.getElementById(
-        "server-status"
-    ).innerText = "online";
-
-
-    document.getElementById(
-        "login-required"
-    ).style.display = "none";
-
-
-    document.getElementById(
-        "write-section"
-    ).style.display = "block";
-
-
-    document.getElementById(
-        "inbox-section"
-    ).style.display = "block";
-
+    document.getElementById("inbox-section").style.display =
+        "block";
 
     if (
         currentProfile &&
         currentProfile.is_admin === true
     ) {
 
-        document.getElementById(
-            "admin-message-box"
-        ).style.display = "block";
+        document.getElementById("admin-message-box").style.display =
+            "block";
+
+        document.getElementById("admin-menu").style.display =
+            "inline-block";
 
     } else {
 
-        document.getElementById(
-            "admin-message-box"
-        ).style.display = "none";
+        document.getElementById("admin-message-box").style.display =
+            "none";
 
+        document.getElementById("admin-menu").style.display =
+            "none";
     }
-
 }
-
-
-/* =========================
-   LOAD MESSAGES
-========================= */
 
 async function loadMessages() {
 
     if (!currentUser) return;
-
 
     const {
         data,
@@ -1083,7 +1045,6 @@ async function loadMessages() {
             }
         );
 
-
     if (error) {
 
         console.error(
@@ -1091,9 +1052,7 @@ async function loadMessages() {
             error
         );
 
-        document.getElementById(
-            "mailbox"
-        ).innerHTML = `
+        document.getElementById("mailbox").innerHTML = `
             <div class="empty-message">
                 편지를 불러오지 못했습니다
                 <br><br>
@@ -1104,25 +1063,17 @@ async function loadMessages() {
         return;
     }
 
-
     currentMessages = data || [];
 
     renderMailbox();
 
     updateUnreadCount();
-
 }
-
-
-/* =========================
-   MAILBOX
-========================= */
 
 function renderMailbox() {
 
     const mailbox =
         document.getElementById("mailbox");
-
 
     if (!currentMessages.length) {
 
@@ -1135,9 +1086,7 @@ function renderMailbox() {
         return;
     }
 
-
     mailbox.innerHTML = "";
-
 
     currentMessages.forEach(message => {
 
@@ -1152,18 +1101,15 @@ function renderMailbox() {
                     : " unread"
             );
 
-
         const mark =
             message.is_read
                 ? ""
                 : '<span class="unread-mark">●</span>';
 
-
         const date =
             formatDate(
                 message.created_at
             );
-
 
         item.innerHTML = `
             <div class="mail-top">
@@ -1185,26 +1131,14 @@ function renderMailbox() {
             </div>
         `;
 
-
         item.onclick = () => {
-
-            openMessage(
-                message.id
-            );
-
+            openMessage(message.id);
         };
-
 
         mailbox.appendChild(item);
 
     });
-
 }
-
-
-/* =========================
-   OPEN MESSAGE
-========================= */
 
 async function openMessage(messageId) {
 
@@ -1213,36 +1147,22 @@ async function openMessage(messageId) {
             item => item.id === messageId
         );
 
-
     if (!message) return;
 
-
-    document.getElementById(
-        "reader-subject"
-    ).innerText =
+    document.getElementById("reader-subject").innerText =
         message.subject;
 
-
-    document.getElementById(
-        "reader-info"
-    ).innerText =
+    document.getElementById("reader-info").innerText =
         "FROM : " +
         message.sender_name +
         "   |   " +
         formatDate(message.created_at);
 
-
-    document.getElementById(
-        "reader-body"
-    ).innerText =
+    document.getElementById("reader-body").innerText =
         message.body;
 
-
-    document.getElementById(
-        "reader-section"
-    ).style.display =
+    document.getElementById("reader-section").style.display =
         "block";
-
 
     window.scrollTo({
         top:
@@ -1251,7 +1171,6 @@ async function openMessage(messageId) {
             ).offsetTop - 10,
         behavior: "smooth"
     });
-
 
     if (!message.is_read) {
 
@@ -1264,7 +1183,6 @@ async function openMessage(messageId) {
                     message.id
             }
         );
-
 
         if (error) {
 
@@ -1283,17 +1201,9 @@ async function openMessage(messageId) {
             renderMailbox();
 
             updateUnreadCount();
-
         }
-
     }
-
 }
-
-
-/* =========================
-   CLOSE READER
-========================= */
 
 function closeReader() {
 
@@ -1303,46 +1213,34 @@ function closeReader() {
 
 }
 
-
-/* =========================
-   SEND MESSAGE
-========================= */
-
 async function sendMessage() {
 
     if (!currentUser) {
 
-        alert(
-            "로그인이 필요합니다."
-        );
+        alert("로그인이 필요합니다.");
 
         return;
     }
-
 
     const recipient =
         document.getElementById(
             "message-recipient"
         ).value.trim();
 
-
     const subject =
         document.getElementById(
             "message-subject"
         ).value.trim();
-
 
     const body =
         document.getElementById(
             "message-body"
         ).value.trim();
 
-
     const result =
         document.getElementById(
             "send-result"
         );
-
 
     if (!recipient) {
 
@@ -1352,7 +1250,6 @@ async function sendMessage() {
         return;
     }
 
-
     if (!subject) {
 
         result.innerText =
@@ -1360,7 +1257,6 @@ async function sendMessage() {
 
         return;
     }
-
 
     if (!body) {
 
@@ -1370,10 +1266,8 @@ async function sendMessage() {
         return;
     }
 
-
     result.innerText =
         "보내는 중...";
-
 
     const {
         error
@@ -1391,7 +1285,6 @@ async function sendMessage() {
         }
     );
 
-
     if (error) {
 
         console.error(
@@ -1405,31 +1298,21 @@ async function sendMessage() {
         return;
     }
 
-
     document.getElementById(
         "message-recipient"
     ).value = "";
-
 
     document.getElementById(
         "message-subject"
     ).value = "";
 
-
     document.getElementById(
         "message-body"
     ).value = "";
 
-
     result.innerText =
         "편지를 보냈습니다.";
-
 }
-
-
-/* =========================
-   ADMIN SEND
-========================= */
 
 async function adminSendMessage() {
 
@@ -1446,30 +1329,25 @@ async function adminSendMessage() {
         return;
     }
 
-
     const recipient =
         document.getElementById(
             "admin-message-recipient"
         ).value.trim();
-
 
     const subject =
         document.getElementById(
             "admin-message-subject"
         ).value.trim();
 
-
     const body =
         document.getElementById(
             "admin-message-body"
         ).value.trim();
 
-
     const result =
         document.getElementById(
             "admin-send-result"
         );
-
 
     if (!recipient) {
 
@@ -1479,7 +1357,6 @@ async function adminSendMessage() {
         return;
     }
 
-
     if (!subject) {
 
         result.innerText =
@@ -1487,7 +1364,6 @@ async function adminSendMessage() {
 
         return;
     }
-
 
     if (!body) {
 
@@ -1497,26 +1373,24 @@ async function adminSendMessage() {
         return;
     }
 
-
     result.innerText =
         "보내는 중...";
-
-
-    /* EVERYONE */
 
     if (
         recipient.toUpperCase() ===
         "EVERYONE"
     ) {
 
-       const { data, error } = await supabaseClient.rpc(
-    "admin_send_message_everyone",
-    {
-        p_subject: subject,
-        p_body: body
-    }
-);
-
+        const {
+            data,
+            error
+        } = await supabaseClient.rpc(
+            "admin_send_message_everyone",
+            {
+                p_subject: subject,
+                p_body: body
+            }
+        );
 
         if (error) {
 
@@ -1531,21 +1405,17 @@ async function adminSendMessage() {
             return;
         }
 
-
         document.getElementById(
             "admin-message-recipient"
         ).value = "";
-
 
         document.getElementById(
             "admin-message-subject"
         ).value = "";
 
-
         document.getElementById(
             "admin-message-body"
         ).value = "";
-
 
         result.innerText =
             data +
@@ -1553,9 +1423,6 @@ async function adminSendMessage() {
 
         return;
     }
-
-
-    /* 특정 사용자 */
 
     const {
         error
@@ -1573,7 +1440,6 @@ async function adminSendMessage() {
         }
     );
 
-
     if (error) {
 
         console.error(
@@ -1587,31 +1453,21 @@ async function adminSendMessage() {
         return;
     }
 
-
     document.getElementById(
         "admin-message-recipient"
     ).value = "";
-
 
     document.getElementById(
         "admin-message-subject"
     ).value = "";
 
-
     document.getElementById(
         "admin-message-body"
     ).value = "";
 
-
     result.innerText =
         "편지를 보냈습니다.";
-
 }
-
-
-/* =========================
-   UNREAD COUNT
-========================= */
 
 function updateUnreadCount() {
 
@@ -1621,15 +1477,12 @@ function updateUnreadCount() {
                 !message.is_read
         ).length;
 
-
     const status =
         document.getElementById(
             "status"
         );
 
-
     if (!currentUser) return;
-
 
     if (unreadCount > 0) {
 
@@ -1642,15 +1495,8 @@ function updateUnreadCount() {
 
         status.innerText =
             "편지 없음";
-
     }
-
 }
-
-
-/* =========================
-   REALTIME
-========================= */
 
 function subscribeMessages() {
 
@@ -1661,9 +1507,7 @@ function subscribeMessages() {
         );
 
         messageChannel = null;
-
     }
-
 
     messageChannel =
         supabaseClient
@@ -1683,35 +1527,24 @@ function subscribeMessages() {
                 },
                 payload => {
 
-                    console.log(
-                        "새 편지:",
-                        payload.new
-                    );
-
-
                     const newMessage =
                         payload.new;
-
 
                     currentMessages.unshift(
                         newMessage
                     );
 
-
                     renderMailbox();
 
                     updateUnreadCount();
-
 
                     const notice =
                         document.getElementById(
                             "new-message-notice"
                         );
 
-
                     notice.style.display =
                         "block";
-
                 }
             )
             .subscribe(
@@ -1724,13 +1557,7 @@ function subscribeMessages() {
 
                 }
             );
-
 }
-
-
-/* =========================
-   LOGOUT
-========================= */
 
 async function logout() {
 
@@ -1743,7 +1570,6 @@ async function logout() {
         );
 
         messageChannel = null;
-
     }
 
     currentUser = null;
@@ -1751,13 +1577,97 @@ async function logout() {
     currentMessages = [];
 
     showLoggedOut();
-
 }
 
+async function loadBanners() {
 
-/* =========================
-   UTIL
-========================= */
+    const notice =
+        document.getElementById("notice");
+
+    const container =
+        document.getElementById(
+            "banner-container"
+        );
+
+    const now =
+        new Date().toISOString();
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("banners")
+        .select("*")
+        .lte("starts_at", now)
+        .or(
+            "ends_at.is.null,ends_at.gt." +
+            now
+        )
+        .order(
+            "created_at",
+            {
+                ascending: true
+            }
+        )
+        .limit(3);
+
+    if (error) {
+
+        console.error(
+            "배너 불러오기 오류:",
+            error
+        );
+
+        notice.style.display = "none";
+
+        return;
+    }
+
+    if (!data || !data.length) {
+
+        notice.style.display = "none";
+
+        return;
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(banner => {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "site-banner";
+
+        div.innerText =
+            banner.message;
+
+        container.appendChild(div);
+
+    });
+
+    notice.style.display =
+        "block";
+}
+
+function subscribeBannerRealtime() {
+
+    supabaseClient
+        .channel("message-banner-realtime")
+        .on(
+            "postgres_changes",
+            {
+                event: "*",
+                schema: "public",
+                table: "banners"
+            },
+            () => {
+                loadBanners();
+            }
+        )
+        .subscribe();
+}
 
 function formatDate(dateString) {
 
@@ -1766,39 +1676,32 @@ function formatDate(dateString) {
     const date =
         new Date(dateString);
 
-
     if (isNaN(date.getTime())) {
         return "";
     }
 
-
     const year =
         date.getFullYear();
-
 
     const month =
         String(
             date.getMonth() + 1
         ).padStart(2, "0");
 
-
     const day =
         String(
             date.getDate()
         ).padStart(2, "0");
-
 
     const hour =
         String(
             date.getHours()
         ).padStart(2, "0");
 
-
     const minute =
         String(
             date.getMinutes()
         ).padStart(2, "0");
-
 
     return (
         year +
@@ -1811,17 +1714,16 @@ function formatDate(dateString) {
         ":" +
         minute
     );
-
 }
-
 
 function escapeHtml(value) {
 
-    if (value === null ||
-        value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
         return "";
     }
-
 
     return String(value)
         .replace(/&/g, "&amp;")
@@ -1829,13 +1731,7 @@ function escapeHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }
-
-
-/* =========================
-   START
-========================= */
 
 window.addEventListener(
     "load",
@@ -1846,16 +1742,13 @@ window.addEventListener(
         ).innerText =
             "connecting...";
 
-
         await checkAuth();
 
+        await loadBanners();
+
+        subscribeBannerRealtime();
     }
 );
-
-
-/* =========================
-   AUTH STATE
-========================= */
 
 supabaseClient.auth.onAuthStateChange(
     async (event, session) => {
@@ -1875,9 +1768,7 @@ supabaseClient.auth.onAuthStateChange(
             await loadMessages();
 
             subscribeMessages();
-
         }
-
 
         if (
             event === "SIGNED_OUT"
@@ -1894,16 +1785,12 @@ supabaseClient.auth.onAuthStateChange(
                 );
 
                 messageChannel = null;
-
             }
 
             showLoggedOut();
-
         }
-
     }
 );
-
 </script>
 
 </body>
