@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PLACE - 작은 장소</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">    updateCommunityGreeting();
+</script>
 
 <style>
 html, body {
@@ -1266,7 +1267,9 @@ body.account-suspended #suspension-screen {
                 <div class="section-title">
                     REALTIME CHAT
                 </div>
+
 <script>
+
 let currentUser = null;
 let currentProfile = null;
 let isAdmin = false;
@@ -2677,15 +2680,9 @@ async function updateChatlock(
         await supabaseClient.rpc(
             "admin_set_chatlock",
             {
-                target_username:
+                p_username:
                     targetUsername
-                        .toLowerCase(),
-
-                new_until:
-                    lockUntil.toISOString(),
-
-                new_reason:
-                    reason || "사유 미작성"
+                        .toLowerCase()
             }
         );
 
