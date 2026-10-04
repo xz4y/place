@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>PLACE - MESSAGE</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 html, body {
     margin: 0;
     padding: 0;
@@ -31,6 +33,10 @@ body {
     border: 1px solid #555;
     box-shadow: 2px 2px 0 #888;
 }
+
+/* =========================
+   TOP
+========================= */
 
 #top {
     height: 70px;
@@ -83,6 +89,10 @@ body {
     cursor: not-allowed;
 }
 
+/* =========================
+   MENU
+========================= */
+
 #menu {
     height: 27px;
     background: #eeeeee;
@@ -100,7 +110,9 @@ body {
     background: linear-gradient(#ffffff, #cfcfcf);
     border: 1px solid #777;
     border-radius: 2px;
-    box-shadow: inset 1px 1px 0 white, inset -1px -1px 0 #aaa;
+    box-shadow:
+        inset 1px 1px 0 white,
+        inset -1px -1px 0 #aaa;
     cursor: pointer;
 }
 
@@ -108,185 +120,185 @@ body {
     background: linear-gradient(#eeeeee, #cccccc);
 }
 
+/* =========================
+   NOTICE
+========================= */
+
 #notice {
     margin: 10px;
     padding: 8px;
     border: 1px solid #d4a300;
     background: #fffde6;
     color: #333;
-    display: none;
     box-sizing: border-box;
 }
 
-#banner-container {
-    width: 100%;
-    box-sizing: border-box;
+.notice-left {
+    display: inline-block;
 }
 
-.site-banner {
-    position: relative;
-    display: block;
-    width: 100%;
-    margin: 0;
-    padding: 4px 2px;
-    background: transparent;
-    border: 0;
-    color: #333;
-    line-height: 1.5;
-    box-sizing: border-box;
+.notice-right {
+    float: right;
+    color: #777;
 }
 
-.site-banner + .site-banner {
-    margin-top: 5px;
-    padding-top: 7px;
-    border-top: 1px dotted #d4c98f;
-}
+/* =========================
+   CONTENT
+========================= */
 
-#main {
-    display: flex;
-    gap: 10px;
+#content {
     padding: 10px;
 }
 
-#left {
-    width: 500px;
-}
-
-#right {
-    width: 210px;
+.page-title {
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 2px solid #555;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
 }
 
 .section {
-    margin-bottom: 10px;
     border: 1px solid #999;
-    background: #f7f7f7;
+    background: #fafafa;
+    margin-bottom: 12px;
 }
 
 .section-title {
-    height: 22px;
-    line-height: 22px;
-    padding-left: 8px;
-    color: #ffffff;
+    background: linear-gradient(#eeeeee, #d0d0d0);
+    border-bottom: 1px solid #999;
+    padding: 6px 8px;
     font-weight: bold;
-    background: linear-gradient(#5f8fbd, #315d8b);
-    border-bottom: 1px solid #24496e;
 }
 
-.section-content {
+.section-body {
     padding: 10px;
 }
 
-#login-required-section {
-    padding: 25px 10px;
+/* =========================
+   LOGIN REQUIRED
+========================= */
+
+#login-required {
+    border: 1px solid #aaa;
+    background: #f5f5f5;
+    padding: 14px;
     text-align: center;
-    color: #666;
+    margin-bottom: 12px;
 }
 
-.message-write-row {
-    margin-bottom: 8px;
-}
-
-.message-write-label {
-    margin-bottom: 4px;
-    font-weight: bold;
-}
-
-.message-input,
-.message-textarea {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px inset #999;
-    background: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    padding: 5px;
-}
-
-.message-input {
-    height: 25px;
-}
-
-.message-textarea {
-    height: 110px;
-    resize: vertical;
-}
-
-.message-send-row {
-    text-align: right;
+#login-required button {
     margin-top: 8px;
 }
 
-#send-result,
-#admin-send-result {
-    margin-top: 6px;
-    color: #666;
-    min-height: 14px;
+/* =========================
+   MESSAGE FORM
+========================= */
+
+.form-row {
+    margin-bottom: 8px;
 }
 
-#mailbox {
-    min-height: 100px;
-}
-
-.mail-item {
-    border-bottom: 1px solid #cccccc;
-    padding: 8px;
-    cursor: pointer;
-    background: #ffffff;
-}
-
-.mail-item:last-child {
-    border-bottom: 0;
-}
-
-.mail-item:hover {
-    background: #eeeeee;
-}
-
-.mail-item.unread {
-    background: #fffbd7;
+.form-row label {
+    display: block;
+    margin-bottom: 3px;
     font-weight: bold;
 }
 
-.mail-item.selected {
-    background: #dce9f5;
+.form-input,
+.form-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #888;
+    background: white;
+    padding: 6px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.mail-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
+.form-textarea {
+    height: 130px;
+    resize: vertical;
 }
 
-.mail-subject {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #315d8b;
 }
 
-.mail-date {
+.send-button {
+    padding: 5px 14px;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 1px outset #eee;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.send-button:active {
+    border-style: inset;
+}
+
+.send-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.message-result {
+    margin-top: 8px;
+    padding: 6px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    display: none;
+}
+
+/* =========================
+   MAILBOX
+========================= */
+
+.mailbox {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mailbox th {
+    background: #e5e5e5;
+    border: 1px solid #999;
+    padding: 6px;
+    text-align: left;
+}
+
+.mailbox td {
+    border: 1px solid #bbb;
+    padding: 6px;
+}
+
+.mailbox tr.unread {
+    font-weight: bold;
+    background: #fffde6;
+}
+
+.mailbox tr:hover {
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+.no-message {
+    padding: 20px;
+    text-align: center;
     color: #777;
-    font-size: 10px;
-    white-space: nowrap;
 }
 
-.mail-sender {
-    margin-top: 4px;
-    color: #555;
-    font-size: 11px;
-}
+/* =========================
+   MESSAGE READER
+========================= */
 
-.unread-mark {
-    display: inline-block;
-    margin-right: 5px;
-    color: #c40000;
-}
-
-#reader-section {
+#message-reader {
     display: none;
 }
 
 .reader-header {
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #aaa;
     padding-bottom: 8px;
     margin-bottom: 10px;
 }
@@ -297,123 +309,74 @@ body {
     margin-bottom: 6px;
 }
 
-.reader-info {
-    color: #666;
+.reader-meta {
+    color: #777;
     font-size: 11px;
 }
 
 .reader-body {
     min-height: 150px;
-    background: #ffffff;
-    border: 1px inset #aaa;
+    border: 1px solid #ccc;
+    background: white;
     padding: 10px;
     white-space: pre-wrap;
-    line-height: 1.5;
     word-break: break-word;
 }
 
-.reader-actions {
-    margin-top: 8px;
-    text-align: right;
+.back-button {
+    margin-top: 10px;
+    padding: 4px 12px;
+    background: linear-gradient(#fff, #ccc);
+    border: 1px outset #eee;
+    cursor: pointer;
 }
 
-.empty-message {
-    padding: 20px;
-    text-align: center;
-    color: #777;
-}
+/* =========================
+   ADMIN
+========================= */
 
-.side-box {
-    border: 1px solid #999;
-    background: #f7f7f7;
-    margin-bottom: 10px;
-}
-
-.side-title {
-    height: 22px;
-    line-height: 22px;
-    padding-left: 8px;
-    color: #ffffff;
-    font-weight: bold;
-    background: linear-gradient(#666666, #3d3d3d);
-}
-
-.side-content {
-    padding: 10px;
-    line-height: 1.5;
-}
-
-#footer {
-    padding: 12px;
-    text-align: center;
-    border-top: 1px solid #999;
-    background: #eeeeee;
-    color: #666;
-    font-size: 11px;
-}
-
-#footer a {
-    color: #666;
-    text-decoration: none;
-}
-
-#footer a:hover {
-    text-decoration: underline;
-}
-
-#status {
-    color: #666;
-    font-size: 11px;
-}
-
-#admin-message-box {
+#admin-message-section {
     display: none;
 }
 
 .admin-warning {
-    padding: 6px;
-    margin-bottom: 8px;
-    border: 1px solid #c5a900;
-    background: #fff9c7;
-    color: #555;
-}
-
-#new-message-notice {
-    display: none;
-    margin-bottom: 8px;
     padding: 7px;
-    border: 1px solid #7c9abb;
-    background: #e8f1fa;
-    color: #315d8b;
-    cursor: pointer;
-    font-weight: bold;
+    background: #fff4d6;
+    border: 1px solid #d4a300;
+    margin-bottom: 8px;
 }
 
-@media (max-width: 800px) {
-    #site {
-        width: calc(100% - 20px);
-        margin: 10px;
-    }
+/* =========================
+   FOOTER
+========================= */
 
-    #main {
-        display: block;
-    }
-
-    #left,
-    #right {
-        width: auto;
-    }
-
-    #auth-bar {
-        right: 8px;
-    }
+#footer {
+    margin-top: 15px;
+    padding: 12px;
+    border-top: 1px solid #aaa;
+    text-align: center;
+    color: #777;
+    font-size: 11px;
 }
+
+.hidden {
+    display: none !important;
+}
+
+.clear {
+    clear: both;
+}
+
 </style>
 </head>
 
 <body>
 
 <div id="site">
+
+    <!-- =========================
+         TOP
+    ========================== -->
 
     <div id="top">
 
@@ -443,7 +406,7 @@ body {
             <button
                 class="auth-btn"
                 id="signup-btn"
-                onclick="goLogin()"
+                onclick="goSignup()"
             >
                 회원가입
             </button>
@@ -461,17 +424,31 @@ body {
 
     </div>
 
+
+    <!-- =========================
+         MENU
+    ========================== -->
+
     <div id="menu">
 
-        <a href="index.html" class="menu-button">
+        <a
+            href="index.html"
+            class="menu-button"
+        >
             HOME
         </a>
 
-        <a href="index.html#world" class="menu-button">
+        <a
+            href="index.html#world"
+            class="menu-button"
+        >
             WORLD
         </a>
 
-        <a href="message.html" class="menu-button">
+        <a
+            href="message.html"
+            class="menu-button"
+        >
             MESSAGE
         </a>
 
@@ -482,7 +459,10 @@ body {
             PROFILE
         </span>
 
-        <a href="index.html#about" class="menu-button">
+        <a
+            href="index.html#about"
+            class="menu-button"
+        >
             ABOUT
         </a>
 
@@ -497,349 +477,341 @@ body {
 
     </div>
 
+
+    <!-- =========================
+         NOTICE
+    ========================== -->
+
     <div id="notice">
 
-        <div id="banner-container">
-            배너를 불러오는 중...
-        </div>
+        <span class="notice-left">
+            <b>MESSAGE</b>
+            · 작은 편지를 주고받는 공간
+        </span>
+
+        <span
+            id="status"
+            class="notice-right"
+        >
+            확인 중...
+        </span>
+
+        <div class="clear"></div>
 
     </div>
 
-    <div id="main">
 
-        <div id="left">
+    <!-- =========================
+         CONTENT
+    ========================== -->
 
-            <div
-                id="login-required-section"
-                class="section"
-                style="display:none;"
+    <div id="content">
+
+        <div class="page-title">
+            MESSAGE
+        </div>
+
+
+        <!-- LOGIN REQUIRED -->
+
+        <div id="login-required">
+
+            메시지를 이용하려면 로그인이 필요합니다
+
+            <br>
+
+            <button
+                class="send-button"
+                onclick="goLogin()"
             >
+                로그인
+            </button>
 
-                <div class="section-title">
-                    MESSAGE
-                </div>
+        </div>
 
-                <div class="section-content">
-                    MESSAGE를 사용하려면 로그인이 필요합니다
-                    <br><br>
 
-                    <button
-                        class="auth-btn"
-                        onclick="goLogin()"
+        <!-- =========================
+             WRITE MESSAGE
+        ========================== -->
+
+        <div
+            id="write-message-section"
+            class="section"
+            style="display:none;"
+        >
+
+            <div class="section-title">
+                새 메시지 작성
+            </div>
+
+            <div class="section-body">
+
+                <div class="form-row">
+
+                    <label for="recipient">
+                        받는 사람
+                    </label>
+
+                    <input
+                        type="text"
+                        id="recipient"
+                        class="form-input"
+                        placeholder="사용자 이름"
+                        autocomplete="off"
                     >
-                        로그인
-                    </button>
+
                 </div>
+
+
+                <div class="form-row">
+
+                    <label for="subject">
+                        제목
+                    </label>
+
+                    <input
+                        type="text"
+                        id="subject"
+                        class="form-input"
+                        maxlength="100"
+                        placeholder="제목을 입력하세요"
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <label for="body">
+                        내용
+                    </label>
+
+                    <textarea
+                        id="body"
+                        class="form-textarea"
+                        maxlength="5000"
+                        placeholder="메시지를 입력하세요"
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    id="send-button"
+                    class="send-button"
+                    onclick="sendMessage()"
+                >
+                    메시지 보내기
+                </button>
+
+
+                <div
+                    id="message-result"
+                    class="message-result"
+                ></div>
 
             </div>
 
-            <div
-                id="new-message-notice"
-                onclick="loadMessages()"
-            >
-                새로운 편지가 도착했습니다
-                · 클릭하여 새로고침
+        </div>
+
+
+        <!-- =========================
+             ADMIN MESSAGE
+        ========================== -->
+
+        <div
+            id="admin-message-section"
+            class="section"
+        >
+
+            <div class="section-title">
+                관리자 메시지
             </div>
 
-            <div
-                id="write-section"
-                class="section"
-                style="display:none;"
-            >
+            <div class="section-body">
 
-                <div class="section-title">
-                    WRITE MESSAGE
+                <div class="admin-warning">
+                    관리자 전용 메시지 발송 영역입니다
                 </div>
 
-                <div class="section-content">
+                <div class="form-row">
 
-                    <div class="message-write-row">
+                    <label for="admin-recipient">
+                        받는 사람
+                    </label>
 
-                        <div class="message-write-label">
-                            받는 사람
-                        </div>
+                    <select
+                        id="admin-recipient"
+                        class="form-input"
+                    >
 
-                        <input
-                            id="message-recipient"
-                            class="message-input"
-                            type="text"
-                            placeholder="username"
-                        >
+                        <option value="EVERYONE">
+                            전체 사용자
+                        </option>
 
-                    </div>
-
-                    <div class="message-write-row">
-
-                        <div class="message-write-label">
-                            제목
-                        </div>
-
-                        <input
-                            id="message-subject"
-                            class="message-input"
-                            type="text"
-                            maxlength="100"
-                            placeholder="제목을 입력하세요"
-                        >
-
-                    </div>
-
-                    <div class="message-write-row">
-
-                        <div class="message-write-label">
-                            내용
-                        </div>
-
-                        <textarea
-                            id="message-body"
-                            class="message-textarea"
-                            maxlength="5000"
-                            placeholder="내용을 입력하세요"
-                        ></textarea>
-
-                    </div>
-
-                    <div class="message-send-row">
-
-                        <button
-                            class="auth-btn"
-                            onclick="sendMessage()"
-                        >
-                            편지 보내기
-                        </button>
-
-                    </div>
-
-                    <div id="send-result"></div>
+                    </select>
 
                 </div>
 
-            </div>
 
-            <div
-                id="admin-message-box"
-                class="section"
-            >
+                <div class="form-row">
 
-                <div class="section-title">
-                    ADMIN MESSAGE
-                </div>
+                    <label for="admin-subject">
+                        제목
+                    </label>
 
-                <div class="section-content">
-
-                    <div class="admin-warning">
-                        관리자 전용 · 특정 사용자 또는 EVERYONE에게 발송할 수 있습니다
-                    </div>
-
-                    <div class="message-write-row">
-
-                        <div class="message-write-label">
-                            받는 사람
-                        </div>
-
-                        <input
-                            id="admin-message-recipient"
-                            class="message-input"
-                            type="text"
-                            placeholder="username 또는 EVERYONE"
-                        >
-
-                    </div>
-
-                    <div class="message-write-row">
-
-                        <div class="message-write-label">
-                            제목
-                        </div>
-
-                        <input
-                            id="admin-message-subject"
-                            class="message-input"
-                            type="text"
-                            maxlength="100"
-                            placeholder="제목을 입력하세요"
-                        >
-
-                    </div>
-
-                    <div class="message-write-row">
-
-                        <div class="message-write-label">
-                            내용
-                        </div>
-
-                        <textarea
-                            id="admin-message-body"
-                            class="message-textarea"
-                            maxlength="5000"
-                            placeholder="내용을 입력하세요"
-                        ></textarea>
-
-                    </div>
-
-                    <div class="message-send-row">
-
-                        <button
-                            class="auth-btn"
-                            onclick="adminSendMessage()"
-                        >
-                            관리자 편지 보내기
-                        </button>
-
-                    </div>
-
-                    <div id="admin-send-result"></div>
+                    <input
+                        type="text"
+                        id="admin-subject"
+                        class="form-input"
+                        maxlength="100"
+                        placeholder="제목"
+                    >
 
                 </div>
+
+
+                <div class="form-row">
+
+                    <label for="admin-body">
+                        내용
+                    </label>
+
+                    <textarea
+                        id="admin-body"
+                        class="form-textarea"
+                        maxlength="5000"
+                        placeholder="관리자 메시지"
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    class="send-button"
+                    onclick="adminSendMessage()"
+                >
+                    관리자 메시지 보내기
+                </button>
+
+
+                <div
+                    id="admin-result"
+                    class="message-result"
+                ></div>
 
             </div>
 
-            <div
-                id="inbox-section"
-                class="section"
-                style="display:none;"
-            >
+        </div>
 
-                <div class="section-title">
-                    INBOX
-                </div>
 
-                <div id="mailbox">
+        <!-- =========================
+             INBOX
+        ========================== -->
 
-                    <div class="empty-message">
-                        편지를 불러오는 중...
+        <div
+            id="inbox-section"
+            class="section"
+            style="display:none;"
+        >
+
+            <div class="section-title">
+                받은 메시지
+            </div>
+
+            <div class="section-body">
+
+                <div id="mailbox-container">
+
+                    <div class="no-message">
+                        메시지를 불러오는 중...
                     </div>
 
                 </div>
 
             </div>
 
-            <div
-                id="reader-section"
-                class="section"
-                style="display:none;"
-            >
+        </div>
 
-                <div class="section-title">
-                    LETTER
-                </div>
 
-                <div class="section-content">
+        <!-- =========================
+             READER
+        ========================== -->
 
-                    <div class="reader-header">
+        <div
+            id="message-reader"
+            class="section"
+        >
 
-                        <div
-                            id="reader-subject"
-                            class="reader-subject"
-                        ></div>
+            <div class="section-title">
+                MESSAGE
+            </div>
 
-                        <div
-                            id="reader-info"
-                            class="reader-info"
-                        ></div>
+            <div class="section-body">
 
-                    </div>
+                <div class="reader-header">
 
                     <div
-                        id="reader-body"
-                        class="reader-body"
+                        id="reader-subject"
+                        class="reader-subject"
                     ></div>
 
-                    <div class="reader-actions">
-
-                        <button
-                            class="auth-btn"
-                            onclick="closeReader()"
-                        >
-                            목록으로
-                        </button>
-
-                    </div>
+                    <div
+                        id="reader-meta"
+                        class="reader-meta"
+                    ></div>
 
                 </div>
+
+
+                <div
+                    id="reader-body"
+                    class="reader-body"
+                ></div>
+
+
+                <button
+                    class="back-button"
+                    onclick="closeMessage()"
+                >
+                    ← 받은 메시지로
+                </button>
 
             </div>
 
         </div>
 
-        <div id="right">
 
-            <div class="side-box">
+        <div id="footer">
 
-                <div class="side-title">
-                    MESSAGE
-                </div>
+            PLACE © 2026
 
-                <div class="side-content">
+            <span
+                style="margin:0 8px; color:#aaa;"
+            >
+                |
+            </span>
 
-                    <b>PLACE MESSAGE</b>
-                    <br><br>
-
-                    이곳에서는 사용자끼리
-                    작은 편지를 주고받을 수 있습니다
-
-                    <br><br>
-
-                    받은 편지는 INBOX에서
-                    확인할 수 있습니다
-
-                </div>
-
-            </div>
-
-            <div class="side-box">
-
-                <div class="side-title">
-                    ACCOUNT
-                </div>
-
-                <div class="side-content">
-
-                    <div id="side-account">
-                        로그인되지 않음
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="side-box">
-
-                <div class="side-title">
-                    STATUS
-                </div>
-
-                <div class="side-content">
-
-                    <div>
-                        MESSAGE SERVER
-                    </div>
-
-                    <div id="server-status">
-                        connecting...
-                    </div>
-
-                </div>
-
-            </div>
+            <a
+                href="terms.html"
+                style="color:#666; text-decoration:none;"
+            >
+                이용약관
+            </a>
 
         </div>
-
-    </div>
-
-    <div id="footer">
-
-        PLACE © 2026
-        |
-        <a href="terms.html">
-            이용약관
-        </a>
 
     </div>
 
 </div>
 
+
 <script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
 const SUPABASE_URL =
     "https://exeoqvfidmtmnwqejyvg.supabase.co";
 
@@ -847,23 +819,43 @@ const SUPABASE_KEY =
     "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
 
 const supabaseClient =
-    window.supabase.createClient(
+    supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
 
+
+/* =========================================
+   STATE
+========================================= */
+
 let currentUser = null;
 let currentProfile = null;
-let currentMessages = [];
-let messageChannel = null;
+let isAdmin = false;
+
+let messageRealtimeChannel = null;
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
 
 function goLogin() {
+    window.location.href = "index.html";
+}
+
+function goSignup() {
     window.location.href = "index.html";
 }
 
 function goProfile() {
     window.location.href = "index.html#profile";
 }
+
+
+/* =========================================
+   AUTH
+========================================= */
 
 async function checkAuth() {
 
@@ -875,12 +867,10 @@ async function checkAuth() {
 
     if (!session) {
 
-        currentUser = null;
-        currentProfile = null;
-
         showLoggedOut();
 
         return;
+
     }
 
     currentUser = session.user;
@@ -892,11 +882,15 @@ async function checkAuth() {
     await loadMessages();
 
     subscribeMessages();
+
 }
+
 
 async function loadProfile() {
 
-    if (!currentUser) return;
+    if (!currentUser) {
+        return;
+    }
 
     const {
         data,
@@ -910,123 +904,461 @@ async function loadProfile() {
     if (error) {
 
         console.error(
-            "프로필 불러오기 오류:",
+            "프로필 불러오기 실패:",
             error
         );
 
         return;
+
     }
 
     currentProfile = data;
 
+    isAdmin =
+        data.is_admin === true;
+
 }
+
 
 function showLoggedOut() {
 
-    document.getElementById("login-btn").style.display =
-        "inline-block";
+    currentUser = null;
+    currentProfile = null;
+    isAdmin = false;
 
-    document.getElementById("signup-btn").style.display =
-        "inline-block";
+    document
+        .getElementById("user-info")
+        .textContent = "로그인 필요";
 
-    document.getElementById("logout-btn").style.display =
-        "none";
+    document
+        .getElementById("login-btn")
+        .style.display = "";
 
-    document.getElementById("admin-menu").style.display =
-        "none";
+    document
+        .getElementById("signup-btn")
+        .style.display = "";
 
-    document.getElementById("user-info").innerText =
-        "로그인 필요";
+    document
+        .getElementById("logout-btn")
+        .style.display = "none";
 
-    document.getElementById("side-account").innerText =
-        "로그인되지 않음";
+    document
+        .getElementById("login-required")
+        .style.display = "block";
 
-    document.getElementById("status").innerText =
-        "로그인 필요";
+    document
+        .getElementById("write-message-section")
+        .style.display = "none";
 
-    document.getElementById("server-status").innerText =
-        "offline";
+    document
+        .getElementById("inbox-section")
+        .style.display = "none";
 
-    document.getElementById("write-section").style.display =
-        "none";
+    document
+        .getElementById("admin-message-section")
+        .style.display = "none";
 
-    document.getElementById("inbox-section").style.display =
-        "none";
+    document
+        .getElementById("admin-menu")
+        .style.display = "none";
 
-    document.getElementById("admin-message-box").style.display =
-        "none";
+    document
+        .getElementById("status")
+        .textContent = "로그인 필요";
 
-    document.getElementById("reader-section").style.display =
-        "none";
-
-    document.getElementById("login-required-section").style.display =
-        "block";
 }
+
 
 function showLoggedIn() {
 
-    document.getElementById("login-btn").style.display =
-        "none";
+    document
+        .getElementById("login-required")
+        .style.display = "none";
 
-    document.getElementById("signup-btn").style.display =
-        "none";
+    document
+        .getElementById("write-message-section")
+        .style.display = "block";
 
-    document.getElementById("logout-btn").style.display =
-        "inline-block";
+    document
+        .getElementById("inbox-section")
+        .style.display = "block";
 
-    document.getElementById("login-required-section").style.display =
-        "none";
+    document
+        .getElementById("login-btn")
+        .style.display = "none";
 
-    const displayName =
+    document
+        .getElementById("signup-btn")
+        .style.display = "none";
+
+    document
+        .getElementById("logout-btn")
+        .style.display = "";
+
+    document
+        .getElementById("admin-message-section")
+        .style.display =
+            isAdmin ? "block" : "none";
+
+    document
+        .getElementById("admin-menu")
+        .style.display =
+            isAdmin ? "inline-block" : "none";
+
+    let displayName =
         currentProfile?.nickname ||
         currentProfile?.username ||
         currentUser.email ||
-        "USER";
+        "사용자";
 
-    document.getElementById("user-info").innerText =
-        displayName;
+    document
+        .getElementById("user-info")
+        .textContent =
+            displayName;
 
-    document.getElementById("side-account").innerText =
-        currentProfile?.username ||
-        currentUser.email ||
-        "USER";
+    document
+        .getElementById("status")
+        .textContent =
+            "로그인됨";
 
-    document.getElementById("status").innerText =
-        "로그인됨";
+}
 
-    document.getElementById("server-status").innerText =
-        "online";
 
-    document.getElementById("write-section").style.display =
-        "block";
+async function logout() {
 
-    document.getElementById("inbox-section").style.display =
-        "block";
+    await supabaseClient.auth.signOut();
 
-    if (
-        currentProfile &&
-        currentProfile.is_admin === true
-    ) {
+    if (messageRealtimeChannel) {
 
-        document.getElementById("admin-message-box").style.display =
+        await supabaseClient
+            .removeChannel(
+                messageRealtimeChannel
+            );
+
+        messageRealtimeChannel = null;
+
+    }
+
+    showLoggedOut();
+
+}
+
+
+/* =========================================
+   SEND MESSAGE
+========================================= */
+
+async function sendMessage() {
+
+    if (!currentUser) {
+
+        alert(
+            "로그인이 필요합니다"
+        );
+
+        return;
+
+    }
+
+
+    const recipient =
+        document
+            .getElementById("recipient")
+            .value
+            .trim();
+
+    const subject =
+        document
+            .getElementById("subject")
+            .value
+            .trim();
+
+    const body =
+        document
+            .getElementById("body")
+            .value
+            .trim();
+
+
+    if (!recipient) {
+
+        alert(
+            "받는 사람을 입력해주세요"
+        );
+
+        return;
+
+    }
+
+
+    if (!subject) {
+
+        alert(
+            "제목을 입력해주세요"
+        );
+
+        return;
+
+    }
+
+
+    if (!body) {
+
+        alert(
+            "내용을 입력해주세요"
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document
+            .getElementById("send-button");
+
+    const result =
+        document
+            .getElementById("message-result");
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "보내는 중...";
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient.rpc(
+        "send_message",
+        {
+            p_recipient_username:
+                recipient,
+
+            p_subject:
+                subject,
+
+            p_body:
+                body
+        }
+    );
+
+
+    if (error) {
+
+        console.error(
+            "메시지 전송 오류:",
+            error
+        );
+
+        result.style.display =
             "block";
 
-        document.getElementById("admin-menu").style.display =
-            "inline-block";
+        result.textContent =
+            "메시지를 보내지 못했습니다: " +
+            error.message;
+
+        button.disabled = false;
+
+        button.textContent =
+            "메시지 보내기";
+
+        return;
+
+    }
+
+
+    result.style.display =
+        "block";
+
+    result.textContent =
+        "메시지를 보냈습니다";
+
+
+    document
+        .getElementById("recipient")
+        .value = "";
+
+    document
+        .getElementById("subject")
+        .value = "";
+
+    document
+        .getElementById("body")
+        .value = "";
+
+
+    button.disabled = false;
+
+    button.textContent =
+        "메시지 보내기";
+
+
+    await loadMessages();
+
+}
+
+
+/* =========================================
+   ADMIN SEND
+========================================= */
+
+async function adminSendMessage() {
+
+    if (!currentUser || !isAdmin) {
+
+        alert(
+            "관리자만 사용할 수 있습니다"
+        );
+
+        return;
+
+    }
+
+
+    const recipient =
+        document
+            .getElementById("admin-recipient")
+            .value;
+
+    const subject =
+        document
+            .getElementById("admin-subject")
+            .value
+            .trim();
+
+    const body =
+        document
+            .getElementById("admin-body")
+            .value
+            .trim();
+
+
+    if (!subject) {
+
+        alert(
+            "제목을 입력해주세요"
+        );
+
+        return;
+
+    }
+
+
+    if (!body) {
+
+        alert(
+            "내용을 입력해주세요"
+        );
+
+        return;
+
+    }
+
+
+    const result =
+        document
+            .getElementById("admin-result");
+
+
+    result.style.display =
+        "block";
+
+    result.textContent =
+        "보내는 중...";
+
+
+    let response;
+
+
+    if (recipient === "EVERYONE") {
+
+        response =
+            await supabaseClient.rpc(
+                "admin_send_message_everyone",
+                {
+                    p_subject:
+                        subject,
+
+                    p_body:
+                        body
+                }
+            );
 
     } else {
 
-        document.getElementById("admin-message-box").style.display =
-            "none";
+        response =
+            await supabaseClient.rpc(
+                "send_message",
+                {
+                    p_recipient_username:
+                        recipient,
 
-        document.getElementById("admin-menu").style.display =
-            "none";
+                    p_subject:
+                        subject,
+
+                    p_body:
+                        body
+                }
+            );
+
     }
+
+
+    if (response.error) {
+
+        console.error(
+            response.error
+        );
+
+        result.textContent =
+            "전송 실패: " +
+            response.error.message;
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "메시지를 보냈습니다";
+
+
+    document
+        .getElementById("admin-subject")
+        .value = "";
+
+    document
+        .getElementById("admin-body")
+        .value = "";
+
+
+    await loadMessages();
+
 }
+
+
+/* =========================================
+   LOAD MESSAGES
+========================================= */
 
 async function loadMessages() {
 
-    if (!currentUser) return;
+    if (!currentUser) {
+        return;
+    }
+
+
+    const container =
+        document
+            .getElementById("mailbox-container");
+
+
+    container.innerHTML =
+        '<div class="no-message">불러오는 중...</div>';
+
 
     const {
         data,
@@ -1034,651 +1366,368 @@ async function loadMessages() {
     } = await supabaseClient
         .from("messages")
         .select("*")
-        .eq(
-            "recipient_user_id",
+        .or(
+            "recipient_id.eq." +
+            currentUser.id +
+            ",sender_id.eq." +
             currentUser.id
         )
         .order(
-            "id",
+            "created_at",
             {
                 ascending: false
             }
         );
 
+
     if (error) {
 
         console.error(
-            "편지 불러오기 오류:",
+            "메시지 불러오기 오류:",
             error
         );
 
-        document.getElementById("mailbox").innerHTML = `
-            <div class="empty-message">
-                편지를 불러오지 못했습니다
-                <br><br>
-                ${escapeHtml(error.message)}
-            </div>
-        `;
+        container.innerHTML =
+            '<div class="no-message">메시지를 불러오지 못했습니다</div>';
 
         return;
+
     }
 
-    currentMessages = data || [];
 
-    renderMailbox();
-
-    updateUnreadCount();
-}
-
-function renderMailbox() {
-
-    const mailbox =
-        document.getElementById("mailbox");
-
-    if (!currentMessages.length) {
-
-        mailbox.innerHTML = `
-            <div class="empty-message">
-                받은 편지가 없습니다
-            </div>
-        `;
-
-        return;
-    }
-
-    mailbox.innerHTML = "";
-
-    currentMessages.forEach(message => {
-
-        const item =
-            document.createElement("div");
-
-        item.className =
-            "mail-item" +
-            (
-                message.is_read
-                    ? ""
-                    : " unread"
-            );
-
-        const mark =
-            message.is_read
-                ? ""
-                : '<span class="unread-mark">●</span>';
-
-        const date =
-            formatDate(
-                message.created_at
-            );
-
-        item.innerHTML = `
-            <div class="mail-top">
-
-                <div class="mail-subject">
-                    ${mark}
-                    ${escapeHtml(message.subject)}
-                </div>
-
-                <div class="mail-date">
-                    ${date}
-                </div>
-
-            </div>
-
-            <div class="mail-sender">
-                FROM :
-                ${escapeHtml(message.sender_name)}
-            </div>
-        `;
-
-        item.onclick = () => {
-            openMessage(message.id);
-        };
-
-        mailbox.appendChild(item);
-
-    });
-}
-
-async function openMessage(messageId) {
-
-    const message =
-        currentMessages.find(
-            item => item.id === messageId
-        );
-
-    if (!message) return;
-
-    document.getElementById("reader-subject").innerText =
-        message.subject;
-
-    document.getElementById("reader-info").innerText =
-        "FROM : " +
-        message.sender_name +
-        "   |   " +
-        formatDate(message.created_at);
-
-    document.getElementById("reader-body").innerText =
-        message.body;
-
-    document.getElementById("reader-section").style.display =
-        "block";
-
-    window.scrollTo({
-        top:
-            document.getElementById(
-                "reader-section"
-            ).offsetTop - 10,
-        behavior: "smooth"
-    });
-
-    if (!message.is_read) {
-
-        const {
-            error
-        } = await supabaseClient.rpc(
-            "mark_message_read",
-            {
-                p_message_id:
-                    message.id
-            }
-        );
-
-        if (error) {
-
-            console.error(
-                "읽음 처리 오류:",
-                error
-            );
-
-        } else {
-
-            message.is_read = true;
-
-            message.read_at =
-                new Date().toISOString();
-
-            renderMailbox();
-
-            updateUnreadCount();
-        }
-    }
-}
-
-function closeReader() {
-
-    document.getElementById(
-        "reader-section"
-    ).style.display = "none";
-
-}
-
-async function sendMessage() {
-
-    if (!currentUser) {
-
-        alert("로그인이 필요합니다.");
-
-        return;
-    }
-
-    const recipient =
-        document.getElementById(
-            "message-recipient"
-        ).value.trim();
-
-    const subject =
-        document.getElementById(
-            "message-subject"
-        ).value.trim();
-
-    const body =
-        document.getElementById(
-            "message-body"
-        ).value.trim();
-
-    const result =
-        document.getElementById(
-            "send-result"
-        );
-
-    if (!recipient) {
-
-        result.innerText =
-            "받는 사람을 입력해주세요.";
-
-        return;
-    }
-
-    if (!subject) {
-
-        result.innerText =
-            "제목을 입력해주세요.";
-
-        return;
-    }
-
-    if (!body) {
-
-        result.innerText =
-            "내용을 입력해주세요.";
-
-        return;
-    }
-
-    result.innerText =
-        "보내는 중...";
-
-    const {
-        error
-    } = await supabaseClient.rpc(
-        "send_message",
-        {
-            p_recipient_username:
-                recipient,
-
-            p_subject:
-                subject,
-
-            p_body:
-                body
-        }
+    renderMailbox(
+        data || []
     );
 
-    if (error) {
-
-        console.error(
-            "편지 보내기 오류:",
-            error
-        );
-
-        result.innerText =
-            error.message;
-
-        return;
-    }
-
-    document.getElementById(
-        "message-recipient"
-    ).value = "";
-
-    document.getElementById(
-        "message-subject"
-    ).value = "";
-
-    document.getElementById(
-        "message-body"
-    ).value = "";
-
-    result.innerText =
-        "편지를 보냈습니다.";
 }
 
-async function adminSendMessage() {
 
-    if (
-        !currentUser ||
-        !currentProfile ||
-        currentProfile.is_admin !== true
-    ) {
+/* =========================================
+   RENDER MAILBOX
+========================================= */
 
-        alert(
-            "관리자 권한이 필요합니다."
-        );
-
-        return;
-    }
-
-    const recipient =
-        document.getElementById(
-            "admin-message-recipient"
-        ).value.trim();
-
-    const subject =
-        document.getElementById(
-            "admin-message-subject"
-        ).value.trim();
-
-    const body =
-        document.getElementById(
-            "admin-message-body"
-        ).value.trim();
-
-    const result =
-        document.getElementById(
-            "admin-send-result"
-        );
-
-    if (!recipient) {
-
-        result.innerText =
-            "받는 사람을 입력해주세요.";
-
-        return;
-    }
-
-    if (!subject) {
-
-        result.innerText =
-            "제목을 입력해주세요.";
-
-        return;
-    }
-
-    if (!body) {
-
-        result.innerText =
-            "내용을 입력해주세요.";
-
-        return;
-    }
-
-    result.innerText =
-        "보내는 중...";
-
-    if (
-        recipient.toUpperCase() ===
-        "EVERYONE"
-    ) {
-
-        const {
-            data,
-            error
-        } = await supabaseClient.rpc(
-            "admin_send_message_everyone",
-            {
-                p_subject: subject,
-                p_body: body
-            }
-        );
-
-        if (error) {
-
-            console.error(
-                "EVERYONE 발송 오류:",
-                error
-            );
-
-            result.innerText =
-                error.message;
-
-            return;
-        }
-
-        document.getElementById(
-            "admin-message-recipient"
-        ).value = "";
-
-        document.getElementById(
-            "admin-message-subject"
-        ).value = "";
-
-        document.getElementById(
-            "admin-message-body"
-        ).value = "";
-
-        result.innerText =
-            data +
-            "명에게 편지를 보냈습니다.";
-
-        return;
-    }
-
-    const {
-        error
-    } = await supabaseClient.rpc(
-        "send_message",
-        {
-            p_recipient_username:
-                recipient,
-
-            p_subject:
-                subject,
-
-            p_body:
-                body
-        }
-    );
-
-    if (error) {
-
-        console.error(
-            "관리자 편지 발송 오류:",
-            error
-        );
-
-        result.innerText =
-            error.message;
-
-        return;
-    }
-
-    document.getElementById(
-        "admin-message-recipient"
-    ).value = "";
-
-    document.getElementById(
-        "admin-message-subject"
-    ).value = "";
-
-    document.getElementById(
-        "admin-message-body"
-    ).value = "";
-
-    result.innerText =
-        "편지를 보냈습니다.";
-}
-
-function updateUnreadCount() {
-
-    const unreadCount =
-        currentMessages.filter(
-            message =>
-                !message.is_read
-        ).length;
-
-    const status =
-        document.getElementById(
-            "status"
-        );
-
-    if (!currentUser) return;
-
-    if (unreadCount > 0) {
-
-        status.innerText =
-            "새 편지 " +
-            unreadCount +
-            "개";
-
-    } else {
-
-        status.innerText =
-            "편지 없음";
-    }
-}
-
-function subscribeMessages() {
-
-    if (messageChannel) {
-
-        supabaseClient.removeChannel(
-            messageChannel
-        );
-
-        messageChannel = null;
-    }
-
-    messageChannel =
-        supabaseClient
-            .channel(
-                "messages-" +
-                currentUser.id
-            )
-            .on(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "messages",
-                    filter:
-                        "recipient_user_id=eq." +
-                        currentUser.id
-                },
-                payload => {
-
-                    const newMessage =
-                        payload.new;
-
-                    currentMessages.unshift(
-                        newMessage
-                    );
-
-                    renderMailbox();
-
-                    updateUnreadCount();
-
-                    const notice =
-                        document.getElementById(
-                            "new-message-notice"
-                        );
-
-                    notice.style.display =
-                        "block";
-                }
-            )
-            .subscribe(
-                status => {
-
-                    console.log(
-                        "MESSAGE realtime:",
-                        status
-                    );
-
-                }
-            );
-}
-
-async function logout() {
-
-    await supabaseClient.auth.signOut();
-
-    if (messageChannel) {
-
-        await supabaseClient.removeChannel(
-            messageChannel
-        );
-
-        messageChannel = null;
-    }
-
-    currentUser = null;
-    currentProfile = null;
-    currentMessages = [];
-
-    showLoggedOut();
-}
-
-async function loadBanners() {
-
-    const notice =
-        document.getElementById("notice");
+function renderMailbox(messages) {
 
     const container =
-        document.getElementById(
-            "banner-container"
-        );
+        document
+            .getElementById("mailbox-container");
 
-    const now =
-        new Date().toISOString();
+
+    if (!messages.length) {
+
+        container.innerHTML =
+            '<div class="no-message">받은 메시지가 없습니다</div>';
+
+        return;
+
+    }
+
+
+    let html = `
+        <table class="mailbox">
+
+            <thead>
+
+                <tr>
+                    <th style="width:70px;">상태</th>
+                    <th>제목</th>
+                    <th style="width:130px;">보낸 사람</th>
+                    <th style="width:120px;">날짜</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+    `;
+
+
+    messages.forEach(
+        message => {
+
+            const isUnread =
+                message.is_read === false ||
+                message.read_at == null &&
+                message.recipient_id === currentUser.id;
+
+
+            const sender =
+                message.sender_username ||
+                message.sender_name ||
+                message.sender_id ||
+                "-";
+
+
+            const subject =
+                escapeHtml(
+                    message.subject ||
+                    "(제목 없음)"
+                );
+
+
+            const date =
+                formatDate(
+                    message.created_at
+                );
+
+
+            html += `
+
+                <tr
+                    class="${isUnread ? "unread" : ""}"
+                    onclick="openMessage('${message.id}')"
+                >
+
+                    <td>
+                        ${
+                            isUnread
+                                ? "● 새 메시지"
+                                : "읽음"
+                        }
+                    </td>
+
+                    <td>
+                        ${subject}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            String(sender)
+                        )}
+                    </td>
+
+                    <td>
+                        ${date}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+            </tbody>
+
+        </table>
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+/* =========================================
+   OPEN MESSAGE
+========================================= */
+
+async function openMessage(id) {
+
+    if (!currentUser) {
+        return;
+    }
+
 
     const {
         data,
         error
     } = await supabaseClient
-        .from("banners")
+        .from("messages")
         .select("*")
-        .lte("starts_at", now)
-        .or(
-            "ends_at.is.null,ends_at.gt." +
-            now
-        )
-        .order(
-            "created_at",
-            {
-                ascending: true
-            }
-        )
-        .limit(3);
+        .eq("id", id)
+        .single();
+
 
     if (error) {
 
         console.error(
-            "배너 불러오기 오류:",
             error
         );
 
-        notice.style.display = "none";
+        alert(
+            "메시지를 불러오지 못했습니다"
+        );
 
         return;
+
     }
 
-    if (!data || !data.length) {
 
-        notice.style.display = "none";
+    document
+        .getElementById("reader-subject")
+        .textContent =
+            data.subject ||
+            "(제목 없음)";
 
-        return;
-    }
 
-    container.innerHTML = "";
+    const sender =
+        data.sender_username ||
+        data.sender_name ||
+        data.sender_id ||
+        "-";
 
-    data.forEach(banner => {
 
-        const div =
-            document.createElement("div");
+    document
+        .getElementById("reader-meta")
+        .textContent =
+            "보낸 사람: " +
+            sender +
+            " · " +
+            formatDate(
+                data.created_at
+            );
 
-        div.className =
-            "site-banner";
 
-        div.innerText =
-            banner.message;
+    document
+        .getElementById("reader-body")
+        .textContent =
+            data.body || "";
 
-        container.appendChild(div);
 
-    });
+    document
+        .getElementById("message-reader")
+        .style.display =
+            "block";
 
-    notice.style.display =
-        "block";
-}
 
-function subscribeBannerRealtime() {
+    document
+        .getElementById("inbox-section")
+        .style.display =
+            "none";
 
-    supabaseClient
-        .channel("message-banner-realtime")
-        .on(
-            "postgres_changes",
+
+    /*
+       받은 메시지라면 읽음 처리
+    */
+
+    if (
+        data.recipient_id ===
+        currentUser.id
+    ) {
+
+        const {
+            error: readError
+        } = await supabaseClient.rpc(
+            "mark_message_read",
             {
-                event: "*",
-                schema: "public",
-                table: "banners"
-            },
-            () => {
-                loadBanners();
+                p_message_id:
+                    id
             }
-        )
-        .subscribe();
+        );
+
+
+        if (readError) {
+
+            console.error(
+                "읽음 처리 오류:",
+                readError
+            );
+
+        }
+
+    }
+
 }
+
+
+/* =========================================
+   CLOSE MESSAGE
+========================================= */
+
+async function closeMessage() {
+
+    document
+        .getElementById("message-reader")
+        .style.display =
+            "none";
+
+    document
+        .getElementById("inbox-section")
+        .style.display =
+            "block";
+
+    await loadMessages();
+
+}
+
+
+/* =========================================
+   REALTIME
+========================================= */
+
+function subscribeMessages() {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    if (messageRealtimeChannel) {
+
+        supabaseClient
+            .removeChannel(
+                messageRealtimeChannel
+            );
+
+    }
+
+
+    messageRealtimeChannel =
+        supabaseClient
+            .channel(
+                "message-page-" +
+                currentUser.id
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "messages"
+                },
+                async () => {
+
+                    await loadMessages();
+
+                }
+            )
+            .subscribe();
+
+}
+
+
+/* =========================================
+   DATE
+========================================= */
 
 function formatDate(dateString) {
 
-    if (!dateString) return "";
-
-    const date =
-        new Date(dateString);
-
-    if (isNaN(date.getTime())) {
+    if (!dateString) {
         return "";
     }
+
+
+    const date =
+        new Date(
+            dateString
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return String(
+            dateString
+        );
+
+    }
+
 
     const year =
         date.getFullYear();
@@ -1686,22 +1735,35 @@ function formatDate(dateString) {
     const month =
         String(
             date.getMonth() + 1
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
     const day =
         String(
             date.getDate()
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
     const hour =
         String(
             date.getHours()
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
     const minute =
         String(
             date.getMinutes()
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
+
 
     return (
         year +
@@ -1714,44 +1776,50 @@ function formatDate(dateString) {
         ":" +
         minute
     );
+
 }
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
 
 function escapeHtml(value) {
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
-        return "";
-    }
-
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
 }
 
-window.addEventListener(
-    "load",
-    async () => {
 
-        document.getElementById(
-            "server-status"
-        ).innerText =
-            "connecting...";
-
-        await checkAuth();
-
-        await loadBanners();
-
-        subscribeBannerRealtime();
-    }
-);
+/* =========================================
+   AUTH STATE
+========================================= */
 
 supabaseClient.auth.onAuthStateChange(
-    async (event, session) => {
+    async (
+        event,
+        session
+    ) => {
 
         if (
             event === "SIGNED_IN" &&
@@ -1768,29 +1836,35 @@ supabaseClient.auth.onAuthStateChange(
             await loadMessages();
 
             subscribeMessages();
+
         }
+
 
         if (
             event === "SIGNED_OUT"
         ) {
 
-            currentUser = null;
-            currentProfile = null;
-            currentMessages = [];
-
-            if (messageChannel) {
-
-                await supabaseClient.removeChannel(
-                    messageChannel
-                );
-
-                messageChannel = null;
-            }
-
             showLoggedOut();
+
         }
+
     }
 );
+
+
+/* =========================================
+   PAGE LOAD
+========================================= */
+
+window.addEventListener(
+    "load",
+    async () => {
+
+        await checkAuth();
+
+    }
+);
+
 </script>
 
 </body>
