@@ -13,9 +13,11 @@ html,
 body {
     margin: 0;
     padding: 0;
+
     background:
         linear-gradient(#eeeeee 1px, transparent 1px),
         linear-gradient(90deg, #eeeeee 1px, transparent 1px);
+
     background-size: 8px 8px;
 
     font-family: Arial, Helvetica, sans-serif;
@@ -26,8 +28,11 @@ body {
 #site {
     width: 760px;
     margin: 25px auto;
+
     background: white;
+
     border: 1px solid #555;
+
     box-shadow: 2px 2px 0 #888;
 }
 
@@ -47,6 +52,7 @@ body {
 
 #title {
     position: absolute;
+
     left: 18px;
     top: 12px;
 
@@ -56,6 +62,7 @@ body {
 
 #subtitle {
     position: absolute;
+
     left: 20px;
     top: 45px;
 
@@ -64,6 +71,7 @@ body {
 
 #user-info {
     position: absolute;
+
     right: 15px;
     top: 15px;
 }
@@ -72,6 +80,7 @@ body {
     height: 27px;
 
     background: #ddd;
+
     border-bottom: 1px solid #999;
 }
 
@@ -88,6 +97,7 @@ body {
         linear-gradient(#fff, #d8d8d8);
 
     border: 1px solid #999;
+
     border-top-color: #fff;
     border-left-color: #fff;
 
@@ -110,6 +120,7 @@ body {
     margin-bottom: 10px;
 
     background: #f7f7f7;
+
     border: 1px solid #999;
 }
 
@@ -136,9 +147,11 @@ input,
 textarea,
 select {
     width: 100%;
+
     padding: 5px;
 
     border: 1px solid #888;
+
     background: white;
 
     font-family: Arial, Helvetica, sans-serif;
@@ -147,6 +160,7 @@ select {
 
 textarea {
     height: 70px;
+
     resize: vertical;
 }
 
@@ -159,6 +173,7 @@ button {
         linear-gradient(#fff, #ddd);
 
     border: 1px solid #777;
+
     border-top-color: #fff;
     border-left-color: #fff;
 
@@ -179,7 +194,9 @@ button:hover {
 
 .admin-action {
     display: grid;
+
     grid-template-columns: repeat(3, 1fr);
+
     gap: 5px;
 
     margin-top: 8px;
@@ -189,9 +206,11 @@ button:hover {
     position: relative;
 
     margin-bottom: 6px;
+
     padding: 8px 30px 8px 8px;
 
     background: #fffbea;
+
     border: 1px solid #d5c36a;
 }
 
@@ -207,6 +226,7 @@ button:hover {
     margin-top: 5px;
 
     color: #777;
+
     font-size: 10px;
 }
 
@@ -226,26 +246,31 @@ button:hover {
 
 #message {
     margin-bottom: 8px;
+
     padding: 6px;
 
     display: none;
 
     border: 1px solid #999;
+
     background: #eee;
 }
 
 #message.error {
     background: #ffe0e0;
+
     border-color: #c77;
 }
 
 #message.success {
     background: #e0ffe0;
+
     border-color: #7c7;
 }
 
 #login-required {
     padding: 20px;
+
     text-align: center;
 }
 
@@ -255,13 +280,17 @@ button:hover {
 
 .small {
     margin-top: 4px;
+
     color: #777;
+
     font-size: 10px;
 }
 
 .row {
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 8px;
 }
 
@@ -271,14 +300,17 @@ button:hover {
     text-align: center;
 
     border-top: 1px solid #999;
+
     background: #eee;
 
     color: #666;
+
     font-size: 11px;
 }
 
 #footer a {
     color: #666;
+
     text-decoration: none;
 }
 
@@ -311,15 +343,24 @@ button:hover {
 
     <div id="menu">
 
-        <a href="index.html" class="menu-button">
+        <a
+            href="index.html"
+            class="menu-button"
+        >
             HOME
         </a>
 
-        <a href="message.html" class="menu-button">
+        <a
+            href="message.html"
+            class="menu-button"
+        >
             MESSAGE
         </a>
 
-        <a href="admin.html" class="menu-button">
+        <a
+            href="admin.html"
+            class="menu-button"
+        >
             ADMIN
         </a>
 
@@ -336,10 +377,14 @@ button:hover {
         </div>
 
 
-        <div id="admin-content" class="hidden">
+        <div
+            id="admin-content"
+            class="hidden"
+        >
 
-
-            <!-- 사용자 관리 -->
+            <!-- =========================
+                 USER MANAGEMENT
+            ========================== -->
 
             <div class="section">
 
@@ -416,7 +461,9 @@ button:hover {
             </div>
 
 
-            <!-- 배너 -->
+            <!-- =========================
+                 BANNER MANAGEMENT
+            ========================== -->
 
             <div class="section">
 
@@ -477,7 +524,9 @@ button:hover {
                     <br>
 
 
-                    <button onclick="createBanner()">
+                    <button
+                        onclick="createBanner()"
+                    >
                         배너 등록
                     </button>
 
@@ -491,7 +540,9 @@ button:hover {
             </div>
 
 
-            <!-- 채팅 -->
+            <!-- =========================
+                 CHAT MANAGEMENT
+            ========================== -->
 
             <div class="section">
 
@@ -518,6 +569,10 @@ button:hover {
     </div>
 
 
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
     <div id="footer">
 
         PLACE © 2026
@@ -531,6 +586,10 @@ button:hover {
 
 
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
     "https://exeoqvfidmtmnwqejyvg.supabase.co";
@@ -547,6 +606,7 @@ const supabaseClient =
 
 
 let currentUser = null;
+
 let currentProfile = null;
 
 
@@ -554,21 +614,34 @@ let currentProfile = null;
    MESSAGE
 ========================= */
 
-function showMessage(text, type = "") {
+function showMessage(
+    text,
+    type = ""
+) {
 
     const box =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
+
 
     box.innerText = text;
 
+
     box.className = "";
+
     box.id = "message";
 
+
     if (type) {
+
         box.classList.add(type);
+
     }
 
-    box.style.display = "block";
+
+    box.style.display =
+        "block";
 }
 
 
@@ -608,18 +681,26 @@ async function checkAdmin() {
         await supabaseClient
             .from("profiles")
             .select("*")
-            .eq("id", currentUser.id)
+            .eq(
+                "id",
+                currentUser.id
+            )
             .single();
 
 
-    if (error || !profile) {
+    if (
+        error ||
+        !profile
+    ) {
 
         console.error(error);
+
 
         showMessage(
             "프로필을 불러올 수 없습니다.",
             "error"
         );
+
 
         return false;
     }
@@ -639,12 +720,15 @@ async function checkAdmin() {
         );
 
 
-    if (profile.is_admin !== true) {
+    if (
+        profile.is_admin !== true
+    ) {
 
         showMessage(
             "관리자 권한이 없습니다.",
             "error"
         );
+
 
         return false;
     }
@@ -652,12 +736,16 @@ async function checkAdmin() {
 
     document.getElementById(
         "login-required"
-    ).classList.add("hidden");
+    ).classList.add(
+        "hidden"
+    );
 
 
     document.getElementById(
         "admin-content"
-    ).classList.remove("hidden");
+    ).classList.remove(
+        "hidden"
+    );
 
 
     await loadBanners();
@@ -668,7 +756,7 @@ async function checkAdmin() {
 
 
 /* =========================
-   BANNER
+   BANNER LOAD
 ========================= */
 
 async function loadBanners() {
@@ -708,7 +796,10 @@ async function loadBanners() {
     list.innerHTML = "";
 
 
-    if (!data || data.length === 0) {
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         list.innerHTML =
             '<div class="small">등록된 배너가 없습니다</div>';
@@ -740,11 +831,13 @@ async function loadBanners() {
 
             const end =
                 banner.ends_at
+
                     ? new Date(
                         banner.ends_at
                     ).toLocaleString(
                         "ko-KR"
                     )
+
                     : "기간 제한 없음";
 
 
@@ -831,6 +924,7 @@ async function createBanner() {
         await supabaseClient.rpc(
             "admin_create_banner",
             {
+
                 p_message:
                     message,
 
@@ -845,6 +939,7 @@ async function createBanner() {
                             end
                         ).toISOString()
                         : null
+
             }
         );
 
@@ -856,10 +951,12 @@ async function createBanner() {
             error
         );
 
+
         showMessage(
             error.message,
             "error"
         );
+
 
         return;
     }
@@ -903,6 +1000,7 @@ async function deleteBanner(id) {
 
 
     if (!confirmed) {
+
         return;
     }
 
@@ -913,8 +1011,10 @@ async function deleteBanner(id) {
         await supabaseClient.rpc(
             "admin_delete_banner",
             {
+
                 p_banner_id:
                     id
+
             }
         );
 
@@ -926,10 +1026,12 @@ async function deleteBanner(id) {
             error
         );
 
+
         showMessage(
             error.message,
             "error"
         );
+
 
         return;
     }
@@ -949,7 +1051,9 @@ async function deleteBanner(id) {
    USER ACTION
 ========================= */
 
-async function runUserAction(action) {
+async function runUserAction(
+    action
+) {
 
     const username =
         document.getElementById(
@@ -1007,15 +1111,18 @@ async function runUserAction(action) {
             " 명령을 실행하시겠습니까?"
         )
     ) {
+
         return;
     }
 
 
     /* =========================
        UNBAN
-    ========================= */
+    ========================== */
 
-    if (action === "unban") {
+    if (
+        action === "unban"
+    ) {
 
         const {
             error
@@ -1023,8 +1130,10 @@ async function runUserAction(action) {
             await supabaseClient.rpc(
                 "admin_unban",
                 {
+
                     p_username:
                         username
+
                 }
             );
 
@@ -1036,10 +1145,12 @@ async function runUserAction(action) {
                 error
             );
 
+
             showMessage(
                 error.message,
                 "error"
             );
+
 
             return;
         }
@@ -1051,15 +1162,18 @@ async function runUserAction(action) {
             "success"
         );
 
+
         return;
     }
 
 
     /* =========================
        CHATLOCK
-    ========================= */
+    ========================== */
 
-    if (action === "chatlock") {
+    if (
+        action === "chatlock"
+    ) {
 
         const {
             error
@@ -1067,8 +1181,10 @@ async function runUserAction(action) {
             await supabaseClient.rpc(
                 "admin_set_chatlock",
                 {
+
                     p_username:
                         username
+
                 }
             );
 
@@ -1080,10 +1196,12 @@ async function runUserAction(action) {
                 error
             );
 
+
             showMessage(
                 error.message,
                 "error"
             );
+
 
             return;
         }
@@ -1095,13 +1213,14 @@ async function runUserAction(action) {
             "success"
         );
 
+
         return;
     }
 
 
     /* =========================
        BAN
-    ========================= */
+    ========================== */
 
     if (
         action === "ban" ||
@@ -1117,11 +1236,19 @@ async function runUserAction(action) {
             await supabaseClient.rpc(
                 "admin_set_ban",
                 {
-                    p_username:
+
+                    target_username:
                         username,
 
-                    p_ban_type:
-                        action
+                    new_ban_type:
+                        action,
+
+                    new_ban_until:
+                        null,
+
+                    new_ban_reason:
+                        actionName
+
                 }
             );
 
@@ -1133,10 +1260,12 @@ async function runUserAction(action) {
                 error
             );
 
+
             showMessage(
                 error.message,
                 "error"
             );
+
 
             return;
         }
@@ -1156,27 +1285,39 @@ async function runUserAction(action) {
             "success"
         );
 
+
         return;
     }
 
 
     /* =========================
        WARNING
-    ========================= */
+    ========================== */
 
-    if (action === "warning") {
+    if (
+        action === "warning"
+    ) {
 
         const {
+            data,
             error
         } =
             await supabaseClient.rpc(
                 "admin_set_ban",
                 {
-                    p_username:
+
+                    target_username:
                         username,
 
-                    p_ban_type:
-                        "warning"
+                    new_ban_type:
+                        "warning",
+
+                    new_ban_until:
+                        null,
+
+                    new_ban_reason:
+                        "경고"
+
                 }
             );
 
@@ -1188,13 +1329,21 @@ async function runUserAction(action) {
                 error
             );
 
+
             showMessage(
                 error.message,
                 "error"
             );
 
+
             return;
         }
+
+
+        console.log(
+            "WARNING RESULT:",
+            data
+        );
 
 
         showMessage(
@@ -1202,6 +1351,7 @@ async function runUserAction(action) {
             " 사용자에게 경고가 적용되었습니다.",
             "success"
         );
+
 
         return;
     }
@@ -1225,6 +1375,7 @@ async function cleanChat() {
             "정말 전체 채팅을 삭제하시겠습니까?"
         )
     ) {
+
         return;
     }
 
@@ -1244,10 +1395,12 @@ async function cleanChat() {
             error
         );
 
+
         showMessage(
             error.message,
             "error"
         );
+
 
         return;
     }
