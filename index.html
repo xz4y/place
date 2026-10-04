@@ -305,6 +305,14 @@ body {
 #forum-body{height:100px;resize:vertical;display:block}
 .forum-compose-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:10px;color:#777}
 .forum-row{display:grid;grid-template-columns:46px 1fr 58px 58px 85px;align-items:center;min-height:54px;padding:0 8px;border:1px solid #aaa;border-top:0;background:#fff;cursor:pointer}
+.forum-carousel{position:relative}
+.forum-carousel-viewport{overflow:hidden}
+.forum-carousel-track{display:flex;width:100%;transition:transform .2s ease}
+.forum-carousel-page{flex:0 0 100%;width:100%}
+.forum-carousel-nav{display:flex;justify-content:center;align-items:center;gap:6px;padding:6px 0 0}
+.forum-carousel-btn{min-width:26px;height:22px;padding:0 7px;background:linear-gradient(#fff,#ddd);border:1px solid #999;color:#333;font:11px Arial;cursor:pointer}
+.forum-carousel-btn:disabled{opacity:.35;cursor:default}
+.forum-carousel-page-info{min-width:50px;text-align:center;color:#777;font-size:10px}
 .forum-row:first-child{border-top:1px solid #aaa}
 .forum-row:hover{background:#f0f5fa}
 .forum-no{text-align:center;color:#777;font-size:10px;font-weight:bold}.forum-main{min-width:0}
@@ -369,6 +377,9 @@ body {
 .forum-comment-pin:before{content:"";position:absolute;left:0;top:0;width:7px;height:6px;background:linear-gradient(#e56a62,#b62d28);border:1px solid #7f1e1b;border-radius:4px 4px 1px 1px;box-shadow:inset 1px 1px 0 rgba(255,255,255,.5)}
 .forum-comment-pin:after{content:"";position:absolute;left:4px;top:5px;width:2px;height:7px;background:#777;transform:rotate(32deg);transform-origin:top center}
 .forum-comment-pinned{background:#fffdf0}
+.forum-comment-reply{margin-left:22px;border-left:2px solid #ddd}
+.forum-reply-cancel{display:none;padding:2px 6px;background:#fff;border:1px solid #bbb;font:10px Arial;color:#555;cursor:pointer}
+.forum-replying #forum-reply-target{display:inline}
 .forum-comment-owner-btn{padding:2px 6px;background:#fff;border:1px solid #bbb;font:10px Arial;color:#555;cursor:pointer}
 .forum-comment-owner-btn:hover{background:#eee}
 .forum-comment-like{padding:2px 6px;background:#fff;border:1px solid #bbb;font:10px Arial;color:#555;cursor:pointer}
@@ -4331,8 +4342,25 @@ function forumRelativeTime(value){
     if(day<7)return day+"일 전";
     return formatDateTime(value);
 }
+function forumIsChatLocked(){
+    if(!currentProfile?.chatlock_until) return false;
+    const until=new Date(currentProfile.chatlock_until).getTime();
+    return Number.isFinite(until) && until > Date.now();
+}
+function forumRequireWritable(){
+    if(!currentUser||!currentProfile){
+        alert("로그인이 필요한 기능입니다.");
+        openModal("loginModal");
+        return false;
+    }
+    if(forumIsChatLocked()){
+        alert("현재 채팅 정지 상태라 게시글과 댓글을 작성할 수 없습니다.");
+        return false;
+    }
+    return true;
+}
 function forumOpenComposer(){
-    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    if(!forumRequireWritable()) return;
     document.getElementById("forum-composer").style.display="block";
     document.getElementById("forum-title").focus();
 }
@@ -4341,7 +4369,7 @@ function closeForumComposer(){
     if(c)c.style.display="none";
 }
 async function createForumPost(){
-    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    if(!forumRequireWritable()) return;
     const title=document.getElementById("forum-title").value.trim();
     const body=document.getElementById("forum-body").value.trim();
     if(!title||!body){alert("제목과 내용을 모두 입력해 주세요.");return;}
@@ -4359,6 +4387,15 @@ async function createForumPost(){
     closeForumComposer();
     openForumDetail(post.id);
 }
+let forumPageIndex = 0;
+const FORUM_PAGE_SIZE = 5;
+
+function forumChangePage(direction){
+    const pages=Math.max(1,Math.ceil(forumRead().length/FORUM_PAGE_SIZE));
+    forumPageIndex=Math.max(0,Math.min(pages-1,forumPageIndex+direction));
+    renderForumList();
+}
+
 function renderForumList(){
     const list=document.getElementById("forum-list"),detail=document.getElementById("forum-detail");
     if(!list)return;
@@ -4373,7 +4410,17 @@ function renderForumList(){
         return sortMode==="likes" ? (likeDiff||timeDiff) : timeDiff;
     });
     if(!posts.length){list.innerHTML='<div class="forum-empty">아직 게시글이 없습니다</div>';return;}
-    list.innerHTML=posts.map(p=>`<div class="forum-row${p.pinned?" forum-pinned":""}" onclick="openForumDetail('${p.id}')"><div class="forum-no">${Number(p.postNo)||"-"}</div><div class="forum-main"><div class="forum-title">${p.pinned?'<span class="forum-pin-icon" title="고정된 게시글" aria-label="고정된 게시글"></span>':''}${forumEscape(p.title)}</div><div class="forum-meta">${forumEscape(p.nickname)} · ${forumEscape(formatDateTime(p.createdAt))}</div></div><div class="forum-count">♥ ${forumLikeCount(p)}</div><div class="forum-count">댓글 ${p.comments?.length||0}</div><div class="forum-time">${forumRelativeTime(p.createdAt)}</div></div>`).join("");
+
+    const pageCount=Math.max(1,Math.ceil(posts.length/FORUM_PAGE_SIZE));
+    forumPageIndex=Math.max(0,Math.min(pageCount-1,forumPageIndex));
+    const pages=[];
+    for(let i=0;i<pageCount;i++){
+        const pagePosts=posts.slice(i*FORUM_PAGE_SIZE,(i+1)*FORUM_PAGE_SIZE);
+        pages.push(`<div class="forum-carousel-page">${pagePosts.map(p=>`<div class="forum-row${p.pinned?" forum-pinned":""}" onclick="openForumDetail('${p.id}')"><div class="forum-no">${Number(p.postNo)||"-"}</div><div class="forum-main"><div class="forum-title">${p.pinned?'<span class="forum-pin-icon" title="고정된 게시글" aria-label="고정된 게시글"></span>':''}${forumEscape(p.title)}</div><div class="forum-meta">${forumEscape(p.nickname)} · ${forumEscape(formatDateTime(p.createdAt))}</div></div><div class="forum-count">♥ ${forumLikeCount(p)}</div><div class="forum-count">댓글 ${p.comments?.length||0}</div><div class="forum-time">${forumRelativeTime(p.createdAt)}</div></div>`).join("")}</div>`);
+    }
+
+    const nav=pageCount>1?`<div class="forum-carousel-nav"><button class="forum-carousel-btn" onclick="forumChangePage(-1)" ${forumPageIndex===0?"disabled":""}>‹ 이전</button><span class="forum-carousel-page-info">${forumPageIndex+1} / ${pageCount}</span><button class="forum-carousel-btn" onclick="forumChangePage(1)" ${forumPageIndex===pageCount-1?"disabled":""}>다음 ›</button></div>`:"";
+    list.innerHTML=`<div class="forum-carousel"><div class="forum-carousel-viewport"><div class="forum-carousel-track" style="transform:translateX(-${forumPageIndex*100}%);">${pages.join("")}</div></div>${nav}</div>`;
 }
 function openForumDetail(id,replaceUrl=false){
     const post=forumRead().find(p=>p.id===id);
@@ -4395,11 +4442,72 @@ function closeForumDetail(){
     forumClearPostUrl();
     renderForumList();
 }
+let forumReplyTargetId = null;
+function forumCommentTotalCount(comments){
+    return Array.isArray(comments) ? comments.length : 0;
+}
+function forumCommentTree(comments){
+    const list=Array.isArray(comments)?comments:[];
+    const byParent=new Map();
+    list.forEach(c=>{
+        const key=c.replyTo||null;
+        if(!byParent.has(key)) byParent.set(key,[]);
+        byParent.get(key).push(c);
+    });
+    byParent.forEach(arr=>arr.sort((a,b)=>{
+        const pin=(b.pinned?1:0)-(a.pinned?1:0);
+        return pin || (new Date(a.createdAt)-new Date(b.createdAt));
+    }));
+    return byParent;
+}
+function forumSetReplyTarget(commentId,postId){
+    const posts=forumRead(),post=posts.find(p=>p.id===postId);
+    if(!post)return;
+    const comment=(post.comments||[]).find(c=>c.id===commentId);
+    if(!comment)return;
+    if(!forumRequireWritable())return;
+    forumReplyTargetId=commentId;
+    const input=document.getElementById('forum-comment-input');
+    const target=document.getElementById('forum-reply-target');
+    const cancel=document.getElementById('forum-reply-cancel');
+    if(input){input.placeholder=`${comment.nickname}님에게 답글을 작성하세요`;input.focus();}
+    if(target){target.textContent=`@${comment.nickname}에게 답글`;target.style.display='inline';}
+    if(cancel)cancel.style.display='inline-block';
+}
+function forumCancelReply(){
+    forumReplyTargetId=null;
+    const input=document.getElementById('forum-comment-input');
+    const target=document.getElementById('forum-reply-target');
+    const cancel=document.getElementById('forum-reply-cancel');
+    if(input)input.placeholder='댓글을 작성하세요';
+    if(target)target.style.display='none';
+    if(cancel)cancel.style.display='none';
+}
+function forumRenderCommentTree(post,comments){
+    const byParent=forumCommentTree(comments);
+    const render=(parentId,depth)=>{
+        const arr=byParent.get(parentId)||[];
+        return arr.map(c=>`<div class="forum-comment${c.pinned?' forum-comment-pinned':''}${depth?' forum-comment-reply':''}">
+            <div class="forum-comment-meta">${c.pinned?'<span class="forum-comment-pin" title="고정된 댓글" aria-label="고정된 댓글"></span>':''}${forumEscape(c.nickname)}${c.replyTo?` <span style="color:#999">↳ 답글</span>`:''} · ${forumEscape(formatDateTime(c.createdAt))}</div>
+            <div class="forum-comment-body">${forumEscape(c.body)}</div>
+            <div class="forum-comment-actions">
+                <button class="forum-comment-like ${forumCommentHasLiked(post,c)?'liked':''}" onclick="forumCommentLike('${post.id}','${c.id}');event.stopPropagation();">좋아요 <span>${forumCommentLikeCount(c)}</span></button>
+                <button class="forum-comment-owner-btn" onclick="forumSetReplyTarget('${c.id}','${post.id}');event.stopPropagation();">답글</button>
+                ${forumCanPinComment(post)?`<button class="forum-comment-owner-btn" onclick="forumCommentTogglePin('${post.id}','${c.id}');event.stopPropagation();">${c.pinned?'고정 해제':'고정'}</button>`:''}
+                ${forumCommentIsOwner(c)?`<button class="forum-comment-owner-btn" onclick="forumCommentDelete('${post.id}','${c.id}');event.stopPropagation();">삭제</button>`:''}
+                <button class="forum-comment-owner-btn forum-report-btn" onclick="forumCommentReport('${post.id}','${c.id}');event.stopPropagation();">신고</button>
+            </div>
+            ${render(c.id,depth+1)}
+        </div>`).join('');
+    };
+    return render(null,0);
+}
 function renderForumDetail(id){
-    const box=document.getElementById("forum-detail-content"),post=forumRead().find(p=>p.id===id);
+    const box=document.getElementById('forum-detail-content'),post=forumRead().find(p=>p.id===id);
     if(!post){forumSelectedPostId=null;renderForumList();return;}
     const comments=post.comments||[];
-    box.innerHTML=`<article class="forum-article"><div class="forum-article-header"><div class="forum-article-title">#${Number(post.postNo)||"-"} · ${forumEscape(post.title)}</div><div class="forum-article-meta">${forumEscape(post.nickname)} · ${forumEscape(formatDateTime(post.createdAt))}</div></div><div class="forum-article-body">${forumEscape(post.body)}</div><div class="forum-actions"><button class="forum-action-btn ${forumHasReacted(post,"like")?"liked":""}" onclick="forumReact('${post.id}','like')">좋아요 <span>${forumLikeCount(post)}</span></button><button class="forum-action-btn ${forumHasReacted(post,"dislike")?"disliked":""}" onclick="forumReact('${post.id}','dislike')">싫어요</button><button class="forum-action-btn report" onclick="forumReport('${post.id}')">신고</button>${isAdmin?`<button class="forum-action-btn" onclick="forumAdminTogglePin('${post.id}')">${post.pinned?'핀 해제':'핀 고정'}</button><button class="forum-action-btn" onclick="forumAdminDelete('${post.id}')">삭제</button>`:''}</div><div class="forum-comments"><div class="forum-comments-title">COMMENTS · ${comments.length}</div>${comments.length?comments.slice().sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)).map(c=>`<div class="forum-comment${c.pinned?" forum-comment-pinned":""}"><div class="forum-comment-meta">${c.pinned?'<span class="forum-comment-pin" title="고정된 댓글" aria-label="고정된 댓글"></span>':''}${forumEscape(c.nickname)} · ${forumEscape(formatDateTime(c.createdAt))}</div><div class="forum-comment-body">${forumEscape(c.body)}</div><div class="forum-comment-actions"><button class="forum-comment-like ${forumCommentHasLiked(post,c)?"liked":""}" onclick="forumCommentLike('${post.id}','${c.id}');event.stopPropagation();">좋아요 <span>${forumCommentLikeCount(c)}</span></button>${forumCommentIsOwner(c)?`<button class="forum-comment-owner-btn" onclick="forumCommentTogglePin('${post.id}','${c.id}');event.stopPropagation();">${c.pinned?'고정 해제':'고정'}</button><button class="forum-comment-owner-btn" onclick="forumCommentDelete('${post.id}','${c.id}');event.stopPropagation();">삭제</button>`:''}<button class="forum-comment-owner-btn forum-report-btn" onclick="forumCommentReport('${post.id}','${c.id}');event.stopPropagation();">신고</button></div></div>`).join(""):'<div class="forum-empty">첫 번째 댓글을 남겨보세요</div>'}<div class="forum-comment-form"><textarea id="forum-comment-input" maxlength="1000" placeholder="댓글을 작성하세요"></textarea><button class="auth-btn" onclick="createForumComment()">COMMENT</button></div></div></article>`;
+    const replyTarget=forumReplyTargetId?comments.find(c=>c.id===forumReplyTargetId):null;
+    box.innerHTML=`<article class="forum-article"><div class="forum-article-header"><div class="forum-article-title">#${Number(post.postNo)||'-'} · ${forumEscape(post.title)}</div><div class="forum-article-meta">${forumEscape(post.nickname)} · ${forumEscape(formatDateTime(post.createdAt))}</div></div><div class="forum-article-body">${forumEscape(post.body)}</div><div class="forum-actions"><button class="forum-action-btn ${forumHasReacted(post,'like')?'liked':''}" onclick="forumReact('${post.id}','like')">좋아요 <span>${forumLikeCount(post)}</span></button><button class="forum-action-btn ${forumHasReacted(post,'dislike')?'disliked':''}" onclick="forumReact('${post.id}','dislike')">싫어요</button><button class="forum-action-btn report" onclick="forumReport('${post.id}')">신고</button>${isAdmin?`<button class="forum-action-btn" onclick="forumAdminTogglePin('${post.id}')">${post.pinned?'핀 해제':'핀 고정'}</button><button class="forum-action-btn" onclick="forumAdminDelete('${post.id}')">삭제</button>`:''}</div><div class="forum-comments"><div class="forum-comments-title">COMMENTS · ${forumCommentTotalCount(comments)}</div>${comments.length?forumRenderCommentTree(post,comments):'<div class="forum-empty">첫 번째 댓글을 남겨보세요</div>'}<div class="forum-comment-form"><textarea id="forum-comment-input" maxlength="1000" placeholder="${replyTarget?forumEscape(replyTarget.nickname)+'님에게 답글을 작성하세요':'댓글을 작성하세요'}"></textarea><span id="forum-reply-target" style="display:${replyTarget?'inline':'none'};font:10px Arial;color:#777;align-self:center">${replyTarget?`@${forumEscape(replyTarget.nickname)}에게 답글`:''}</span><button id="forum-reply-cancel" class="forum-reply-cancel" style="display:${replyTarget?'inline-block':'none'}" onclick="forumCancelReply()">취소</button><button class="auth-btn" onclick="createForumComment()">${replyTarget?'REPLY':'COMMENT'}</button></div></div></article>`;
 }
 function forumCommentLikeCount(comment){ return Array.isArray(comment.likes)?comment.likes.length:0; }
 function forumCommentHasLiked(post,comment){ const key=forumCurrentKey(); return Array.isArray(comment.likes) && comment.likes.includes(key); }
@@ -4596,24 +4704,32 @@ function forumCommentReport(postId,commentId){
     openForumReportModal("comment", postId, commentId);
 }
 function createForumComment(){
-    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    if(!forumRequireWritable()) return;
     const input=document.getElementById("forum-comment-input"),body=input?.value.trim();
     if(!body){alert("댓글 내용을 입력해 주세요.");return;}
     const posts=forumRead(),post=posts.find(p=>p.id===forumSelectedPostId);
     if(!post)return;
-    post.comments=post.comments||[];post.comments.push({id:crypto.randomUUID(),nickname:currentProfile.nickname,body,createdAt:new Date().toISOString(),pinned:false,likes:[]});
+    const parentId=forumReplyTargetId;
+    if(parentId && !(post.comments||[]).some(c=>c.id===parentId)){forumReplyTargetId=null;}
+    post.comments=post.comments||[];
+    post.comments.push({id:crypto.randomUUID(),nickname:currentProfile.nickname,body,createdAt:new Date().toISOString(),pinned:false,likes:[],replyTo:parentId||null});
+    forumReplyTargetId=null;
     forumWrite(posts);renderForumDetail(post.id);
 }
 function forumCommentIsOwner(comment){
     return !!currentProfile && comment.nickname === currentProfile.nickname;
 }
+function forumCanPinComment(post){
+    return !!currentUser && !!currentProfile && !!post && post.nickname === currentProfile.nickname;
+}
 function forumCommentTogglePin(postId,commentId){
     if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    if(forumIsChatLocked()){alert("현재 채팅 정지 상태에서는 댓글을 고정할 수 없습니다.");return;}
     const posts=forumRead(),post=posts.find(p=>p.id===postId);
     if(!post)return;
     const comment=(post.comments||[]).find(c=>c.id===commentId);
     if(!comment)return;
-    if(!forumCommentIsOwner(comment)){alert("댓글 작성자만 고정할 수 있습니다.");return;}
+    if(!forumCanPinComment(post)){alert("게시글 작성자만 댓글을 고정할 수 있습니다.");return;}
     comment.pinned=!comment.pinned;
     forumWrite(posts);
     renderForumDetail(postId);
