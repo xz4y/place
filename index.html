@@ -1656,40 +1656,53 @@ function showSuspensionScreen(profile) {
         "사유 미작성";
 
 
-    /* =====================================================
-       정지 기간 / 경고 안내
-    ====================================================== */
+   /* =====================================================
+   정지 기간 / 경고 안내
+====================================================== */
 
-    const untilElement =
-        document.getElementById(
-            "suspension-until"
+const untilElement =
+    document.getElementById(
+        "suspension-until"
+    );
+
+
+/*
+ * 영구 정지는 idban일 때만
+ */
+if (
+    profile.ban_type === "idban"
+) {
+
+    untilElement.innerHTML =
+        "계정이 영구적으로 비활성화된 상태입니다.";
+
+}
+
+
+/*
+ * 기간 정지
+ *
+ * ban_until이 존재하면
+ * 실제 정지 종료 시간을 표시
+ */
+else if (
+    profile.ban_until
+) {
+
+    const untilDate =
+        new Date(
+            profile.ban_until
         );
 
 
     /*
-     * 영구 정지는 idban일 때만
+     * 날짜가 정상적으로 변환된 경우
      */
     if (
-        profile.ban_type === "idban"
+        !isNaN(
+            untilDate.getTime()
+        )
     ) {
-
-        untilElement.innerHTML =
-            "계정이 영구적으로 비활성화된 상태입니다.";
-
-    }
-
-
-    /*
-     * 기간 정지
-     */
-    else if (
-        profile.ban_until
-    ) {
-
-        const untilDate =
-            new Date(
-                profile.ban_until
-            );
 
         untilElement.innerHTML =
             `계정이 비활성화 처리가 되었습니다.<br>` +
@@ -1701,20 +1714,7 @@ function showSuspensionScreen(profile) {
 
 
     /*
-     * 경고
-     */
-    else if (
-        profile.ban_type === "warning"
-    ) {
-
-        untilElement.innerHTML =
-            "경고 조치가 적용되었습니다.";
-
-    }
-
-
-    /*
-     * 예상하지 못한 데이터
+     * 날짜 데이터가 잘못된 경우
      */
     else {
 
@@ -1723,49 +1723,90 @@ function showSuspensionScreen(profile) {
 
     }
 
+}
 
-    /* =====================================================
-       경고 확인 영역
-    ====================================================== */
 
-    const warningConfirmArea =
-        document.getElementById(
-            "warning-confirm-area"
-        );
+/*
+ * 경고
+ */
+else if (
+    profile.ban_type === "warning"
+) {
 
-    if (warningConfirmArea) {
+    untilElement.innerHTML =
+        "경고 조치가 적용되었습니다.";
 
-        if (
-            profile.ban_type === "warning"
-        ) {
+}
 
-            warningConfirmArea.style.display =
-                "block";
 
-            const checkbox =
-                document.getElementById(
-                    "warningAgreeCheckbox"
-                );
+/*
+ * 예상하지 못한 데이터
+ */
+else {
 
-            const button =
-                document.getElementById(
-                    "reactivateBtn"
-                );
+    untilElement.innerHTML =
+        "정지 기간 정보를 확인할 수 없습니다.";
 
-            if (checkbox) {
-                checkbox.checked = false;
-            }
+}
 
-            if (button) {
-                button.disabled = true;
-            }
 
-        } else {
+/* =====================================================
+   경고 확인 영역
+====================================================== */
 
-            warningConfirmArea.style.display =
-                "none";
+const warningConfirmArea =
+    document.getElementById(
+        "warning-confirm-area"
+    );
+
+
+if (warningConfirmArea) {
+
+    if (
+        profile.ban_type === "warning"
+    ) {
+
+        warningConfirmArea.style.display =
+            "block";
+
+
+        const checkbox =
+            document.getElementById(
+                "warningAgreeCheckbox"
+            );
+
+
+        const button =
+            document.getElementById(
+                "reactivateBtn"
+            );
+
+
+        if (checkbox) {
+
+            checkbox.checked =
+                false;
+
         }
+
+
+        if (button) {
+
+            button.disabled =
+                true;
+
+        }
+
     }
+
+    else {
+
+        warningConfirmArea.style.display =
+            "none";
+
+    }
+
+}
 
 
     /* =====================================================
