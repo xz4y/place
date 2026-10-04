@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PLACE - 작은 장소</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">    updateCommunityGreeting();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 html, body {
@@ -1267,7 +1266,15 @@ body.account-suspended #suspension-screen {
                 <div class="section-title">
                     REALTIME CHAT
                 </div>
-                   입력 검사
+<script>
+let currentUser = null;
+let currentProfile = null;
+let isAdmin = false;
+let isSuspended = false;
+let profileRealtimeChannel = null;
+
+/* =========================================================
+   입력 검사
 ========================================================= */
 
 function isValidUsername(username) {
