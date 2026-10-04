@@ -160,7 +160,11 @@ select {
 
 textarea {
     height: 70px;
+    resize: vertical;
+}
 
+#ban-reason {
+    height: 55px;
     resize: vertical;
 }
 
@@ -258,19 +262,16 @@ button:hover {
 
 #message.error {
     background: #ffe0e0;
-
     border-color: #c77;
 }
 
 #message.success {
     background: #e0ffe0;
-
     border-color: #7c7;
 }
 
 #login-required {
     padding: 20px;
-
     text-align: center;
 }
 
@@ -310,7 +311,6 @@ button:hover {
 
 #footer a {
     color: #666;
-
     text-decoration: none;
 }
 
@@ -382,6 +382,7 @@ button:hover {
             class="hidden"
         >
 
+
             <!-- =========================
                  USER MANAGEMENT
             ========================== -->
@@ -406,6 +407,23 @@ button:hover {
 
                     <div class="small">
                         대상 사용자의 계정 아이디를 입력하세요
+                    </div>
+
+
+                    <br>
+
+
+                    <label>
+                        밴 사유
+                    </label>
+
+                    <textarea
+                        id="ban-reason"
+                        placeholder="밴 또는 경고 사유를 입력하세요"
+                    ></textarea>
+
+                    <div class="small">
+                        밴, 아이디밴, 소프트밴, 하드밴, 경고를 실행할 때 사용됩니다
                     </div>
 
 
@@ -478,6 +496,7 @@ button:hover {
                     </div>
 
                     <hr>
+
 
                     <label>
                         배너 내용
@@ -569,14 +588,8 @@ button:hover {
     </div>
 
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
     <div id="footer">
-
         PLACE © 2026
-
     </div>
 
 </div>
@@ -1061,6 +1074,12 @@ async function runUserAction(
         ).value.trim();
 
 
+    const reason =
+        document.getElementById(
+            "ban-reason"
+        ).value.trim();
+
+
     if (!username) {
 
         showMessage(
@@ -1103,12 +1122,60 @@ async function runUserAction(
         action;
 
 
+    /* =========================
+       BAN REASON CHECK
+    ========================== */
+
+    if (
+        action === "idban" ||
+        action === "ban" ||
+        action === "softban" ||
+        action === "hardban" ||
+        action === "warning"
+    ) {
+
+        if (!reason) {
+
+            showMessage(
+                "밴 사유를 입력해주세요.",
+                "error"
+            );
+
+            return;
+        }
+
+    }
+
+
+    /* =========================
+       CONFIRM
+    ========================== */
+
+    let confirmMessage =
+        username +
+        " 사용자에게 " +
+        actionName +
+        " 명령을 실행하시겠습니까?";
+
+
+    if (
+        action === "idban" ||
+        action === "ban" ||
+        action === "softban" ||
+        action === "hardban" ||
+        action === "warning"
+    ) {
+
+        confirmMessage +=
+            "\n\n사유: " +
+            reason;
+
+    }
+
+
     if (
         !confirm(
-            username +
-            " 사용자에게 " +
-            actionName +
-            " 명령을 실행하시겠습니까?"
+            confirmMessage
         )
     ) {
 
@@ -1125,13 +1192,14 @@ async function runUserAction(
     ) {
 
         const {
+            data,
             error
         } =
             await supabaseClient.rpc(
                 "admin_unban",
                 {
 
-                    p_username:
+                    target_username:
                         username
 
                 }
@@ -1154,6 +1222,12 @@ async function runUserAction(
 
             return;
         }
+
+
+        console.log(
+            "UNBAN RESULT:",
+            data
+        );
 
 
         showMessage(
@@ -1247,7 +1321,7 @@ async function runUserAction(
                         null,
 
                     new_ban_reason:
-                        actionName
+                        reason
 
                 }
             );
@@ -1275,6 +1349,11 @@ async function runUserAction(
             "BAN RESULT:",
             data
         );
+
+
+        document.getElementById(
+            "ban-reason"
+        ).value = "";
 
 
         showMessage(
@@ -1316,7 +1395,7 @@ async function runUserAction(
                         null,
 
                     new_ban_reason:
-                        "경고"
+                        reason
 
                 }
             );
@@ -1344,6 +1423,11 @@ async function runUserAction(
             "WARNING RESULT:",
             data
         );
+
+
+        document.getElementById(
+            "ban-reason"
+        ).value = "";
 
 
         showMessage(
