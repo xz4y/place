@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PLACE - 작은 장소</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">    updateCommunityGreeting();
+</script>
 
 <style>
 html, body {
@@ -273,6 +274,361 @@ body {
     background: linear-gradient(#ffffff, #cccccc);
     border: 2px outset #eeeeee;
     cursor: pointer;
+}
+
+
+/* =========================================================
+   COMMUNITY FORUM
+========================================================= */
+
+#forum-wrap{
+    padding:8px;
+    background:#f7f7f7
+}
+
+.forum-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:7px 8px;
+    margin-bottom:7px;
+    border:1px solid #aaa;
+    background:#eee
+}
+
+.forum-heading strong{
+    display:block;
+    font-size:13px;
+    color:#333
+}
+
+.forum-heading span{
+    display:block;
+    margin-top:2px;
+    color:#777;
+    font-size:11px
+}
+
+.forum-composer{
+    margin-bottom:8px;
+    padding:8px;
+    border:1px solid #aaa;
+    background:#fff
+}
+
+.forum-sortbar{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:5px;
+    padding:4px 0 6px;
+    font:11px Arial;
+    color:#555
+}
+
+.forum-sortbar select{
+    font:11px Arial;
+    border:1px solid #999;
+    background:#fff;
+    padding:2px 4px
+}
+
+#forum-title,
+#forum-body{
+    box-sizing:border-box;
+    width:100%;
+    border:1px inset #aaa;
+    padding:6px;
+    font:12px Arial;
+    color:#222
+}
+
+#forum-title{
+    height:28px;
+    margin-bottom:6px
+}
+
+#forum-body{
+    height:100px;
+    resize:vertical;
+    display:block
+}
+
+.forum-compose-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:7px;
+    font-size:10px;
+    color:#777
+}
+
+.forum-row{
+    display:grid;
+    grid-template-columns:1fr 58px 58px 85px;
+    align-items:center;
+    min-height:54px;
+    padding:0 8px;
+    border:1px solid #aaa;
+    border-top:0;
+    background:#fff;
+    cursor:pointer
+}
+
+.forum-row:first-child{
+    border-top:1px solid #aaa
+}
+
+.forum-row:hover{
+    background:#f0f5fa
+}
+
+.forum-main{
+    min-width:0
+}
+
+.forum-title{
+    font-weight:bold;
+    color:#254f78;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis
+}
+
+.forum-pin-icon{
+    display:inline-block;
+    width:12px;
+    height:15px;
+    position:relative;
+    margin-right:6px;
+    vertical-align:-2px;
+}
+
+.forum-pin-icon:before{
+    content:"";
+    position:absolute;
+    left:2px;
+    top:0;
+    width:8px;
+    height:9px;
+    background:linear-gradient(#9a9a9a,#555);
+    border:1px solid #333;
+    box-shadow:inset 1px 1px 0 #d8d8d8;
+    transform:rotate(-18deg);
+}
+
+.forum-pin-icon:after{
+    content:"";
+    position:absolute;
+    left:5px;
+    top:8px;
+    width:3px;
+    height:8px;
+    background:#444;
+    border-left:1px solid #222;
+    transform:rotate(18deg);
+}
+
+.forum-row.forum-pinned{
+    background:#f5f7f9;
+    box-shadow:inset 3px 0 0 #777;
+}
+
+.forum-row.forum-pinned:hover{
+    background:#edf2f6
+}
+
+.forum-meta{
+    margin-top:4px;
+    color:#888;
+    font-size:10px
+}
+
+.forum-count{
+    text-align:center;
+    color:#666;
+    font-size:11px
+}
+
+.forum-time{
+    text-align:right;
+    color:#888;
+    font-size:10px
+}
+
+.forum-empty{
+    padding:25px 8px;
+    text-align:center;
+    color:#888;
+    border:1px solid #aaa;
+    background:#fff
+}
+
+.forum-detail-head{
+    padding:6px 0 8px
+}
+
+.forum-back{
+    border:0;
+    background:none;
+    color:#315d8b;
+    font-size:11px;
+    cursor:pointer;
+    padding:2px
+}
+
+.forum-article{
+    border:1px solid #aaa;
+    background:#fff
+}
+
+.forum-article-header{
+    padding:12px;
+    border-bottom:1px solid #ccc;
+    background:#eee
+}
+
+.forum-article-title{
+    font-size:16px;
+    font-weight:bold;
+    color:#222;
+    word-break:break-word
+}
+
+.forum-article-meta{
+    margin-top:7px;
+    color:#777;
+    font-size:10px
+}
+
+.forum-article-body{
+    padding:14px;
+    min-height:90px;
+    white-space:pre-wrap;
+    line-height:1.7;
+    word-break:break-word
+}
+
+.forum-comments{
+    border-top:1px solid #aaa;
+    background:#f7f7f7;
+    padding:8px
+}
+
+.forum-comments-title{
+    font-weight:bold;
+    margin-bottom:6px
+}
+
+.forum-comment{
+    padding:7px 8px;
+    border:1px solid #ccc;
+    border-bottom:0;
+    background:#fff
+}
+
+.forum-comment:last-child{
+    border-bottom:1px solid #ccc
+}
+
+.forum-comment-meta{
+    font-size:10px;
+    color:#777;
+    margin-bottom:4px
+}
+
+.forum-comment-body{
+    white-space:pre-wrap;
+    line-height:1.5;
+    word-break:break-word
+}
+
+.forum-comment-actions{
+    margin-top:5px;
+    display:flex;
+    align-items:center;
+    gap:4px
+}
+
+.forum-comment-like{
+    padding:2px 6px;
+    background:#fff;
+    border:1px solid #bbb;
+    font:10px Arial;
+    color:#555;
+    cursor:pointer
+}
+
+.forum-comment-like.liked{
+    background:#e5eef8;
+    color:#174b7a;
+    border-color:#8aaaca;
+    font-weight:bold
+}
+
+.forum-actions{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    padding:8px 12px;
+    border-top:1px solid #ddd;
+    background:#f7f7f7
+}
+
+.forum-action-btn{
+    padding:4px 9px;
+    background:linear-gradient(#fff,#ddd);
+    border:2px outset #eee;
+    font:11px Arial;
+    color:#333;
+    cursor:pointer
+}
+
+.forum-action-btn:active{
+    border-style:inset
+}
+
+.forum-action-btn.liked{
+    background:#e5eef8;
+    color:#174b7a;
+    font-weight:bold
+}
+
+.forum-action-btn.disliked{
+    background:#fbe1e1;
+    color:#c62828;
+    font-weight:bold
+}
+
+.forum-action-btn.report{
+    margin-left:auto;
+    color:#a33
+}
+
+.forum-comment-form{
+    display:flex;
+    gap:5px;
+    margin-top:7px
+}
+
+#forum-comment-input{
+    flex:1;
+    min-height:30px;
+    box-sizing:border-box;
+    resize:vertical;
+    border:1px inset #aaa;
+    padding:5px;
+    font:12px Arial
+}
+
+@media(max-width:700px){
+    .forum-row{
+        grid-template-columns:1fr 48px 48px
+    }
+
+    .forum-time{
+        display:none
+    }
 }
 
 
@@ -673,7 +1029,7 @@ body.account-suspended #suspension-screen {
             HOME
         </a>
 
-        <a href="#world" class="menu-button">
+        <a href="world.html" class="menu-button">
             WORLD
         </a>
 
@@ -850,57 +1206,52 @@ body.account-suspended #suspension-screen {
     <div id="main">
 
         <div id="left">
+            <div id="community-greeting" style="display:none;padding:0 8px 7px 8px;font-size:21px;font-weight:700;color:#222;">안녕하세요, 님!</div>
 
-            <div class="section">
+            <div class="section" id="community-section">
 
                 <div class="section-title">
-                    WORLD
+                    COMMUNITY
                 </div>
 
-                <div style="padding:8px">
-
-                    <div id="world">
-
-                        <div class="tree tree1">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
+                <div id="forum-wrap">
+                    <div class="forum-toolbar">
+                        <div class="forum-heading">
+                            <strong>PLACE COMMUNITY</strong>
+                            <span>사람들이 남긴 이야기</span>
                         </div>
-
-                        <div class="tree tree2">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree3">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree4">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree5">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="character">
-                            <div class="character-head"></div>
-                        </div>
-
-                        <button
-                            id="secret"
-                            onclick="goToRoom()"
-                        >
-                            숨겨진 장소
-                        </button>
-
+                        <button class="auth-btn" onclick="forumOpenComposer()">WRITE</button>
                     </div>
 
-                </div>
+                    <div id="forum-composer" class="forum-composer" style="display:none;">
+                        <input id="forum-title" type="text" maxlength="80" placeholder="제목을 입력하세요">
+                        <textarea id="forum-body" maxlength="4000" placeholder="내용을 작성하세요"></textarea>
+                        <div class="forum-compose-bottom">
+                            <span id="forum-login-hint">로그인 후 작성할 수 있습니다</span>
+                            <div>
+                                <button class="auth-btn" onclick="closeForumComposer()">CANCEL</button>
+                                <button class="auth-btn" onclick="createForumPost()">POST</button>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="forum-sortbar">
+                        <span>정렬</span>
+                        <select id="forum-sort" onchange="renderForumList()">
+                            <option value="likes" selected>인기순</option>
+                            <option value="latest">최신순</option>
+                        </select>
+                    </div>
+
+                    <div id="forum-list"></div>
+
+                    <div id="forum-detail" style="display:none;">
+                        <div class="forum-detail-head">
+                            <button class="forum-back" onclick="closeForumDetail()">← 목록</button>
+                        </div>
+                        <div id="forum-detail-content"></div>
+                    </div>
+                </div>
             </div>
 
 
@@ -916,1006 +1267,7 @@ body.account-suspended #suspension-screen {
                 <div class="section-title">
                     REALTIME CHAT
                 </div>
-
-                <div id="messages">
-
-                    <div class="message">
-
-                        <span class="message-name">
-                            SYSTEM
-                        </span>
-
-                        :
-                        채팅 서버 연결 완료
-
-                    </div>
-
-                </div>
-
-                <div id="chat-input-container">
-
-                    <div id="chat-controls">
-
-                        <select
-                            id="channelSelect"
-                            onchange="handleChannelChange()"
-                        >
-
-                            <option value="all">
-                                전체
-                            </option>
-
-                            <option value="whisper">
-                                귓속말
-                            </option>
-
-                        </select>
-
-                        <input
-                            id="whisperTargetInput"
-                            type="text"
-                            placeholder="상대 아이디"
-                        >
-
-                        <input
-                            id="usernameInput"
-                            type="text"
-                            placeholder="닉네임"
-                            value="Guest"
-                            readonly
-                        >
-
-                    </div>
-
-                    <div id="chat-input">
-
-                        <input
-                            id="messageInput"
-                            type="text"
-                            placeholder="로그인 후 채팅을 입력할 수 있습니다."
-                            onclick="checkInputPermission()"
-                        >
-
-                        <button
-                            id="sendButton"
-                            onclick="sendMessage()"
-                        >
-                            SEND
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================================
-             오른쪽
-        ====================================================== -->
-
-        <div id="right">
-
-            <div class="side-box">
-
-                <div class="side-title">
-                    INFORMATION
-                </div>
-
-                <div class="side-content">
-                    이곳은 사람들이 잠시 머물다 가는 작은 장소입니다.
-                </div>
-
-            </div>
-
-
-            <div class="side-box">
-
-                <div class="side-title">
-                    ONLINE
-                </div>
-
-                <div class="side-content">
-
-                    <span class="online">
-                        ● ONLINE
-                    </span>
-
-                    <br>
-
-                    <span id="side-online-text">
-                        0 users online
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="side-box">
-
-                <div class="side-title">
-                    MENU
-                </div>
-
-                <div class="side-content">
-
-                    <a href="index.html">
-                        Home
-                    </a>
-
-                    <br>
-
-                    <a href="#world">
-                        World
-                    </a>
-
-                    <br>
-
-                    <a href="room.html">
-                        오래된 방
-                    </a>
-
-                    <br>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         푸터
-    ====================================================== -->
-
-    <div id="footer">
-
-        PLACE © 2026
-
-        <span style="margin: 0 8px; color:#aaa;">
-            |
-        </span>
-
-        <a href="terms.html">
-            이용약관
-        </a>
-
-        <span style="margin: 0 8px; color:#aaa;">
-            |
-        </span>
-
-        <a href="privacy.html">
-            개인정보처리방침
-        </a>
-
-        <span style="margin: 0 8px; color:#aaa;">
-            |
-        </span>
-
-        <a href="accessibility.html">
-            접근성 안내
-        </a>
-
-    </div>
-
-
-<!-- =========================================================
-     로그인
-========================================================= -->
-
-<div id="loginModal" class="modal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-            🔑 로그인
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                아이디
-            </label>
-
-            <input
-                type="text"
-                id="loginUsername"
-                placeholder="영어, 숫자, 언더바(_)"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                비밀번호
-            </label>
-
-            <input
-                type="password"
-                id="loginPassword"
-            >
-
-        </div>
-
-        <div class="modal-buttons">
-
-            <button
-                class="auth-btn"
-                onclick="handleLogin()"
-            >
-                로그인
-            </button>
-
-            <button
-                class="auth-btn"
-                onclick="closeModal('loginModal')"
-            >
-                취소
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     회원가입
-========================================================= -->
-
-<div id="signupModal" class="modal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-            📝 계정 생성
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                아이디 (영어, 숫자, _ 만 가능)
-            </label>
-
-            <input
-                type="text"
-                id="signupUsername"
-                placeholder="예: user_123"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                닉네임 (2~16자, 연속 공백 최대 2개)
-            </label>
-
-            <input
-                type="text"
-                id="signupNickname"
-                placeholder="예: 모험가"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                비밀번호
-            </label>
-
-            <input
-                type="password"
-                id="signupPassword"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                비밀번호 확인
-            </label>
-
-            <input
-                type="password"
-                id="signupPasswordConfirm"
-            >
-
-        </div>
-
-        <div class="modal-buttons">
-
-            <button
-                class="auth-btn"
-                onclick="handleSignup()"
-            >
-                가입하기
-            </button>
-
-            <button
-                class="auth-btn"
-                onclick="closeModal('signupModal')"
-            >
-                취소
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     프로필
-========================================================= -->
-
-<div id="profileModal" class="modal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-            👤 유저 프로필
-        </div>
-
-        <div class="profile-row">
-
-            <b>계정 번호:</b>
-
-            <span
-                id="profAccountNumber"
-                style="color:#d9381e; font-weight:bold;"
-            >
-                -
-            </span>
-
-            번 유저
-
-        </div>
-
-        <div class="profile-row">
-
-            <b>아이디:</b>
-
-            <span id="profUsername">
-                -
-            </span>
-
-        </div>
-
-        <div class="profile-row">
-
-            <b>닉네임:</b>
-
-            <span id="profNickname">
-                -
-            </span>
-
-        </div>
-
-        <div class="profile-row">
-
-            <b>가입일:</b>
-
-            <span id="profCreatedAt">
-                -
-            </span>
-
-        </div>
-
-        <div
-            id="nicknameChangeBox"
-            style="margin-top:12px; border-top:1px dashed #ccc; padding-top:10px;"
-        >
-
-            <div class="form-group">
-
-                <label>
-                    새 닉네임 변경 (30분에 1회 가능)
-                </label>
-
-                <input
-                    type="text"
-                    id="newNicknameInput"
-                    placeholder="새 닉네임 (2~16자)"
-                >
-
-            </div>
-
-            <button
-                class="auth-btn"
-                onclick="changeNickname()"
-            >
-                닉네임 변경하기
-            </button>
-
-        </div>
-
-        <div class="modal-buttons">
-
-            <button
-                class="auth-btn"
-                onclick="closeModal('profileModal')"
-            >
-                닫기
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-
-const SUPABASE_URL =
-    "https://exeoqvfidmtmnwqejyvg.supabase.co";
-
-const SUPABASE_ANON_KEY =
-    "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
-
-const supabaseClient =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
-
-const CURRENT_MAP_NAME = "main";
-
-let currentUser = null;
-let currentProfile = null;
-let isAdmin = false;
-let isSuspended = false;
-
-let presenceChannel = null;
-let profileRealtimeChannel = null;
-let chatRealtimeChannel = null;
-let bannerRealtimeChannel = null;
-
-
-/* =========================================================
-   기본 UI
-========================================================= */
-
-function openModal(id) {
-    document.getElementById(id).style.display = "block";
-}
-
-function closeModal(id) {
-    document.getElementById(id).style.display = "none";
-}
-
-
-/* =========================================================
-   날짜
-========================================================= */
-
-function formatDateTime(dateValue) {
-
-    if (!dateValue) {
-        return "-";
-    }
-
-    const date = new Date(dateValue);
-
-    if (isNaN(date.getTime())) {
-        return "-";
-    }
-
-    const year = date.getFullYear();
-
-    const month =
-        String(date.getMonth() + 1)
-            .padStart(2, "0");
-
-    const day =
-        String(date.getDate())
-            .padStart(2, "0");
-
-    const hours = date.getHours();
-
-    const minutes =
-        String(date.getMinutes())
-            .padStart(2, "0");
-
-    const seconds =
-        String(date.getSeconds())
-            .padStart(2, "0");
-
-    const ampm =
-        hours < 12
-            ? "오전"
-            : "오후";
-
-    const displayHour =
-        hours % 12 || 12;
-
-    return (
-        `${year}/${month}/${day} ` +
-        `${displayHour}:${minutes}:${seconds} ` +
-        `${ampm}`
-    );
-}
-
-
-/* =========================================================
-   배너
-========================================================= */
-
-async function loadBanners() {
-
-    const now =
-        new Date().toISOString();
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("banners")
-            .select("*")
-            .lte(
-                "starts_at",
-                now
-            )
-            .or(
-                "ends_at.is.null,ends_at.gt." +
-                now
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: true
-                }
-            )
-            .limit(3);
-
-    if (error) {
-
-        console.error(
-            "배너 불러오기 오류:",
-            error
-        );
-
-        return;
-    }
-
-    const notice =
-        document.getElementById(
-            "notice"
-        );
-
-    const container =
-        document.getElementById(
-            "banner-container"
-        );
-
-    if (!notice || !container) {
-        return;
-    }
-
-    container.innerHTML = "";
-
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        notice.style.display =
-            "none";
-
-        return;
-    }
-
-    notice.style.display =
-        "block";
-
-    data.forEach(
-        banner => {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-            element.className =
-                "site-banner";
-
-            element.textContent =
-                "📢 " +
-                (banner.message || "");
-
-            container.appendChild(
-                element
-            );
-        }
-    );
-}
-
-
-function subscribeBannerRealtime() {
-
-    if (bannerRealtimeChannel) {
-
-        supabaseClient.removeChannel(
-            bannerRealtimeChannel
-        );
-
-        bannerRealtimeChannel = null;
-    }
-
-    bannerRealtimeChannel =
-        supabaseClient
-            .channel(
-                "public:banners"
-            )
-            .on(
-                "postgres_changes",
-                {
-                    event: "*",
-                    schema: "public",
-                    table: "banners"
-                },
-                async () => {
-
-                    await loadBanners();
-                }
-            )
-            .subscribe();
-}
-
-
-/* =========================================================
-   정지 기간
-========================================================= */
-
-function getBanPeriodText(banType) {
-
-    switch (banType) {
-
-        case "ban":
-            return "1일 정지";
-
-        case "softban":
-            return "7일 정지";
-
-        case "hardban":
-            return "30일 정지";
-
-        case "idban":
-            return "영구 정지";
-
-        case "warning":
-            return "경고";
-
-        default:
-            return "계정 정지";
-    }
-}
-
-
-/* =========================================================
-   ACCOUNT STATUS 화면
-   밴 + 경고 통합
-========================================================= */
-
-function showSuspensionScreen(profile) {
-
-    isSuspended = true;
-
-    document.body.classList.add(
-        "account-suspended"
-    );
-
-
-    /* =====================================================
-       제목
-    ====================================================== */
-
-    const periodText =
-        getBanPeriodText(
-            profile.ban_type
-        );
-
-    document.getElementById(
-        "suspension-title"
-    ).innerText =
-        `회원님의 계정은 ${periodText} 처리되었습니다.`;
-
-
-    /* =====================================================
-       처리 일시
-    ====================================================== */
-
-    document.getElementById(
-        "suspension-date"
-    ).innerText =
-        formatDateTime(
-            profile.ban_started_at
-        );
-
-
-    /* =====================================================
-       처리 사유
-    ====================================================== */
-
-    document.getElementById(
-        "suspension-reason"
-    ).innerText =
-        profile.ban_reason ||
-        "사유 미작성";
-
-
-   /* =====================================================
-   정지 기간 / 경고 안내
-====================================================== */
-
-const untilElement =
-    document.getElementById(
-        "suspension-until"
-    );
-
-
-/*
- * 영구 정지는 idban일 때만
- */
-if (
-    profile.ban_type === "idban"
-) {
-
-    untilElement.innerHTML =
-        "계정이 영구적으로 비활성화된 상태입니다.";
-
-}
-
-
-/*
- * 기간 정지
- *
- * ban_until이 존재하면
- * 실제 정지 종료 시간을 표시
- */
-else if (
-    profile.ban_until
-) {
-
-    const untilDate =
-        new Date(
-            profile.ban_until
-        );
-
-
-    /*
-     * 날짜가 정상적으로 변환된 경우
-     */
-    if (
-        !isNaN(
-            untilDate.getTime()
-        )
-    ) {
-
-        untilElement.innerHTML =
-            `계정이 비활성화 처리가 되었습니다.<br>` +
-            `<span class="suspension-date">` +
-            `${formatDateTime(untilDate)}` +
-            `</span> 이후로 재활성화가 가능합니다.`;
-
-    }
-
-
-    /*
-     * 날짜 데이터가 잘못된 경우
-     */
-    else {
-
-        untilElement.innerHTML =
-            "정지 기간 정보를 확인할 수 없습니다.";
-
-    }
-
-}
-
-
-/*
- * 경고
- */
-else if (
-    profile.ban_type === "warning"
-) {
-
-    untilElement.innerHTML =
-        "경고 조치가 적용되었습니다.";
-
-}
-
-
-/*
- * 예상하지 못한 데이터
- */
-else {
-
-    untilElement.innerHTML =
-        "정지 기간 정보를 확인할 수 없습니다.";
-
-}
-
-
-/* =====================================================
-   경고 확인 영역
-====================================================== */
-
-const warningConfirmArea =
-    document.getElementById(
-        "warning-confirm-area"
-    );
-
-
-if (warningConfirmArea) {
-
-    if (
-        profile.ban_type === "warning"
-    ) {
-
-        warningConfirmArea.style.display =
-            "block";
-
-
-        const checkbox =
-            document.getElementById(
-                "warningAgreeCheckbox"
-            );
-
-
-        const button =
-            document.getElementById(
-                "reactivateBtn"
-            );
-
-
-        if (checkbox) {
-
-            checkbox.checked =
-                false;
-
-        }
-
-
-        if (button) {
-
-            button.disabled =
-                true;
-
-        }
-
-    }
-
-    else {
-
-        warningConfirmArea.style.display =
-            "none";
-
-    }
-
-}
-
-
-    /* =====================================================
-       채팅 잠금
-    ====================================================== */
-
-    const messageInput =
-        document.getElementById(
-            "messageInput"
-        );
-
-    const sendButton =
-        document.getElementById(
-            "sendButton"
-        );
-
-    const channelSelect =
-        document.getElementById(
-            "channelSelect"
-        );
-
-    const whisperTargetInput =
-        document.getElementById(
-            "whisperTargetInput"
-        );
-
-    if (messageInput) {
-
-        messageInput.disabled =
-            true;
-
-        messageInput.placeholder =
-            "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
-    }
-
-    if (sendButton) {
-        sendButton.disabled = true;
-    }
-
-    if (channelSelect) {
-        channelSelect.disabled = true;
-    }
-
-    if (whisperTargetInput) {
-        whisperTargetInput.disabled = true;
-    }
-}
-
-
-function hideSuspensionScreen() {
-
-    isSuspended = false;
-
-    document.body.classList.remove(
-        "account-suspended"
-    );
-
-
-    const messageInput =
-        document.getElementById(
-            "messageInput"
-        );
-
-    const sendButton =
-        document.getElementById(
-            "sendButton"
-        );
-
-    const channelSelect =
-        document.getElementById(
-            "channelSelect"
-        );
-
-    const whisperTargetInput =
-        document.getElementById(
-            "whisperTargetInput"
-        );
-
-    if (messageInput) {
-        messageInput.disabled = false;
-    }
-
-    if (sendButton) {
-        sendButton.disabled = false;
-    }
-
-    if (channelSelect) {
-        channelSelect.disabled = false;
-    }
-
-    if (whisperTargetInput) {
-        whisperTargetInput.disabled = false;
-    }
-
-
-    const warningConfirmArea =
-        document.getElementById(
-            "warning-confirm-area"
-        );
-
-    if (warningConfirmArea) {
-        warningConfirmArea.style.display =
-            "none";
-    }
-}
-
-
-/* =========================================================
-   입력 검사
+                   입력 검사
 ========================================================= */
 
 function isValidUsername(username) {
@@ -2214,6 +1566,17 @@ async function handleLogout() {
    인증 상태
 ========================================================= */
 
+function updateCommunityGreeting(){
+    const el=document.getElementById("community-greeting");
+    if(!el) return;
+    if(currentUser && currentProfile && currentProfile.nickname){
+        el.textContent="안녕하세요, "+currentProfile.nickname+"님!";
+        el.style.display="block";
+    }else{
+        el.style.display="none";
+    }
+}
+
 async function checkAuthStatus() {
 
     const {
@@ -2266,6 +1629,8 @@ async function checkAuthStatus() {
 
         currentProfile =
             profile;
+
+        updateCommunityGreeting();
 
         document.getElementById(
             "user-info"
@@ -2342,6 +1707,7 @@ async function checkAuthStatus() {
         currentUser = null;
         currentProfile = null;
         isAdmin = false;
+        updateCommunityGreeting();
 
         hideSuspensionScreen();
 
@@ -2901,8 +2267,7 @@ async function changeNickname() {
                     newNick
             }
         );
-
-    if (error) {
+            if (error) {
 
         alert(
             "닉네임 변경 실패: " +
@@ -3899,9 +3264,7 @@ async function updatePresenceIdentity() {
 
         return;
     }
-
-
-    let presenceKey =
+            let presenceKey =
         sessionStorage.getItem(
             "place_presence_key"
         );
@@ -3978,6 +3341,8 @@ supabaseClient.auth.onAuthStateChange(
 window.onload = async () => {
 
     await checkAuthStatus();
+    renderForumList();
+    subscribeForum();
 
     await trackPresence();
 
@@ -3990,6 +3355,168 @@ window.onload = async () => {
     subscribeBannerRealtime();
 };
 
+
+/* =========================================================
+   COMMUNITY FORUM
+========================================================= */
+const FORUM_STORAGE_KEY = "place_forum_posts_v2";
+let forumSelectedPostId = null;
+let forumChannel = null;
+
+function forumRead(){
+    try{return JSON.parse(localStorage.getItem(FORUM_STORAGE_KEY)||"[]");}
+    catch(e){return [];}
+}
+function forumWrite(posts){
+    localStorage.setItem(FORUM_STORAGE_KEY,JSON.stringify(posts));
+    try{forumChannel&&forumChannel.postMessage({type:"update"});}catch(e){}
+}
+function forumEscape(v){return escapeHtml(String(v??""));}
+function forumRelativeTime(value){
+    const d=new Date(value), diff=Math.max(0,Date.now()-d.getTime()), min=Math.floor(diff/60000);
+    if(min<1)return "방금 전";
+    if(min<60)return min+"분 전";
+    const h=Math.floor(min/60);
+    if(h<24)return h+"시간 전";
+    const day=Math.floor(h/24);
+    if(day<7)return day+"일 전";
+    return formatDateTime(value);
+}
+function forumOpenComposer(){
+    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    document.getElementById("forum-composer").style.display="block";
+    document.getElementById("forum-title").focus();
+}
+function closeForumComposer(){
+    const c=document.getElementById("forum-composer");
+    if(c)c.style.display="none";
+}
+function createForumPost(){
+    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const title=document.getElementById("forum-title").value.trim();
+    const body=document.getElementById("forum-body").value.trim();
+    if(!title||!body){alert("제목과 내용을 모두 입력해 주세요.");return;}
+    const now=new Date().toISOString();
+    const post={id:crypto.randomUUID(),title,body,nickname:currentProfile.nickname,createdAt:now,comments:[]};
+    const posts=forumRead();posts.push(post);forumWrite(posts);
+    document.getElementById("forum-title").value="";document.getElementById("forum-body").value="";
+    closeForumComposer();renderForumList();
+}
+function renderForumList(){
+    const list=document.getElementById("forum-list"),detail=document.getElementById("forum-detail");
+    if(!list)return;
+    if(forumSelectedPostId){list.style.display="none";detail.style.display="block";renderForumDetail(forumSelectedPostId);return;}
+    list.style.display="block";detail.style.display="none";
+    const sortMode=document.getElementById("forum-sort")?.value||"latest";
+    const posts=forumRead().slice().sort((a,b)=>{
+        const pinDiff=(b.pinned?1:0)-(a.pinned?1:0);
+        if(pinDiff) return pinDiff;
+        const likeDiff=forumLikeCount(b)-forumLikeCount(a);
+        const timeDiff=new Date(b.createdAt)-new Date(a.createdAt);
+        return sortMode==="likes" ? (likeDiff||timeDiff) : timeDiff;
+    });
+    if(!posts.length){list.innerHTML='<div class="forum-empty">아직 게시글이 없습니다</div>';return;}
+    list.innerHTML=posts.map(p=>`<div class="forum-row${p.pinned?" forum-pinned":""}" onclick="openForumDetail('${p.id}')"><div class="forum-main"><div class="forum-title">${p.pinned?'<span class="forum-pin-icon" title="고정된 게시글" aria-label="고정된 게시글"></span>':''}${forumEscape(p.title)}</div><div class="forum-meta">${forumEscape(p.nickname)} · ${forumEscape(formatDateTime(p.createdAt))}</div></div><div class="forum-count">♥ ${forumLikeCount(p)}</div><div class="forum-count">댓글 ${p.comments?.length||0}</div><div class="forum-time">${forumRelativeTime(p.createdAt)}</div></div>`).join("");
+}
+function openForumDetail(id){forumSelectedPostId=id;renderForumList();}
+function closeForumDetail(){forumSelectedPostId=null;renderForumList();}
+function renderForumDetail(id){
+    const box=document.getElementById("forum-detail-content"),post=forumRead().find(p=>p.id===id);
+    if(!post){forumSelectedPostId=null;renderForumList();return;}
+    const comments=post.comments||[];
+    box.innerHTML=`<article class="forum-article"><div class="forum-article-header"><div class="forum-article-title">${forumEscape(post.title)}</div><div class="forum-article-meta">${forumEscape(post.nickname)} · ${forumEscape(formatDateTime(post.createdAt))}</div></div><div class="forum-article-body">${forumEscape(post.body)}</div><div class="forum-actions"><button class="forum-action-btn ${forumHasReacted(post,"like")?"liked":""}" onclick="forumReact('${post.id}','like')">좋아요 <span>${forumLikeCount(post)}</span></button><button class="forum-action-btn ${forumHasReacted(post,"dislike")?"disliked":""}" onclick="forumReact('${post.id}','dislike')">싫어요</button><button class="forum-action-btn report" onclick="forumReport('${post.id}')">신고</button>${isAdmin?`<button class="forum-action-btn" onclick="forumAdminTogglePin('${post.id}')">${post.pinned?'핀 해제':'핀 고정'}</button><button class="forum-action-btn" onclick="forumAdminDelete('${post.id}')">삭제</button>`:''}</div><div class="forum-comments"><div class="forum-comments-title">COMMENTS · ${comments.length}</div>${comments.length?comments.map(c=>`<div class="forum-comment"><div class="forum-comment-meta">${forumEscape(c.nickname)} · ${forumEscape(formatDateTime(c.createdAt))}</div><div class="forum-comment-body">${forumEscape(c.body)}</div><div class="forum-comment-actions"><button class="forum-comment-like ${forumCommentHasLiked(post,c)?"liked":""}" onclick="forumCommentLike('${post.id}','${c.id}');event.stopPropagation();">좋아요 <span>${forumCommentLikeCount(c)}</span></button></div></div>`).join(""):'<div class="forum-empty">첫 번째 댓글을 남겨보세요</div>'}<div class="forum-comment-form"><textarea id="forum-comment-input" maxlength="1000" placeholder="댓글을 작성하세요"></textarea><button class="auth-btn" onclick="createForumComment()">COMMENT</button></div></div></article>`;
+}
+function forumCommentLikeCount(comment){ return Array.isArray(comment.likes)?comment.likes.length:0; }
+function forumCommentHasLiked(post,comment){ const key=forumCurrentKey(); return Array.isArray(comment.likes) && comment.likes.includes(key); }
+function forumCommentLike(postId,commentId){
+    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const posts=forumRead(),post=posts.find(p=>p.id===postId); if(!post)return;
+    const comment=(post.comments||[]).find(c=>c.id===commentId); if(!comment)return;
+    comment.likes=Array.isArray(comment.likes)?comment.likes:[];
+    const key=forumCurrentKey(),idx=comment.likes.indexOf(key);
+    if(idx>=0) comment.likes.splice(idx,1); else comment.likes.push(key);
+    forumWrite(posts); renderForumList();
+}
+function forumCurrentKey(){
+    return currentProfile?.nickname || currentUser?.email || "anonymous";
+}
+function forumLikeCount(post){
+    return Array.isArray(post.likes)?post.likes.length:0;
+}
+function forumHasReacted(post,type){
+    const key=forumCurrentKey();
+    return Array.isArray(post[type+"s"]) && post[type+"s"].includes(key);
+}
+function forumReact(id,type){
+    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    if(type!=="like"&&type!=="dislike")return;
+    const posts=forumRead(),post=posts.find(p=>p.id===id);
+    if(!post)return;
+    post.likes=Array.isArray(post.likes)?post.likes:[];
+    post.dislikes=Array.isArray(post.dislikes)?post.dislikes:[];
+    const key=forumCurrentKey();
+    const ownList=type==="like"?post.likes:post.dislikes;
+    const otherList=type==="like"?post.dislikes:post.likes;
+    const ownIndex=ownList.indexOf(key);
+    const otherIndex=otherList.indexOf(key);
+    if(ownIndex>=0){ownList.splice(ownIndex,1);}
+    else{
+        if(otherIndex>=0)otherList.splice(otherIndex,1);
+        ownList.push(key);
+    }
+    forumWrite(posts);
+    renderForumDetail(id);
+}
+function forumAdminTogglePin(id){
+    if(!isAdmin){alert("커뮤니티 운영자만 사용할 수 있습니다.");return;}
+    const posts=forumRead(),post=posts.find(p=>p.id===id);
+    if(!post)return;
+    post.pinned=!post.pinned;
+    forumWrite(posts);
+    renderForumList();
+}
+function forumAdminDelete(id){
+    if(!isAdmin){alert("커뮤니티 운영자만 사용할 수 있습니다.");return;}
+    const posts=forumRead(),post=posts.find(p=>p.id===id);
+    if(!post)return;
+    if(!confirm("정말 이 게시글을 삭제하시겠습니까?"))return;
+    if(!confirm("최종 확인입니다. 이 게시글은 삭제 후 복구할 수 없습니다. 계속하시겠습니까?"))return;
+    const next=posts.filter(p=>p.id!==id);
+    forumWrite(next);
+    forumSelectedPostId=null;
+    renderForumList();
+}
+function forumReport(id){
+    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const posts=forumRead(),post=posts.find(p=>p.id===id);
+    if(!post)return;
+    post.reports=Array.isArray(post.reports)?post.reports:[];
+    const key=forumCurrentKey();
+    if(post.reports.some(r=>r.nickname===key)){alert("이미 신고한 게시글입니다.");return;}
+    const reason=prompt("신고 사유를 입력해 주세요");
+    if(reason===null)return;
+    const trimmed=reason.trim();
+    if(!trimmed){alert("신고 사유를 입력해 주세요.");return;}
+    post.reports.push({nickname:key,reason:trimmed,createdAt:new Date().toISOString()});
+    forumWrite(posts);
+    alert("신고가 접수되었습니다.");
+}
+function createForumComment(){
+    if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const input=document.getElementById("forum-comment-input"),body=input?.value.trim();
+    if(!body){alert("댓글 내용을 입력해 주세요.");return;}
+    const posts=forumRead(),post=posts.find(p=>p.id===forumSelectedPostId);
+    if(!post)return;
+    post.comments=post.comments||[];post.comments.push({id:crypto.randomUUID(),nickname:currentProfile.nickname,body,createdAt:new Date().toISOString()});
+    forumWrite(posts);renderForumDetail(post.id);
+}
+function subscribeForum(){
+    try{
+        forumChannel=new BroadcastChannel("place-forum");
+        forumChannel.onmessage=()=>{if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);else renderForumList();};
+    }catch(e){}
+    window.addEventListener("storage",e=>{if(e.key===FORUM_STORAGE_KEY){if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);else renderForumList();}});
+}
 
 /* =========================================================
    숨겨진 장소
