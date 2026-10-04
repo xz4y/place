@@ -1681,13 +1681,6 @@ function showSuspensionScreen(profile) {
 
     /*
      * 기간 정지
-     *
-     * ban
-     * softban
-     * hardban
-     *
-     * ban_until에 실제 종료 시간이
-     * 들어있는 경우 해당 시간을 표시
      */
     else if (
         profile.ban_until
@@ -1760,15 +1753,11 @@ function showSuspensionScreen(profile) {
                 );
 
             if (checkbox) {
-
-                checkbox.checked =
-                    false;
+                checkbox.checked = false;
             }
 
             if (button) {
-
-                button.disabled =
-                    true;
+                button.disabled = true;
             }
 
         } else {
@@ -1813,21 +1802,15 @@ function showSuspensionScreen(profile) {
     }
 
     if (sendButton) {
-
-        sendButton.disabled =
-            true;
+        sendButton.disabled = true;
     }
 
     if (channelSelect) {
-
-        channelSelect.disabled =
-            true;
+        channelSelect.disabled = true;
     }
 
     if (whisperTargetInput) {
-
-        whisperTargetInput.disabled =
-            true;
+        whisperTargetInput.disabled = true;
     }
 }
 
@@ -1862,27 +1845,19 @@ function hideSuspensionScreen() {
         );
 
     if (messageInput) {
-
-        messageInput.disabled =
-            false;
+        messageInput.disabled = false;
     }
 
     if (sendButton) {
-
-        sendButton.disabled =
-            false;
+        sendButton.disabled = false;
     }
 
     if (channelSelect) {
-
-        channelSelect.disabled =
-            false;
+        channelSelect.disabled = false;
     }
 
     if (whisperTargetInput) {
-
-        whisperTargetInput.disabled =
-            false;
+        whisperTargetInput.disabled = false;
     }
 
 
@@ -1892,7 +1867,6 @@ function hideSuspensionScreen() {
         );
 
     if (warningConfirmArea) {
-
         warningConfirmArea.style.display =
             "none";
     }
@@ -2302,11 +2276,22 @@ async function checkAuthStatus() {
                 profile
             );
 
+        /*
+         * 정지 / 경고 계정은 온라인 Presence에서 제외
+         */
         if (banned) {
+
+            await updatePresenceIdentity();
+
             return;
         }
 
         hideSuspensionScreen();
+
+        /*
+         * 정상 계정은 온라인 Presence 등록
+         */
+        await updatePresenceIdentity();
 
         messageInput.placeholder =
             "메시지를 입력하세요";
@@ -2318,6 +2303,12 @@ async function checkAuthStatus() {
         isAdmin = false;
 
         hideSuspensionScreen();
+
+        /*
+         * 로그아웃 / 비로그인 상태에서는
+         * 게스트 Presence를 다시 등록
+         */
+        await updatePresenceIdentity();
 
         document.getElementById(
             "user-info"
@@ -2446,10 +2437,6 @@ async function checkBanStatus(profile) {
     const now =
         new Date();
 
-    const reason =
-        profile.ban_reason ||
-        "사유 미작성";
-
 
     /*
      * 기간이 있는 제재의 만료 처리
@@ -2509,9 +2496,6 @@ async function checkBanStatus(profile) {
 
     /*
      * 경고
-     *
-     * 기존 warningModal 대신
-     * 밴과 동일한 ACCOUNT STATUS 화면 사용
      */
 
     if (
@@ -2604,6 +2588,11 @@ async function handleReactivateAccount() {
 
     hideSuspensionScreen();
 
+    /*
+     * 경고 해제 후 즉시 온라인 Presence 갱신
+     */
+    await updatePresenceIdentity();
+
     const messageInput =
         document.getElementById(
             "messageInput"
@@ -2670,22 +2659,36 @@ async function subscribeToMyProfile() {
                             currentProfile
                         );
 
-                    if (!banned) {
+                    /*
+                     * 실시간으로 정지된 경우
+                     * 즉시 Presence에서 제거
+                     */
+                    if (banned) {
 
-                        hideSuspensionScreen();
+                        await updatePresenceIdentity();
 
-                        document.getElementById(
-                            "user-info"
-                        ).innerText =
-                            "👤 " +
-                            currentProfile.nickname +
-                            "님";
-
-                        document.getElementById(
-                            "usernameInput"
-                        ).value =
-                            currentProfile.nickname;
+                        return;
                     }
+
+                    /*
+                     * 실시간으로 정지가 해제된 경우
+                     * 즉시 Presence에 다시 등록
+                     */
+                    hideSuspensionScreen();
+
+                    await updatePresenceIdentity();
+
+                    document.getElementById(
+                        "user-info"
+                    ).innerText =
+                        "👤 " +
+                        currentProfile.nickname +
+                        "님";
+
+                    document.getElementById(
+                        "usernameInput"
+                    ).value =
+                        currentProfile.nickname;
                 }
             )
             .subscribe();
@@ -3826,11 +3829,36 @@ async function trackPresence() {
 }
 
 
+/* =========================================================
+   접속자 신원 업데이트
+========================================================= */
+
 async function updatePresenceIdentity() {
 
     if (!presenceChannel) {
         return;
     }
+
+    /*
+     * 정지 / 경고 계정은 온라인 상태로 등록하지 않음
+     */
+    if (isSuspended) {
+
+        try {
+
+            await presenceChannel.untrack();
+
+        } catch (error) {
+
+            console.error(
+                "Presence 해제 실패:",
+                error
+            );
+        }
+
+        return;
+    }
+
 
     let presenceKey =
         sessionStorage.getItem(
@@ -3848,12 +3876,18 @@ async function updatePresenceIdentity() {
         );
     }
 
+
+    /*
+     * 로그인한 일반 계정은
+     * 계정 ID를 Presence 키로 사용
+     */
     if (currentUser) {
 
         presenceKey =
             "user:" +
             currentUser.id;
     }
+
 
     try {
 
