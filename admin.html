@@ -281,6 +281,10 @@ button:hover {
     color: #666;
     text-decoration: none;
 }
+
+#footer a:hover {
+    text-decoration: underline;
+}
 </style>
 </head>
 
@@ -289,13 +293,21 @@ button:hover {
 <div id="site">
 
     <div id="top">
-        <div id="title">PLACE</div>
-        <div id="subtitle">ADMINISTRATION PANEL</div>
+
+        <div id="title">
+            PLACE
+        </div>
+
+        <div id="subtitle">
+            ADMINISTRATION PANEL
+        </div>
 
         <div id="user-info">
             관리자 확인 중...
         </div>
+
     </div>
+
 
     <div id="menu">
 
@@ -313,15 +325,19 @@ button:hover {
 
     </div>
 
+
     <div id="content">
 
         <div id="message"></div>
+
 
         <div id="login-required">
             관리자 권한이 필요합니다
         </div>
 
+
         <div id="admin-content" class="hidden">
+
 
             <!-- 사용자 관리 -->
 
@@ -347,29 +363,42 @@ button:hover {
                         대상 사용자의 계정 아이디를 입력하세요
                     </div>
 
+
                     <div class="admin-action">
 
-                        <button onclick="runUserAction('idban')">
+                        <button
+                            onclick="runUserAction('idban')"
+                        >
                             아이디밴
                         </button>
 
-                        <button onclick="runUserAction('ban')">
+                        <button
+                            onclick="runUserAction('ban')"
+                        >
                             밴
                         </button>
 
-                        <button onclick="runUserAction('softban')">
+                        <button
+                            onclick="runUserAction('softban')"
+                        >
                             소프트밴
                         </button>
 
-                        <button onclick="runUserAction('hardban')">
+                        <button
+                            onclick="runUserAction('hardban')"
+                        >
                             하드밴
                         </button>
 
-                        <button onclick="runUserAction('warning')">
+                        <button
+                            onclick="runUserAction('warning')"
+                        >
                             경고
                         </button>
 
-                        <button onclick="runUserAction('chatlock')">
+                        <button
+                            onclick="runUserAction('chatlock')"
+                        >
                             채팅 제한
                         </button>
 
@@ -412,9 +441,11 @@ button:hover {
                         placeholder="배너에 표시할 내용을 입력하세요"
                     ></textarea>
 
+
                     <div class="row">
 
                         <div>
+
                             <label>
                                 시작
                             </label>
@@ -423,9 +454,12 @@ button:hover {
                                 id="banner-start"
                                 type="datetime-local"
                             >
+
                         </div>
 
+
                         <div>
+
                             <label>
                                 종료
                             </label>
@@ -434,15 +468,19 @@ button:hover {
                                 id="banner-end"
                                 type="datetime-local"
                             >
+
                         </div>
 
                     </div>
 
+
                     <br>
+
 
                     <button onclick="createBanner()">
                         배너 등록
                     </button>
+
 
                     <div class="small">
                         활성 배너는 최대 3개까지 등록할 수 있습니다
@@ -474,18 +512,23 @@ button:hover {
 
             </div>
 
+
         </div>
 
     </div>
 
+
     <div id="footer">
+
         PLACE © 2026
+
     </div>
 
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -494,6 +537,7 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
     "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
+
 
 const supabaseClient =
     supabase.createClient(
@@ -506,6 +550,10 @@ let currentUser = null;
 let currentProfile = null;
 
 
+/* =========================
+   MESSAGE
+========================= */
+
 function showMessage(text, type = "") {
 
     const box =
@@ -514,7 +562,6 @@ function showMessage(text, type = "") {
     box.innerText = text;
 
     box.className = "";
-
     box.id = "message";
 
     if (type) {
@@ -525,6 +572,10 @@ function showMessage(text, type = "") {
 }
 
 
+/* =========================
+   ADMIN CHECK
+========================= */
+
 async function checkAdmin() {
 
     const {
@@ -533,6 +584,7 @@ async function checkAdmin() {
         }
     } =
         await supabaseClient.auth.getSession();
+
 
     if (!session) {
 
@@ -544,8 +596,10 @@ async function checkAdmin() {
         return false;
     }
 
+
     currentUser =
         session.user;
+
 
     const {
         data: profile,
@@ -556,6 +610,7 @@ async function checkAdmin() {
             .select("*")
             .eq("id", currentUser.id)
             .single();
+
 
     if (error || !profile) {
 
@@ -569,14 +624,20 @@ async function checkAdmin() {
         return false;
     }
 
+
     currentProfile =
         profile;
+
 
     document.getElementById(
         "user-info"
     ).innerText =
-        "👤 " +
-        (profile.nickname || profile.username);
+        "관리자: " +
+        (
+            profile.nickname ||
+            profile.username
+        );
+
 
     if (profile.is_admin !== true) {
 
@@ -588,15 +649,19 @@ async function checkAdmin() {
         return false;
     }
 
+
     document.getElementById(
         "login-required"
     ).classList.add("hidden");
+
 
     document.getElementById(
         "admin-content"
     ).classList.remove("hidden");
 
+
     await loadBanners();
+
 
     return true;
 }
@@ -615,9 +680,13 @@ async function loadBanners() {
         await supabaseClient
             .from("banners")
             .select("*")
-            .order("created_at", {
-                ascending: true
-            });
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
 
     if (error) {
 
@@ -629,12 +698,15 @@ async function loadBanners() {
         return;
     }
 
+
     const list =
         document.getElementById(
             "banner-list"
         );
 
+
     list.innerHTML = "";
+
 
     if (!data || data.length === 0) {
 
@@ -644,49 +716,72 @@ async function loadBanners() {
         return;
     }
 
-    data.forEach(banner => {
 
-        const item =
-            document.createElement("div");
+    data.forEach(
+        banner => {
 
-        item.className =
-            "banner-item";
+            const item =
+                document.createElement(
+                    "div"
+                );
 
-        const start =
-            new Date(
-                banner.starts_at
-            ).toLocaleString("ko-KR");
 
-        const end =
-            banner.ends_at
-                ? new Date(
-                    banner.ends_at
-                ).toLocaleString("ko-KR")
-                : "기간 제한 없음";
+            item.className =
+                "banner-item";
 
-        item.innerHTML = `
-            <div class="banner-message">
-                📢 ${escapeHtml(banner.message)}
-            </div>
 
-            <div class="banner-date">
-                ${start}
-                ~
-                ${end}
-            </div>
+            const start =
+                new Date(
+                    banner.starts_at
+                ).toLocaleString(
+                    "ko-KR"
+                );
 
-            <button
-                class="banner-delete"
-                onclick="deleteBanner(${banner.id})"
-            >
-                X
-            </button>
-        `;
 
-        list.appendChild(item);
-    });
+            const end =
+                banner.ends_at
+                    ? new Date(
+                        banner.ends_at
+                    ).toLocaleString(
+                        "ko-KR"
+                    )
+                    : "기간 제한 없음";
+
+
+            item.innerHTML = `
+
+                <div class="banner-message">
+                    📢 ${escapeHtml(
+                        banner.message
+                    )}
+                </div>
+
+                <div class="banner-date">
+                    ${start}
+                    ~
+                    ${end}
+                </div>
+
+                <button
+                    class="banner-delete"
+                    onclick="deleteBanner(${banner.id})"
+                >
+                    X
+                </button>
+
+            `;
+
+
+            list.appendChild(item);
+
+        }
+    );
 }
 
+
+/* =========================
+   CREATE BANNER
+========================= */
 
 async function createBanner() {
 
@@ -695,15 +790,18 @@ async function createBanner() {
             "banner-message"
         ).value.trim();
 
+
     const start =
         document.getElementById(
             "banner-start"
         ).value;
 
+
     const end =
         document.getElementById(
             "banner-end"
         ).value;
+
 
     if (!message) {
 
@@ -715,6 +813,7 @@ async function createBanner() {
         return;
     }
 
+
     if (!start) {
 
         showMessage(
@@ -725,25 +824,37 @@ async function createBanner() {
         return;
     }
 
+
     const {
         error
     } =
         await supabaseClient.rpc(
             "admin_create_banner",
             {
-                p_message: message,
+                p_message:
+                    message,
 
                 p_starts_at:
-                    new Date(start).toISOString(),
+                    new Date(
+                        start
+                    ).toISOString(),
 
                 p_ends_at:
                     end
-                        ? new Date(end).toISOString()
+                        ? new Date(
+                            end
+                        ).toISOString()
                         : null
             }
         );
 
+
     if (error) {
+
+        console.error(
+            "배너 등록 오류:",
+            error
+        );
 
         showMessage(
             error.message,
@@ -753,26 +864,35 @@ async function createBanner() {
         return;
     }
 
+
     document.getElementById(
         "banner-message"
     ).value = "";
+
 
     document.getElementById(
         "banner-start"
     ).value = "";
 
+
     document.getElementById(
         "banner-end"
     ).value = "";
+
 
     showMessage(
         "배너가 등록되었습니다.",
         "success"
     );
 
+
     await loadBanners();
 }
 
+
+/* =========================
+   DELETE BANNER
+========================= */
 
 async function deleteBanner(id) {
 
@@ -781,9 +901,11 @@ async function deleteBanner(id) {
             "정말 이 배너를 삭제하시겠습니까?\n\n삭제하면 다시 복구할 수 없습니다."
         );
 
+
     if (!confirmed) {
         return;
     }
+
 
     const {
         error
@@ -791,11 +913,18 @@ async function deleteBanner(id) {
         await supabaseClient.rpc(
             "admin_delete_banner",
             {
-                p_banner_id: id
+                p_banner_id:
+                    id
             }
         );
 
+
     if (error) {
+
+        console.error(
+            "배너 삭제 오류:",
+            error
+        );
 
         showMessage(
             error.message,
@@ -805,10 +934,12 @@ async function deleteBanner(id) {
         return;
     }
 
+
     showMessage(
         "배너가 삭제되었습니다.",
         "success"
     );
+
 
     await loadBanners();
 }
@@ -825,6 +956,7 @@ async function runUserAction(action) {
             "target-username"
         ).value.trim();
 
+
     if (!username) {
 
         showMessage(
@@ -835,40 +967,255 @@ async function runUserAction(action) {
         return;
     }
 
+
+    const actionNames = {
+
+        idban:
+            "아이디밴",
+
+        ban:
+            "밴",
+
+        softban:
+            "소프트밴",
+
+        hardban:
+            "하드밴",
+
+        warning:
+            "경고",
+
+        chatlock:
+            "채팅 제한",
+
+        unban:
+            "제한 해제"
+
+    };
+
+
+    const actionName =
+        actionNames[action] ||
+        action;
+
+
     if (
         !confirm(
             username +
             " 사용자에게 " +
-            action +
+            actionName +
             " 명령을 실행하시겠습니까?"
         )
     ) {
         return;
     }
 
-    /*
-        여기에는 기존에 만든 관리자 RPC를 연결합니다.
 
-        현재 프로젝트의 기존 RPC:
-        admin_set_ban
-        admin_unban
-        admin_set_chatlock
-        admin_clean_chat
+    /* =========================
+       UNBAN
+    ========================= */
 
-        기존 RPC의 정확한 인자명을 확인한 뒤
-        이 부분에 연결하면 됩니다.
-    */
+    if (action === "unban") {
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "admin_unban",
+                {
+                    p_username:
+                        username
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "UNBAN ERROR:",
+                error
+            );
+
+            showMessage(
+                error.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        showMessage(
+            username +
+            " 사용자의 제한이 해제되었습니다.",
+            "success"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       CHATLOCK
+    ========================= */
+
+    if (action === "chatlock") {
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "admin_set_chatlock",
+                {
+                    p_username:
+                        username
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "CHATLOCK ERROR:",
+                error
+            );
+
+            showMessage(
+                error.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        showMessage(
+            username +
+            " 사용자의 채팅이 제한되었습니다.",
+            "success"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       BAN
+    ========================= */
+
+    if (
+        action === "ban" ||
+        action === "softban" ||
+        action === "hardban" ||
+        action === "idban"
+    ) {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "admin_set_ban",
+                {
+                    p_username:
+                        username,
+
+                    p_ban_type:
+                        action
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "BAN ERROR:",
+                error
+            );
+
+            showMessage(
+                error.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "BAN RESULT:",
+            data
+        );
+
+
+        showMessage(
+            username +
+            " 사용자에게 " +
+            actionName +
+            " 처리가 완료되었습니다.",
+            "success"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       WARNING
+    ========================= */
+
+    if (action === "warning") {
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "admin_set_ban",
+                {
+                    p_username:
+                        username,
+
+                    p_ban_type:
+                        "warning"
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "WARNING ERROR:",
+                error
+            );
+
+            showMessage(
+                error.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        showMessage(
+            username +
+            " 사용자에게 경고가 적용되었습니다.",
+            "success"
+        );
+
+        return;
+    }
+
 
     showMessage(
-        "명령: " + action +
-        "\n대상: " + username,
-        "success"
+        "알 수 없는 관리자 명령입니다.",
+        "error"
     );
 }
 
 
 /* =========================
-   CHAT
+   CHAT CLEAN
 ========================= */
 
 async function cleanChat() {
@@ -881,6 +1228,7 @@ async function cleanChat() {
         return;
     }
 
+
     const {
         error
     } =
@@ -888,7 +1236,13 @@ async function cleanChat() {
             "admin_clean_chat"
         );
 
+
     if (error) {
+
+        console.error(
+            "CHAT CLEAN ERROR:",
+            error
+        );
 
         showMessage(
             error.message,
@@ -897,6 +1251,7 @@ async function cleanChat() {
 
         return;
     }
+
 
     showMessage(
         "전체 채팅이 삭제되었습니다.",
@@ -912,19 +1267,44 @@ async function cleanChat() {
 function escapeHtml(text) {
 
     return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
-window.onload = async () => {
+/* =========================
+   START
+========================= */
 
-    await checkAdmin();
+window.onload =
+    async () => {
 
-};
+        await checkAdmin();
+
+    };
 
 
 supabaseClient.auth.onAuthStateChange(
