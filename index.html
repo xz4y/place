@@ -1595,6 +1595,9 @@ function getBanPeriodText(banType) {
         case "idban":
             return "영구 정지";
 
+        case "warning":
+            return "경고";
+
         default:
             return "계정 정지";
     }
@@ -1606,156 +1609,33 @@ function getBanPeriodText(banType) {
    밴 + 경고 통합
 ========================================================= */
 
-```js
 function showSuspensionScreen(profile) {
+
     isSuspended = true;
-    document.body.classList.add("account-suspended");
 
-    const periodText = getBanPeriodText(profile.ban_type);
+    document.body.classList.add(
+        "account-suspended"
+    );
 
-    document.getElementById("suspension-title").innerText =
+
+    /* =====================================================
+       제목
+    ====================================================== */
+
+    const periodText =
+        getBanPeriodText(
+            profile.ban_type
+        );
+
+    document.getElementById(
+        "suspension-title"
+    ).innerText =
         `회원님의 계정은 ${periodText} 처리되었습니다.`;
 
-    document.getElementById("suspension-date").innerText =
-        formatDateTime(profile.ban_started_at);
 
-    document.getElementById("suspension-reason").innerText =
-        profile.ban_reason || "사유 미작성";
-
-    const untilElement = document.getElementById("suspension-until");
-
-    /*
-     * 영구 정지는 idban만 해당
-     */
-    if (profile.ban_type === "idban") {
-
-        untilElement.innerHTML =
-            "계정이 영구적으로 비활성화된 상태입니다.";
-
-    /*
-     * 기간 정지
-     * ban / softban / hardban
-     */
-    } else if (profile.ban_until) {
-
-        const untilDate = new Date(profile.ban_until);
-
-        untilElement.innerHTML =
-            `계정이 비활성화 처리가 되었습니다.<br>` +
-            `<span class="suspension-date">` +
-            `${formatDateTime(untilDate)}` +
-            `</span> 이후로 재활성화가 가능합니다.`;
-
-    /*
-     * warning 또는 잘못된 데이터가 들어온 경우
-     */
-    } else if (profile.ban_type === "warning") {
-
-        untilElement.innerHTML =
-            "경고 조치가 적용되었습니다.";
-
-    } else {
-
-        untilElement.innerHTML =
-            "정지 기간 정보를 확인할 수 없습니다.";
-    }
-
-    /*
-     * 경고 전용 확인 영역
-     */
-    const warningConfirmArea =
-        document.getElementById("warning-confirm-area");
-
-    if (warningConfirmArea) {
-
-        if (profile.ban_type === "warning") {
-            warningConfirmArea.style.display = "block";
-
-            const checkbox =
-                document.getElementById("warningAgreeCheckbox");
-
-            const button =
-                document.getElementById("reactivateBtn");
-
-            if (checkbox) {
-                checkbox.checked = false;
-            }
-
-            if (button) {
-                button.disabled = true;
-            }
-
-        } else {
-            warningConfirmArea.style.display = "none";
-        }
-    }
-
-    /*
-     * 정지/경고 상태에서는 채팅 이용 불가
-     */
-    const messageInput =
-        document.getElementById("messageInput");
-
-    const sendButton =
-        document.getElementById("sendButton");
-
-    const channelSelect =
-        document.getElementById("channelSelect");
-
-    const whisperTargetInput =
-        document.getElementById("whisperTargetInput");
-
-    if (messageInput) {
-        messageInput.disabled = true;
-        messageInput.placeholder =
-            "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
-    }
-
-    if (sendButton) {
-        sendButton.disabled = true;
-    }
-
-    if (channelSelect) {
-        channelSelect.disabled = true;
-    }
-
-    if (whisperTargetInput) {
-        whisperTargetInput.disabled = true;
-    }
-}
-```
-
-그리고 **`getBanPeriodText()`도 warning까지 포함해서** 아래처럼 되어 있어야 합니다
-
-```js
-function getBanPeriodText(banType) {
-    switch (banType) {
-        case "ban":
-            return "1일 정지";
-
-        case "softban":
-            return "7일 정지";
-
-        case "hardban":
-            return "30일 정지";
-
-        case "idban":
-            return "영구 정지";
-
-        case "warning":
-            return "경고";
-
-        default:
-            return "계정 정지";
-    }
-}
-```
-
-이렇게 하면 **hardban에서 `ban_until`이 존재하는 경우 절대로 `영구적으로 비활성화된 상태입니다`가 나오지 않습니다**
-
-`idban`일 때만 그 문구가 나옵니다.
-
-
+    /* =====================================================
+       처리 일시
+    ====================================================== */
 
     document.getElementById(
         "suspension-date"
@@ -1764,6 +1644,11 @@ function getBanPeriodText(banType) {
             profile.ban_started_at
         );
 
+
+    /* =====================================================
+       처리 사유
+    ====================================================== */
+
     document.getElementById(
         "suspension-reason"
     ).innerText =
@@ -1771,9 +1656,132 @@ function getBanPeriodText(banType) {
         "사유 미작성";
 
 
+    /* =====================================================
+       정지 기간 / 경고 안내
+    ====================================================== */
+
+    const untilElement =
+        document.getElementById(
+            "suspension-until"
+        );
+
+
     /*
-     * 채팅 잠금
+     * 영구 정지는 idban일 때만
      */
+    if (
+        profile.ban_type === "idban"
+    ) {
+
+        untilElement.innerHTML =
+            "계정이 영구적으로 비활성화된 상태입니다.";
+
+    }
+
+
+    /*
+     * 기간 정지
+     *
+     * ban
+     * softban
+     * hardban
+     *
+     * ban_until에 실제 종료 시간이
+     * 들어있는 경우 해당 시간을 표시
+     */
+    else if (
+        profile.ban_until
+    ) {
+
+        const untilDate =
+            new Date(
+                profile.ban_until
+            );
+
+        untilElement.innerHTML =
+            `계정이 비활성화 처리가 되었습니다.<br>` +
+            `<span class="suspension-date">` +
+            `${formatDateTime(untilDate)}` +
+            `</span> 이후로 재활성화가 가능합니다.`;
+
+    }
+
+
+    /*
+     * 경고
+     */
+    else if (
+        profile.ban_type === "warning"
+    ) {
+
+        untilElement.innerHTML =
+            "경고 조치가 적용되었습니다.";
+
+    }
+
+
+    /*
+     * 예상하지 못한 데이터
+     */
+    else {
+
+        untilElement.innerHTML =
+            "정지 기간 정보를 확인할 수 없습니다.";
+
+    }
+
+
+    /* =====================================================
+       경고 확인 영역
+    ====================================================== */
+
+    const warningConfirmArea =
+        document.getElementById(
+            "warning-confirm-area"
+        );
+
+    if (warningConfirmArea) {
+
+        if (
+            profile.ban_type === "warning"
+        ) {
+
+            warningConfirmArea.style.display =
+                "block";
+
+            const checkbox =
+                document.getElementById(
+                    "warningAgreeCheckbox"
+                );
+
+            const button =
+                document.getElementById(
+                    "reactivateBtn"
+                );
+
+            if (checkbox) {
+
+                checkbox.checked =
+                    false;
+            }
+
+            if (button) {
+
+                button.disabled =
+                    true;
+            }
+
+        } else {
+
+            warningConfirmArea.style.display =
+                "none";
+        }
+    }
+
+
+    /* =====================================================
+       채팅 잠금
+    ====================================================== */
 
     const messageInput =
         document.getElementById(
@@ -1795,15 +1803,32 @@ function getBanPeriodText(banType) {
             "whisperTargetInput"
         );
 
-    messageInput.disabled = true;
-    sendButton.disabled = true;
-    channelSelect.disabled = true;
-    whisperTargetInput.disabled = true;
+    if (messageInput) {
 
-    messageInput.placeholder =
-        isWarning
-            ? "경고 내용을 확인한 후 다시 이용할 수 있습니다."
-            : "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
+        messageInput.disabled =
+            true;
+
+        messageInput.placeholder =
+            "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
+    }
+
+    if (sendButton) {
+
+        sendButton.disabled =
+            true;
+    }
+
+    if (channelSelect) {
+
+        channelSelect.disabled =
+            true;
+    }
+
+    if (whisperTargetInput) {
+
+        whisperTargetInput.disabled =
+            true;
+    }
 }
 
 
@@ -1815,6 +1840,7 @@ function hideSuspensionScreen() {
         "account-suspended"
     );
 
+
     const messageInput =
         document.getElementById(
             "messageInput"
@@ -1835,15 +1861,41 @@ function hideSuspensionScreen() {
             "whisperTargetInput"
         );
 
-    messageInput.disabled = false;
-    sendButton.disabled = false;
-    channelSelect.disabled = false;
-    whisperTargetInput.disabled = false;
+    if (messageInput) {
 
-    document.getElementById(
-        "warning-confirm-area"
-    ).style.display =
-        "none";
+        messageInput.disabled =
+            false;
+    }
+
+    if (sendButton) {
+
+        sendButton.disabled =
+            false;
+    }
+
+    if (channelSelect) {
+
+        channelSelect.disabled =
+            false;
+    }
+
+    if (whisperTargetInput) {
+
+        whisperTargetInput.disabled =
+            false;
+    }
+
+
+    const warningConfirmArea =
+        document.getElementById(
+            "warning-confirm-area"
+        );
+
+    if (warningConfirmArea) {
+
+        warningConfirmArea.style.display =
+            "none";
+    }
 }
 
 
