@@ -1381,7 +1381,13 @@ async function loadMessages() {
         '<div class="no-message">불러오는 중...</div>';
 
 
-    const {
+    /*
+       먼저 기존 recipient_id 기준으로 조회합니다.
+       이 값이 비어 있으면 username 기준으로 한 번 더 조회합니다.
+       Supabase 함수에서 수신자 식별자를 어떤 방식으로 저장하더라도
+       받은 편지함에서 놓치지 않도록 하는 fallback입니다.
+    */
+    let {
         data,
         error
     } = await supabaseClient
@@ -1398,8 +1404,58 @@ async function loadMessages() {
             }
         );
 
-
     if (error) {
+
+        console.error(
+            "recipient_id 기준 메시지 조회 오류:",
+            error
+        );
+
+    }
+
+    /*
+       recipient_id 조회 결과가 없을 때만
+       recipient_username 컬럼이 있는 경우를 시도합니다.
+       컬럼이 없는 DB라면 이 조회는 실패하지만
+       기존 recipient_id 결과를 그대로 사용합니다.
+    */
+    if (
+        (!Array.isArray(data) || data.length === 0) &&
+        currentProfile?.username
+    ) {
+
+        const fallbackResult =
+            await supabaseClient
+                .from("messages")
+                .select("*")
+                .eq(
+                    "recipient_username",
+                    currentProfile.username
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+        if (
+            !fallbackResult.error &&
+            Array.isArray(fallbackResult.data)
+        ) {
+
+            data = fallbackResult.data;
+            error = null;
+
+        }
+
+    }
+
+
+    if (
+        error &&
+        (!Array.isArray(data) || data.length === 0)
+    ) {
 
         console.error(
             "메시지 불러오기 오류:",
@@ -1550,7 +1606,7 @@ async function openMessage(id) {
     }
 
 
-    const {
+    let {
         data,
         error
     } = await supabaseClient
@@ -1559,6 +1615,35 @@ async function openMessage(id) {
         .eq("id", id)
         .eq("recipient_id", currentUser.id)
         .single();
+
+    /*
+       recipient_id 방식으로 찾지 못한 경우
+       recipient_username 기준으로 다시 찾습니다.
+    */
+    if (
+        error &&
+        currentProfile?.username
+    ) {
+
+        const fallbackResult =
+            await supabaseClient
+                .from("messages")
+                .select("*")
+                .eq("id", id)
+                .eq(
+                    "recipient_username",
+                    currentProfile.username
+                )
+                .single();
+
+        if (!fallbackResult.error) {
+
+            data = fallbackResult.data;
+            error = null;
+
+        }
+
+    }
 
 
     if (error) {
