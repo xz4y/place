@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PLACE - 작은 장소</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">    updateCommunityGreeting();
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://exeoqvfidmtmnwqejyvg.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
 </script>
 
 <style>
