@@ -970,7 +970,7 @@ body.account-suspended #suspension-screen {
                 <div id="forum-wrap">
                     <div class="forum-toolbar">
                         <div class="forum-heading">
-                            <strong>PLACE COMMUNITY</strong>
+                            <strong>PLACE's FORUM</strong>
                             <span>사람들이 남긴 이야기</span>
                         </div>
                         <button class="auth-btn" onclick="forumOpenComposer()">WRITE</button>
@@ -1451,6 +1451,91 @@ body.account-suspended #suspension-screen {
                 onclick="closeModal('profileModal')"
             >
                 닫기
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     COMMUNITY CONFIRM / REPORT MODALS
+========================================================= -->
+
+<div id="forumDeleteModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            🗑️ 게시글 삭제
+        </div>
+
+        <div class="profile-row" id="forumDeleteMessage" style="line-height:1.7;">
+            정말 이 게시글을 삭제하시겠습니까?
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="auth-btn"
+                onclick="confirmForumDelete()"
+            >
+                삭제
+            </button>
+
+            <button
+                class="auth-btn"
+                onclick="closeForumDeleteModal()"
+            >
+                취소
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="forumReportModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            🚨 신고하기
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                신고 사유를 알려주세요.
+            </label>
+
+            <textarea
+                id="forumReportReasonInput"
+                maxlength="500"
+                placeholder="신고 사유를 입력해 주세요."
+                style="width:93%; min-height:90px; padding:5px; border:1px solid #777; font-size:12px; resize:vertical; box-sizing:border-box;"
+            ></textarea>
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="auth-btn"
+                onclick="submitForumReport()"
+            >
+                신고
+            </button>
+
+            <button
+                class="auth-btn"
+                onclick="closeForumReportModal()"
+            >
+                취소
             </button>
 
         </div>
@@ -4078,6 +4163,7 @@ supabaseClient.auth.onAuthStateChange(
 window.onload = async () => {
 
     await checkAuthStatus();
+    await forumLoadFromSupabase();
     renderForumList();
     subscribeForum();
 
@@ -4097,16 +4183,80 @@ window.onload = async () => {
    COMMUNITY FORUM
 ========================================================= */
 const FORUM_STORAGE_KEY = "place_forum_posts_v2";
+const FORUM_CLOUD_TABLE = "forum_board";
+const FORUM_CLOUD_ID = "main";
 let forumSelectedPostId = null;
 let forumChannel = null;
+let forumCloudChannel = null;
+let forumPostsCache = [];
+let forumCloudReady = false;
 
+function forumReadLocal(){
+    try{
+        const data=JSON.parse(localStorage.getItem(FORUM_STORAGE_KEY)||"[]");
+        return Array.isArray(data)?data:[];
+    }catch(e){return [];}
+}
 function forumRead(){
-    try{return JSON.parse(localStorage.getItem(FORUM_STORAGE_KEY)||"[]");}
-    catch(e){return [];}
+    return Array.isArray(forumPostsCache) ? forumPostsCache : forumReadLocal();
+}
+function forumCache(posts){
+    forumPostsCache=Array.isArray(posts)?posts:[];
+    localStorage.setItem(FORUM_STORAGE_KEY,JSON.stringify(forumPostsCache));
+}
+async function forumLoadFromSupabase(){
+    const {data,error}=await supabaseClient
+        .from(FORUM_CLOUD_TABLE)
+        .select("posts")
+        .eq("id",FORUM_CLOUD_ID)
+        .maybeSingle();
+
+    if(error){
+        forumCloudReady=false;
+        forumCache(forumReadLocal());
+        console.error("포럼 클라우드 불러오기 실패:",error);
+        return;
+    }
+
+    forumCloudReady=true;
+    const localPosts=forumReadLocal();
+    const cloudPosts=data && Array.isArray(data.posts) ? data.posts : [];
+    const seen=new Set(cloudPosts.map(p=>p?.id).filter(Boolean));
+    const merged=cloudPosts.slice();
+    localPosts.forEach(p=>{
+        if(p?.id && !seen.has(p.id)){
+            merged.push(p);
+            seen.add(p.id);
+        }
+    });
+
+    forumCache(merged);
+
+    if(!data && merged.length && currentUser){
+        await forumPersistToSupabase(merged);
+    }else if(data && merged.length!==cloudPosts.length && currentUser){
+        await forumPersistToSupabase(merged);
+    }
+}
+async function forumPersistToSupabase(posts){
+    if(!currentUser || !forumCloudReady) return;
+    const {error}=await supabaseClient
+        .from(FORUM_CLOUD_TABLE)
+        .upsert({
+            id:FORUM_CLOUD_ID,
+            posts:Array.isArray(posts)?posts:[],
+            updated_at:new Date().toISOString()
+        });
+
+    if(error){
+        console.error("포럼 클라우드 저장 실패:",error);
+    }
 }
 function forumWrite(posts){
-    localStorage.setItem(FORUM_STORAGE_KEY,JSON.stringify(posts));
+    const next=Array.isArray(posts)?posts:[];
+    forumCache(next);
     try{forumChannel&&forumChannel.postMessage({type:"update"});}catch(e){}
+    forumPersistToSupabase(next);
 }
 function forumEscape(v){return escapeHtml(String(v??""));}
 function forumRelativeTime(value){
@@ -4212,16 +4362,129 @@ function forumAdminTogglePin(id){
     forumWrite(posts);
     renderForumList();
 }
+let forumDeleteTarget = null;
+let forumReportTarget = null;
+
+function openForumDeleteModal(type, postId, commentId){
+    forumDeleteTarget = { type, postId, commentId };
+    const message = document.getElementById("forumDeleteMessage");
+    if(message){
+        message.innerText =
+            type === "comment"
+                ? "정말 이 댓글을 삭제하시겠습니까?"
+                : "정말 이 게시글을 삭제하시겠습니까?";
+    }
+    openModal("forumDeleteModal");
+}
+
+function closeForumDeleteModal(){
+    forumDeleteTarget = null;
+    closeModal("forumDeleteModal");
+}
+
+function confirmForumDelete(){
+    const target = forumDeleteTarget;
+    if(!target){
+        closeForumDeleteModal();
+        return;
+    }
+
+    if(target.type === "post"){
+        const posts=forumRead();
+        const post=posts.find(p=>p.id===target.postId);
+        if(!post){
+            closeForumDeleteModal();
+            return;
+        }
+        const next=posts.filter(p=>p.id!==target.postId);
+        forumWrite(next);
+        forumSelectedPostId=null;
+        closeForumDeleteModal();
+        renderForumList();
+        return;
+    }
+
+    const posts=forumRead(),post=posts.find(p=>p.id===target.postId);
+    if(!post){
+        closeForumDeleteModal();
+        return;
+    }
+    post.comments=(post.comments||[]).filter(c=>c.id!==target.commentId);
+    forumWrite(posts);
+    closeForumDeleteModal();
+    renderForumDetail(target.postId);
+}
+
+function openForumReportModal(type, postId, commentId){
+    forumReportTarget = { type, postId, commentId };
+    const input = document.getElementById("forumReportReasonInput");
+    if(input) input.value = "";
+    openModal("forumReportModal");
+    if(input) input.focus();
+}
+
+function closeForumReportModal(){
+    forumReportTarget = null;
+    closeModal("forumReportModal");
+}
+
+function submitForumReport(){
+    const target=forumReportTarget;
+    const input=document.getElementById("forumReportReasonInput");
+    const trimmed=(input?.value||"").trim();
+
+    if(!target){
+        closeForumReportModal();
+        return;
+    }
+
+    if(!trimmed){
+        alert("신고 사유를 입력해 주세요.");
+        if(input) input.focus();
+        return;
+    }
+
+    const posts=forumRead(),post=posts.find(p=>p.id===target.postId);
+    if(!post){
+        closeForumReportModal();
+        return;
+    }
+
+    const key=forumCurrentKey();
+
+    if(target.type === "post"){
+        post.reports=Array.isArray(post.reports)?post.reports:[];
+        if(post.reports.some(r=>r.nickname===key && !r.resolved)){
+            closeForumReportModal();
+            alert("이미 신고한 게시글입니다.");
+            return;
+        }
+        post.reports.push({id:crypto.randomUUID(),type:"post",nickname:key,reason:trimmed,createdAt:new Date().toISOString(),resolved:false});
+    }else{
+        const comment=(post.comments||[]).find(c=>c.id===target.commentId);
+        if(!comment){
+            closeForumReportModal();
+            return;
+        }
+        comment.reports=Array.isArray(comment.reports)?comment.reports:[];
+        if(comment.reports.some(r=>r.nickname===key && !r.resolved)){
+            closeForumReportModal();
+            alert("이미 신고한 댓글입니다.");
+            return;
+        }
+        comment.reports.push({id:crypto.randomUUID(),type:"comment",nickname:key,reason:trimmed,createdAt:new Date().toISOString(),resolved:false});
+    }
+
+    forumWrite(posts);
+    closeForumReportModal();
+    alert("신고가 접수되었습니다.");
+}
+
 function forumAdminDelete(id){
     if(!isAdmin){alert("커뮤니티 운영자만 사용할 수 있습니다.");return;}
     const posts=forumRead(),post=posts.find(p=>p.id===id);
     if(!post)return;
-    if(!confirm("정말 이 게시글을 삭제하시겠습니까?"))return;
-    if(!confirm("최종 확인입니다. 이 게시글은 삭제 후 복구할 수 없습니다. 계속하시겠습니까?"))return;
-    const next=posts.filter(p=>p.id!==id);
-    forumWrite(next);
-    forumSelectedPostId=null;
-    renderForumList();
+    openForumDeleteModal("post", id);
 }
 function forumReport(id){
     if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
@@ -4230,13 +4493,7 @@ function forumReport(id){
     post.reports=Array.isArray(post.reports)?post.reports:[];
     const key=forumCurrentKey();
     if(post.reports.some(r=>r.nickname===key && !r.resolved)){alert("이미 신고한 게시글입니다.");return;}
-    const reason=prompt("신고 사유를 간단히 입력해 주세요");
-    if(reason===null)return;
-    const trimmed=reason.trim();
-    if(!trimmed){alert("신고 사유를 입력해 주세요.");return;}
-    post.reports.push({id:crypto.randomUUID(),type:"post",nickname:key,reason:trimmed,createdAt:new Date().toISOString(),resolved:false});
-    forumWrite(posts);
-    alert("신고가 접수되었습니다.");
+    openForumReportModal("post", id);
 }
 function forumCommentReport(postId,commentId){
     if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
@@ -4247,13 +4504,7 @@ function forumCommentReport(postId,commentId){
     comment.reports=Array.isArray(comment.reports)?comment.reports:[];
     const key=forumCurrentKey();
     if(comment.reports.some(r=>r.nickname===key && !r.resolved)){alert("이미 신고한 댓글입니다.");return;}
-    const reason=prompt("신고 사유를 간단히 입력해 주세요");
-    if(reason===null)return;
-    const trimmed=reason.trim();
-    if(!trimmed){alert("신고 사유를 입력해 주세요.");return;}
-    comment.reports.push({id:crypto.randomUUID(),type:"comment",nickname:key,reason:trimmed,createdAt:new Date().toISOString(),resolved:false});
-    forumWrite(posts);
-    alert("신고가 접수되었습니다.");
+    openForumReportModal("comment", postId, commentId);
 }
 function createForumComment(){
     if(!currentUser||!currentProfile){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
@@ -4285,18 +4536,50 @@ function forumCommentDelete(postId,commentId){
     const comment=(post.comments||[]).find(c=>c.id===commentId);
     if(!comment)return;
     if(!forumCommentIsOwner(comment)){alert("댓글 작성자만 삭제할 수 있습니다.");return;}
-    if(!confirm("정말 이 댓글을 삭제하시겠습니까?"))return;
-    if(!confirm("최종 확인입니다. 이 댓글은 삭제 후 복구할 수 없습니다. 계속하시겠습니까?"))return;
-    post.comments=(post.comments||[]).filter(c=>c.id!==commentId);
-    forumWrite(posts);
-    renderForumDetail(postId);
+    openForumDeleteModal("comment", postId, commentId);
 }
 function subscribeForum(){
     try{
         forumChannel=new BroadcastChannel("place-forum");
         forumChannel.onmessage=()=>{if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);else renderForumList();};
     }catch(e){}
-    window.addEventListener("storage",e=>{if(e.key===FORUM_STORAGE_KEY){if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);else renderForumList();}});
+
+    window.addEventListener("storage",e=>{
+        if(e.key===FORUM_STORAGE_KEY){
+            forumPostsCache=forumReadLocal();
+            if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);
+            else renderForumList();
+        }
+    });
+
+    try{
+        if(forumCloudChannel){
+            supabaseClient.removeChannel(forumCloudChannel);
+            forumCloudChannel=null;
+        }
+        forumCloudChannel=supabaseClient
+            .channel("forum-board-realtime")
+            .on(
+                "postgres_changes",
+                {
+                    event:"*",
+                    schema:"public",
+                    table:FORUM_CLOUD_TABLE,
+                    filter:"id=eq."+FORUM_CLOUD_ID
+                },
+                payload=>{
+                    const posts=payload?.new?.posts;
+                    if(Array.isArray(posts)){
+                        forumCache(posts);
+                        if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);
+                        else renderForumList();
+                    }
+                }
+            )
+            .subscribe();
+    }catch(e){
+        console.error("포럼 실시간 연결 실패:",e);
+    }
 }
 
 /* =========================================================
