@@ -1091,6 +1091,27 @@ async function sendMessage() {
     }
 
 
+    const myUsername =
+        String(
+            currentProfile?.username ||
+            ""
+        ).trim().toLowerCase();
+
+    if (
+        myUsername &&
+        recipient.toLowerCase() ===
+            myUsername
+    ) {
+
+        alert(
+            "자기 자신에게는 메시지를 보낼 수 없습니다"
+        );
+
+        return;
+
+    }
+
+
     if (!subject) {
 
         alert(
@@ -1366,10 +1387,8 @@ async function loadMessages() {
     } = await supabaseClient
         .from("messages")
         .select("*")
-        .or(
-            "recipient_id.eq." +
-            currentUser.id +
-            ",sender_id.eq." +
+        .eq(
+            "recipient_id",
             currentUser.id
         )
         .order(
@@ -1538,6 +1557,7 @@ async function openMessage(id) {
         .from("messages")
         .select("*")
         .eq("id", id)
+        .eq("recipient_id", currentUser.id)
         .single();
 
 
