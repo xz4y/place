@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PLACE - 개인정보처리방침</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #d6d6d6;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    font-size: 12px;
+}
+
+body {
+    background:
+        linear-gradient(#eeeeee 1px, transparent 1px),
+        linear-gradient(90deg, #eeeeee 1px, transparent 1px);
+    background-size: 8px 8px;
+}
+
+#site {
+    width: 760px;
+    margin: 25px auto;
+    background: #ffffff;
+    border: 1px solid #555;
+    box-shadow: 2px 2px 0 #888;
+}
+
+#top {
+    height: 70px;
+    background: linear-gradient(#5f8fbd, #315d8b);
+    border-bottom: 3px solid #24496e;
+    color: white;
+    position: relative;
+}
+
+#title {
+    position: absolute;
+    left: 18px;
+    top: 12px;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+#subtitle {
+    position: absolute;
+    left: 20px;
+    top: 45px;
+    font-size: 11px;
+}
+
+#auth-bar {
+    position: absolute;
+    right: 15px;
+    top: 18px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.auth-btn {
+    padding: 3px 8px;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 1px outset #eee;
+    font-size: 11px;
+    cursor: pointer;
+    color: #222;
+}
+
+.auth-btn:active {
+    border-style: inset;
+}
+
+#menu {
+    height: 27px;
+    background: #eeeeee;
+    border-bottom: 1px solid #999;
+    padding-left: 8px;
+}
+
+.menu-button {
+    display: inline-block;
+    margin-top: 4px;
+    margin-right: 3px;
+    padding: 3px 12px;
+    color: #222;
+    text-decoration: none;
+    background: linear-gradient(#ffffff, #cfcfcf);
+    border: 1px solid #777;
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 0 white, inset -1px -1px 0 #aaa;
+    cursor: pointer;
+}
+
+.menu-button:hover {
+    background: linear-gradient(#eeeeee, #cccccc);
+}
+
+#notice {
+    background: #f3f3f3;
+    border-bottom: 1px solid #aaa;
+    padding: 7px 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#content {
+    padding: 18px;
+    min-height: 600px;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.page-subtitle {
+    color: #666;
+    font-size: 11px;
+    margin-bottom: 20px;
+}
+
+.section {
+    margin-bottom: 28px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: bold;
+    background: #eeeeee;
+    border: 1px solid #aaa;
+    border-left: 4px solid #315d8b;
+    padding: 7px 9px;
+    margin-bottom: 10px;
+}
+
+.sub-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 15px 0 7px 0;
+}
+
+.text {
+    line-height: 1.8;
+    margin: 5px 0;
+}
+
+ul {
+    margin-top: 7px;
+    padding-left: 22px;
+    line-height: 1.8;
+}
+
+.policy-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    table-layout: fixed;
+}
+
+.policy-table th,
+.policy-table td {
+    border: 1px solid #999;
+    padding: 8px;
+    vertical-align: top;
+    line-height: 1.6;
+}
+
+.policy-table th {
+    background: #e9e9e9;
+    text-align: left;
+    font-weight: bold;
+}
+
+.policy-table th:nth-child(1) {
+    width: 18%;
+}
+
+.policy-table th:nth-child(2) {
+    width: 37%;
+}
+
+.policy-table th:nth-child(3) {
+    width: 45%;
+}
+
+.notice-box {
+    background: #f7f7f7;
+    border: 1px solid #aaa;
+    padding: 10px;
+    line-height: 1.7;
+    margin-top: 10px;
+}
+
+.footer {
+    border-top: 1px solid #aaa;
+    background: #eeeeee;
+    padding: 12px;
+    text-align: center;
+    color: #666;
+    font-size: 11px;
+}
+
+.footer a {
+    color: #555;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+    #site {
+        width: calc(100% - 20px);
+        margin: 10px auto;
+    }
+
+    #auth-bar {
+        right: 8px;
+    }
+
+    #title {
+        left: 12px;
+    }
+
+    #subtitle {
+        left: 14px;
+    }
+
+    #content {
+        padding: 12px;
+    }
+
+    .policy-table {
+        font-size: 11px;
+    }
+
+    .policy-table th,
+    .policy-table td {
+        padding: 6px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="site">
+
+    <div id="top">
+
+        <div id="title">PLACE</div>
+
+        <div id="subtitle">
+            어딘가에 존재하는 작은 장소
+        </div>
+
+        <div id="auth-bar">
+
+            <span
+                id="user-info"
+                style="font-size:11px; color:#fff;"
+            >
+                로그인 필요
+            </span>
+
+            <a
+                href="index.html"
+                class="auth-btn"
+                style="text-decoration:none;"
+            >
+                로그인
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div id="menu">
+
+        <a href="index.html" class="menu-button">
+            HOME
+        </a>
+
+        <a href="index.html#world" class="menu-button">
+            WORLD
+        </a>
+
+        <a href="message.html" class="menu-button">
+            MESSAGE
+        </a>
+
+        <a href="index.html#profile" class="menu-button">
+            PROFILE
+        </a>
+
+        <a href="about.html" class="menu-button">
+            ABOUT
+        </a>
+
+    </div>
+
+
+    <div id="notice">
+
+        <span>
+            <b>PRIVACY</b> · 개인정보처리방침
+        </span>
+
+        <span>
+            시행일 2026.10.04
+        </span>
+
+    </div>
+
+
+    <div id="content">
+
+        <div class="page-title">
+            개인정보처리방침
+        </div>
+
+        <div class="page-subtitle">
+            PLACE의 개인정보 수집 및 이용에 관한 안내
+        </div>
+
+
+        <div class="section">
+
+            <p class="text">
+                PLACE(이하 "서비스")는 이용자의 개인정보를 중요하게 생각하며,
+                이용자가 서비스를 안전하게 이용할 수 있도록 개인정보를 적절하게
+                관리하고 보호하기 위해 노력합니다
+            </p>
+
+            <p class="text">
+                본 개인정보처리방침은 PLACE가 어떤 정보를 수집하고,
+                어떤 목적으로 이용하며, 어떻게 보관하는지에 관한 사항을 안내합니다
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                1. 수집하는 개인정보 및 이용 목적
+            </div>
+
+            <p class="text">
+                PLACE는 서비스 제공과 운영에 필요한 범위에서 다음과 같은 정보를
+                수집 및 저장할 수 있습니다
+            </p>
+
+            <table class="policy-table">
+
+                <thead>
+                    <tr>
+                        <th>구분</th>
+                        <th>수집·보관 항목</th>
+                        <th>이용 목적</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>계정 정보</td>
+                        <td>
+                            계정 ID<br>
+                            닉네임
+                        </td>
+                        <td>
+                            회원 식별, 계정 관리 및 서비스 이용
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>프로필·아바타</td>
+                        <td>
+                            프로필 정보<br>
+                            아바타 정보<br>
+                            아바타 설정 및 변경 기록
+                        </td>
+                        <td>
+                            프로필 및 아바타 기능 제공,
+                            서비스 내 이용자 표시
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>게임 이용 기록</td>
+                        <td>
+                            게임 이용 기록<br>
+                            게임 내 활동 기록<br>
+                            게임 진행 관련 기록
+                        </td>
+                        <td>
+                            게임 기능 제공,
+                            게임 진행 상태 저장,
+                            서비스 개선 및 오류 확인
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>재화 기록</td>
+                        <td>
+                            보유 재화<br>
+                            재화 획득 기록<br>
+                            재화 사용 기록<br>
+                            재화 변동 기록
+                        </td>
+                        <td>
+                            게임 내 재화 시스템 운영,
+                            재화 변동 내역 확인,
+                            부정 이용 방지
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>채팅</td>
+                        <td>
+                            채팅 내용<br>
+                            작성자 정보<br>
+                            작성 시간<br>
+                            채팅 이용 관련 기록
+                        </td>
+                        <td>
+                            이용자 간 의사소통,
+                            도배·괴롭힘·부정 이용 등의 문제 확인
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>메시지</td>
+                        <td>
+                            메시지 발신자<br>
+                            메시지 수신자<br>
+                            메시지 제목<br>
+                            메시지 내용<br>
+                            메시지 작성 시간<br>
+                            메시지 읽음 여부 및 관련 기록
+                        </td>
+                        <td>
+                            메시지 전송 및 관리,
+                            이용자 간 의사소통 제공
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>보안 관련 기록</td>
+                        <td>
+                            서비스 보안 및 비정상 이용과 관련된 기록
+                        </td>
+                        <td>
+                            계정 도용,
+                            서비스 공격,
+                            부정 이용 및 비정상적인 접근 방지
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>신고·제재 기록</td>
+                        <td>
+                            신고 내용<br>
+                            신고 처리 기록<br>
+                            이용 제한 기록<br>
+                            제재 사유<br>
+                            제재 기간 및 관련 기록
+                        </td>
+                        <td>
+                            신고 처리,
+                            이용규칙 위반 확인,
+                            서비스 질서 유지
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>결제 기록</td>
+                        <td>
+                            결제 내역<br>
+                            결제 일시<br>
+                            결제 관련 서비스 이용 기록
+                        </td>
+                        <td>
+                            결제 처리,
+                            결제 내역 확인,
+                            부정 결제 방지
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="notice-box">
+                ※ 서비스 제공에 필요한 범위에서만 개인정보를 수집하며,
+                서비스 운영 과정에서 수집 항목은 변경될 수 있습니다.
+                수집 항목이 변경되는 경우 개인정보처리방침을 통해 안내합니다
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                2. 개인정보의 이용 목적
+            </div>
+
+            <p class="text">
+                PLACE는 수집한 정보를 다음과 같은 목적으로 이용합니다
+            </p>
+
+            <ul>
+                <li>회원 및 계정 관리</li>
+                <li>서비스 제공</li>
+                <li>게임 기능 제공</li>
+                <li>프로필 및 아바타 제공</li>
+                <li>채팅 및 메시지 기능 제공</li>
+                <li>게임 내 재화 및 경제 시스템 운영</li>
+                <li>서비스 이용 기록 관리</li>
+                <li>부정 이용 및 비정상적인 활동 방지</li>
+                <li>서비스 보안 유지</li>
+                <li>신고 및 제재 처리</li>
+                <li>결제 및 결제 내역 관리</li>
+                <li>서비스 오류 확인 및 개선</li>
+                <li>이용자 문의 및 요청 처리</li>
+            </ul>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                3. 개인정보의 보관
+            </div>
+
+            <p class="text">
+                PLACE는 개인정보를 수집한 목적을 달성하는 데 필요한 기간 동안
+                보관합니다
+            </p>
+
+            <div class="sub-title">
+                계정 및 프로필 정보
+            </div>
+
+            <p class="text">
+                계정 ID, 닉네임, 프로필 및 아바타 등의 정보는
+                이용자가 서비스를 이용하는 동안 보관할 수 있습니다
+            </p>
+
+            <div class="sub-title">
+                게임 및 재화 기록
+            </div>
+
+            <p class="text">
+                게임 이용 기록과 재화 관련 기록은 서비스의 정상적인 운영과
+                기록의 정확성을 위해 필요한 기간 동안 보관할 수 있습니다
+            </p>
+
+            <div class="sub-title">
+                채팅 및 메시지
+            </div>
+
+            <p class="text">
+                채팅과 메시지는 서비스 제공 및 이용자 간 의사소통을 위해
+                필요한 기간 동안 보관할 수 있습니다
+            </p>
+
+            <p class="text">
+                서비스의 데이터 관리 정책에 따라 오래된 채팅 및 메시지는
+                삭제될 수 있습니다
+            </p>
+
+            <div class="sub-title">
+                보안 및 신고·제재 기록
+            </div>
+
+            <p class="text">
+                보안 관련 기록과 신고·제재 기록은 서비스의 안전한 운영과
+                부정 이용 방지를 위해 필요한 기간 동안 보관할 수 있습니다
+            </p>
+
+            <div class="sub-title">
+                결제 기록
+            </div>
+
+            <p class="text">
+                결제 기록은 관련 법령에서 정하는 보존기간이 있는 경우
+                해당 기간 동안 보관할 수 있습니다
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                4. 회원 탈퇴 및 개인정보 삭제
+            </div>
+
+            <p class="text">
+                PLACE의 회원 탈퇴는 서비스 내에서 즉시 처리하는 방식이 아닌
+                <b>문의 사항을 통한 요청 방식</b>으로 처리됩니다
+            </p>
+
+            <p class="text">
+                이용자는 문의를 통해 자신의 계정 탈퇴를 요청할 수 있습니다
+            </p>
+
+            <p class="text">
+                PLACE는 탈퇴 요청에 필요한 본인 확인 등의 절차를 거친 후
+                계정 탈퇴를 처리합니다
+            </p>
+
+            <p class="text">
+                회원 탈퇴가 처리되면 서비스 이용을 위해 보관하던 개인정보는
+                원칙적으로 삭제합니다
+            </p>
+
+            <p class="text">
+                다만 관련 법령에 따라 일정 기간 보관해야 하는 정보 또는
+                서비스의 보안 및 부정 이용 방지를 위해 필요한 최소한의 기록은
+                해당 목적과 기간에 따라 별도로 보관될 수 있습니다
+            </p>
+
+            <p class="text">
+                보관기간이 종료된 개인정보는 지체 없이 삭제합니다
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                5. 개인정보의 제3자 제공
+            </div>
+
+            <p class="text">
+                PLACE는 원칙적으로 이용자의 개인정보를 외부에 제공하지 않습니다
+            </p>
+
+            <p class="text">
+                다만 다음과 같은 경우에는 예외로 할 수 있습니다
+            </p>
+
+            <ul>
+                <li>이용자가 사전에 동의한 경우</li>
+                <li>법령에 따라 제공이 필요한 경우</li>
+                <li>수사기관 등 관계 기관이 적법한 절차에 따라 요청한 경우</li>
+            </ul>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                6. 개인정보 처리의 위탁
+            </div>
+
+            <p class="text">
+                PLACE는 서비스 제공을 위해 외부 서비스를 이용할 수 있습니다
+            </p>
+
+            <p class="text">
+                외부 서비스를 통해 개인정보가 처리되는 경우 해당 서비스의
+                역할과 처리 범위를 확인하고, 필요한 경우 이용자에게
+                관련 내용을 안내합니다
+            </p>
+
+            <p class="text">
+                외부 서비스의 이용과 개인정보 처리에 관한 자세한 사항은
+                해당 서비스의 정책에 따를 수 있습니다
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                7. 개인정보의 안전성 확보
+            </div>
+
+            <p class="text">
+                PLACE는 이용자의 개인정보를 안전하게 보호하기 위해
+                다음과 같은 조치를 취하기 위해 노력합니다
+            </p>
+
+            <ul>
+                <li>개인정보에 대한 접근 권한 관리</li>
+                <li>계정 및 서비스 접근 보안 관리</li>
+                <li>비정상적인 이용 및 공격에 대한 대응</li>
+                <li>개인정보의 불필요한 보관 방지</li>
+                <li>서비스 운영에 필요한 최소한의 접근 권한 유지</li>
+            </ul>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                8. 이용자의 권리
+            </div>
+
+            <p class="text">
+                이용자는 자신의 개인정보와 관련하여 다음과 같은 요청을 할 수 있습니다
+            </p>
+
+            <ul>
+                <li>개인정보 확인 요청</li>
+                <li>개인정보의 수정 요청</li>
+                <li>개인정보의 삭제 요청</li>
+                <li>회원 탈퇴 요청</li>
+            </ul>
+
+            <p class="text">
+                개인정보와 관련된 요청은 PLACE의 문의 방법을 통해 접수할 수 있습니다
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                9. 개인정보처리방침의 변경
+            </div>
+
+            <p class="text">
+                PLACE는 서비스의 변경, 새로운 기능의 추가 또는 관련 법령의
+                변경 등에 따라 본 개인정보처리방침을 변경할 수 있습니다
+            </p>
+
+            <p class="text">
+                개인정보처리방침이 변경되는 경우 변경된 내용을
+                서비스 내에서 안내합니다
+            </p>
+
+            <p class="text">
+                변경된 개인정보처리방침은 별도로 안내한 시행일부터 적용됩니다
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                10. 문의
+            </div>
+
+            <p class="text">
+                개인정보와 관련된 문의, 열람·수정·삭제 요청 또는
+                회원 탈퇴 요청은 PLACE의 문의 방법을 통해 접수할 수 있습니다
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+        PLACE © 2026 |
+        <a href="terms.html">이용약관</a> |
+        <a href="privacy.html">개인정보처리방침</a>
+    </div>
+
+</div>
+
+</body>
+</html>
