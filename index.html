@@ -421,7 +421,8 @@ input {
 
 
 /* =========================================================
-   정지 화면
+   ACCOUNT STATUS
+   밴 + 경고 공통 화면
 ========================================================= */
 
 #suspension-screen {
@@ -503,6 +504,42 @@ input {
 
 
 /* =========================================================
+   경고 확인 버튼
+========================================================= */
+
+.warning-confirm-area {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+}
+
+.warning-confirm-text {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.warning-confirm-button {
+    padding: 6px 18px;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 2px outset #eeeeee;
+    color: #222;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.warning-confirm-button:active {
+    border-style: inset;
+}
+
+.warning-confirm-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
    MODAL
 ========================================================= */
 
@@ -563,7 +600,7 @@ input {
 
 
 /* =========================================================
-   실제 정지 상태
+   실제 ACCOUNT STATUS 상태
 ========================================================= */
 
 body.account-suspended #notice,
@@ -681,7 +718,8 @@ body.account-suspended #suspension-screen {
 
 
     <!-- =====================================================
-         정지 화면
+         ACCOUNT STATUS
+         밴 / 경고 공통 화면
     ====================================================== -->
 
     <div id="suspension-screen">
@@ -701,12 +739,13 @@ body.account-suspended #suspension-screen {
                     회원님의 계정은 정지 처리되었습니다.
                 </div>
 
-                <div class="suspension-text">
-
+                <div
+                    id="suspension-description"
+                    class="suspension-text"
+                >
                     콘텐츠 검열 결과,
-                    회원님은 Place 이용 약관을 위반한 것으로
-                    확인 되었습니다.
-
+                    회원님은 PLACE 이용 약관을 위반한 것으로
+                    확인되었습니다.
                 </div>
 
                 <div class="suspension-info">
@@ -748,6 +787,53 @@ body.account-suspended #suspension-screen {
                     class="suspension-bottom"
                 >
                     -
+                </div>
+
+
+                <!-- =================================================
+                     경고 확인 영역
+                ================================================== -->
+
+                <div
+                    id="warning-confirm-area"
+                    class="warning-confirm-area"
+                    style="display:none;"
+                >
+
+                    <div class="warning-confirm-text">
+
+                        위 경고 내용을 확인하셨다면
+                        아래 버튼을 눌러 계정을 다시 활성화할 수 있습니다.
+
+                    </div>
+
+                    <label
+                        style="
+                            display:block;
+                            margin-bottom:12px;
+                            cursor:pointer;
+                        "
+                    >
+
+                        <input
+                            type="checkbox"
+                            id="warningAgreeCheckbox"
+                            onchange="toggleReactivateBtn()"
+                        >
+
+                        위 내용을 확인했습니다.
+
+                    </label>
+
+                    <button
+                        id="reactivateBtn"
+                        class="warning-confirm-button"
+                        onclick="handleReactivateAccount()"
+                        disabled
+                    >
+                        확인했습니다
+                    </button>
+
                 </div>
 
             </div>
@@ -989,33 +1075,33 @@ body.account-suspended #suspension-screen {
 
     <div id="footer">
 
-    PLACE © 2026
+        PLACE © 2026
 
-    <span style="margin: 0 8px; color:#aaa;">
-        |
-    </span>
+        <span style="margin: 0 8px; color:#aaa;">
+            |
+        </span>
 
-    <a href="terms.html">
-        이용약관
-    </a>
+        <a href="terms.html">
+            이용약관
+        </a>
 
-    <span style="margin: 0 8px; color:#aaa;">
-        |
-    </span>
+        <span style="margin: 0 8px; color:#aaa;">
+            |
+        </span>
 
-    <a href="privacy.html">
-        개인정보처리방침
-    </a>
+        <a href="privacy.html">
+            개인정보처리방침
+        </a>
 
-    <span style="margin: 0 8px; color:#aaa;">
-        |
-    </span>
+        <span style="margin: 0 8px; color:#aaa;">
+            |
+        </span>
 
-    <a href="accessibility.html">
-        접근성 안내
-    </a>
+        <a href="accessibility.html">
+            접근성 안내
+        </a>
 
-</div>
+    </div>
 
 
 <!-- =========================================================
@@ -1261,84 +1347,6 @@ body.account-suspended #suspension-screen {
                 onclick="closeModal('profileModal')"
             >
                 닫기
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     경고
-========================================================= -->
-
-<div id="warningModal" class="modal">
-
-    <div
-        class="modal-content"
-        style="border-color:#d9381e;"
-    >
-
-        <div
-            class="modal-header"
-            style="color:#d9381e;"
-        >
-            ⚠️ 계정이 잠겼습니다
-        </div>
-
-        <p
-            style="font-size:12px; line-height:1.5; color:#333;"
-        >
-
-            운영 정책 위반 또는 경고 조치로 인해
-            계정이 일시적으로 비활성화되었습니다.
-
-            <br><br>
-
-            <b>사유:</b>
-
-            <span
-                id="warningReasonText"
-                style="color:#d9381e; font-weight:bold;"
-            >
-                -
-            </span>
-
-        </p>
-
-        <div
-            style="margin-top:15px; font-size:11px;"
-        >
-
-            <label style="cursor:pointer;">
-
-                <input
-                    type="checkbox"
-                    id="warningAgreeCheckbox"
-                    onchange="toggleReactivateBtn()"
-                >
-
-                위 내용을 확인하였으며,
-                이에 동의합니다.
-
-            </label>
-
-        </div>
-
-        <div
-            class="modal-buttons"
-            style="margin-top:15px;"
-        >
-
-            <button
-                class="auth-btn"
-                id="reactivateBtn"
-                onclick="handleReactivateAccount()"
-                disabled
-            >
-                재활성화
             </button>
 
         </div>
@@ -1594,7 +1602,8 @@ function getBanPeriodText(banType) {
 
 
 /* =========================================================
-   정지 화면
+   ACCOUNT STATUS 화면
+   밴 + 경고 통합
 ========================================================= */
 
 function showSuspensionScreen(profile) {
@@ -1605,15 +1614,109 @@ function showSuspensionScreen(profile) {
         "account-suspended"
     );
 
-    const periodText =
-        getBanPeriodText(
-            profile.ban_type
+    const isWarning =
+        profile.ban_type === "warning";
+
+    const titleElement =
+        document.getElementById(
+            "suspension-title"
         );
 
-    document.getElementById(
-        "suspension-title"
-    ).innerText =
-        `회원님의 계정은 ${periodText} 처리되었습니다.`;
+    const descriptionElement =
+        document.getElementById(
+            "suspension-description"
+        );
+
+    const untilElement =
+        document.getElementById(
+            "suspension-until"
+        );
+
+    const warningArea =
+        document.getElementById(
+            "warning-confirm-area"
+        );
+
+
+    /*
+     * 경고
+     */
+
+    if (isWarning) {
+
+        titleElement.innerText =
+            "회원님의 계정에 경고가 적용되었습니다.";
+
+        descriptionElement.innerHTML =
+            "콘텐츠 검열 결과,<br>" +
+            "PLACE 운영 정책에 따른 경고 조치가 적용되었습니다.";
+
+        untilElement.innerText =
+            "아래 내용을 확인한 후 계정을 다시 활성화할 수 있습니다.";
+
+        warningArea.style.display =
+            "block";
+
+
+        const checkbox =
+            document.getElementById(
+                "warningAgreeCheckbox"
+            );
+
+        const button =
+            document.getElementById(
+                "reactivateBtn"
+            );
+
+        checkbox.checked = false;
+        button.disabled = true;
+
+
+    } else {
+
+        /*
+         * 밴
+         */
+
+        const periodText =
+            getBanPeriodText(
+                profile.ban_type
+            );
+
+        titleElement.innerText =
+            `회원님의 계정은 ${periodText} 처리되었습니다.`;
+
+        descriptionElement.innerHTML =
+            "콘텐츠 검열 결과,<br>" +
+            "회원님은 PLACE 이용 약관을 위반한 것으로 확인되었습니다.";
+
+        warningArea.style.display =
+            "none";
+
+
+        if (
+            profile.ban_type === "idban" ||
+            !profile.ban_until
+        ) {
+
+            untilElement.innerHTML =
+                "계정이 영구적으로 비활성화된 상태입니다.";
+
+        } else {
+
+            const untilDate =
+                new Date(
+                    profile.ban_until
+                );
+
+            untilElement.innerHTML =
+                `계정이 비활성화 처리가 되었습니다.<br>` +
+                `<span class="suspension-date">` +
+                `${formatDateTime(untilDate)}` +
+                `</span> 이후로 재활성화가 가능합니다.`;
+        }
+    }
+
 
     document.getElementById(
         "suspension-date"
@@ -1628,32 +1731,10 @@ function showSuspensionScreen(profile) {
         profile.ban_reason ||
         "사유 미작성";
 
-    const untilElement =
-        document.getElementById(
-            "suspension-until"
-        );
 
-    if (
-        profile.ban_type === "idban" ||
-        !profile.ban_until
-    ) {
-
-        untilElement.innerHTML =
-            "계정이 영구적으로 비활성화된 상태입니다.";
-
-    } else {
-
-        const untilDate =
-            new Date(
-                profile.ban_until
-            );
-
-        untilElement.innerHTML =
-            `계정이 비활성화 처리가 되었습니다.<br>` +
-            `<span class="suspension-date">` +
-            `${formatDateTime(untilDate)}` +
-            `</span> 이후로 재활성화가 가능합니다.`;
-    }
+    /*
+     * 채팅 잠금
+     */
 
     const messageInput =
         document.getElementById(
@@ -1681,7 +1762,9 @@ function showSuspensionScreen(profile) {
     whisperTargetInput.disabled = true;
 
     messageInput.placeholder =
-        "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
+        isWarning
+            ? "경고 내용을 확인한 후 다시 이용할 수 있습니다."
+            : "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
 }
 
 
@@ -1717,6 +1800,11 @@ function hideSuspensionScreen() {
     sendButton.disabled = false;
     channelSelect.disabled = false;
     whisperTargetInput.disabled = false;
+
+    document.getElementById(
+        "warning-confirm-area"
+    ).style.display =
+        "none";
 }
 
 
@@ -2009,7 +2097,6 @@ async function handleLogout() {
     currentProfile = null;
     isAdmin = false;
 
-    closeModal("warningModal");
     closeModal("profileModal");
 
     await updatePresenceIdentity();
@@ -2141,8 +2228,6 @@ async function checkAuthStatus() {
 
         hideSuspensionScreen();
 
-        closeModal("warningModal");
-
         document.getElementById(
             "user-info"
         ).innerText =
@@ -2255,7 +2340,7 @@ function removeAdminChannel() {
 
 
 /* =========================================================
-   밴 상태
+   밴 / 경고 상태 확인
 ========================================================= */
 
 async function checkBanStatus(profile) {
@@ -2273,6 +2358,11 @@ async function checkBanStatus(profile) {
     const reason =
         profile.ban_reason ||
         "사유 미작성";
+
+
+    /*
+     * 기간이 있는 제재의 만료 처리
+     */
 
     if (profile.ban_until) {
 
@@ -2306,6 +2396,11 @@ async function checkBanStatus(profile) {
         }
     }
 
+
+    /*
+     * 일반 정지
+     */
+
     if (
         profile.ban_type === "idban" ||
         profile.ban_type === "hardban" ||
@@ -2320,17 +2415,20 @@ async function checkBanStatus(profile) {
         return true;
     }
 
+
+    /*
+     * 경고
+     *
+     * 기존 warningModal 대신
+     * 밴과 동일한 ACCOUNT STATUS 화면 사용
+     */
+
     if (
         profile.ban_type === "warning"
     ) {
 
-        document.getElementById(
-            "warningReasonText"
-        ).innerText =
-            reason;
-
-        openModal(
-            "warningModal"
+        showSuspensionScreen(
+            profile
         );
 
         return true;
@@ -2341,7 +2439,7 @@ async function checkBanStatus(profile) {
 
 
 /* =========================================================
-   경고 재활성화
+   경고 확인 버튼
 ========================================================= */
 
 function toggleReactivateBtn() {
@@ -2378,28 +2476,50 @@ async function handleReactivateAccount() {
             error.message
         );
 
-    } else {
-
-        alert(
-            "계정이 재활성화되었습니다."
-        );
-
-        closeModal(
-            "warningModal"
-        );
-
-        document.getElementById(
-            "warningAgreeCheckbox"
-        ).checked =
-            false;
-
-        document.getElementById(
-            "reactivateBtn"
-        ).disabled =
-            true;
-
-        await checkAuthStatus();
+        return;
     }
+
+
+    /*
+     * 로컬 상태 초기화
+     */
+
+    if (currentProfile) {
+
+        currentProfile.ban_type =
+            null;
+
+        currentProfile.ban_until =
+            null;
+
+        currentProfile.ban_reason =
+            null;
+
+        currentProfile.ban_started_at =
+            null;
+    }
+
+
+    document.getElementById(
+        "warningAgreeCheckbox"
+    ).checked =
+        false;
+
+    document.getElementById(
+        "reactivateBtn"
+    ).disabled =
+        true;
+
+
+    hideSuspensionScreen();
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    messageInput.placeholder =
+        "메시지를 입력하세요";
 }
 
 
@@ -2719,6 +2839,7 @@ async function handleAdminCommand(
 
             break;
 
+
         case "/hardban":
 
             await updateBan(
@@ -2736,6 +2857,7 @@ async function handleAdminCommand(
             );
 
             break;
+
 
         case "/softban":
 
@@ -2755,6 +2877,7 @@ async function handleAdminCommand(
 
             break;
 
+
         case "/ban":
 
             await updateBan(
@@ -2772,6 +2895,7 @@ async function handleAdminCommand(
 
             break;
 
+
         case "/warning":
 
             await updateBan(
@@ -2783,6 +2907,7 @@ async function handleAdminCommand(
 
             break;
 
+
         case "/unban":
 
             await unbanUser(
@@ -2790,6 +2915,7 @@ async function handleAdminCommand(
             );
 
             break;
+
 
         case "/chatlock":
 
@@ -2806,6 +2932,7 @@ async function handleAdminCommand(
             );
 
             break;
+
 
         case "/softchatlock":
 
@@ -2824,6 +2951,7 @@ async function handleAdminCommand(
 
             break;
 
+
         case "/hardchatlock":
 
             await updateChatlock(
@@ -2840,6 +2968,7 @@ async function handleAdminCommand(
             );
 
             break;
+
 
         case "/0chatlock":
 
@@ -2858,11 +2987,13 @@ async function handleAdminCommand(
 
             break;
 
+
         case "/cleanchat":
 
             await cleanAllChatSoft();
 
             break;
+
 
         default:
 
@@ -2925,10 +3056,32 @@ async function updateBan(
         return;
     }
 
+
+    let periodText =
+        "경고";
+
+    if (banType === "ban") {
+        periodText = "1일 정지";
+    }
+
+    if (banType === "softban") {
+        periodText = "7일 정지";
+    }
+
+    if (banType === "hardban") {
+        periodText = "30일 정지";
+    }
+
+    if (banType === "idban") {
+        periodText = "영구 정지";
+    }
+
+
     alert(
         `🚨 [${targetUsername}] 유저에게 ` +
-        `[${banType}] 제재를 적용했습니다.`
+        `[${periodText}] 제재를 적용했습니다.`
     );
+
 
     if (
         currentUser &&
