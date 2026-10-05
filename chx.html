@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLACE - Chx</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+html,body{margin:0;padding:0;background:#d6d6d6;font-family:Arial,Helvetica,sans-serif;color:#222;font-size:12px}
+body{background:linear-gradient(#eee 1px,transparent 1px),linear-gradient(90deg,#eee 1px,transparent 1px);background-size:8px 8px}
+#site{width:760px;margin:25px auto;background:#fff;border:1px solid #555;box-shadow:2px 2px 0 #888}
+#top{height:70px;background:linear-gradient(#5f8fbd,#315d8b);border-bottom:3px solid #24496e;color:#fff;position:relative}
+#title{position:absolute;left:18px;top:12px;font-size:28px;font-weight:bold;letter-spacing:-1px}
+#subtitle{position:absolute;left:20px;top:45px;font-size:11px}
+#auth-bar{position:absolute;right:15px;top:18px;display:flex;gap:6px;align-items:center}
+.auth-btn{padding:3px 8px;background:linear-gradient(#fff,#ccc);border:1px outset #eee;font-size:11px;cursor:pointer;color:#222}
+#menu{height:27px;background:#eee;border-bottom:1px solid #999;padding-left:8px}
+.menu-button{display:inline-block;margin-top:4px;margin-right:3px;padding:3px 12px;color:#222;text-decoration:none;background:linear-gradient(#fff,#cfcfcf);border:1px solid #777;border-radius:2px;box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 #aaa}
+#main{padding:10px}
+.section{margin-bottom:10px;border:1px solid #999;background:#f7f7f7}
+.section-title{height:22px;line-height:22px;padding-left:8px;color:#fff;font-weight:bold;background:linear-gradient(#6f9bc2,#3c6b99);border:1px solid #345979}
+.chx-box{padding:14px;background:#f7f7f7}
+.balance{padding:15px;border:2px inset #aaa;background:#fff;text-align:center}
+.balance-label{color:#777;font-size:11px}
+.balance-value{font-size:25px;font-weight:bold;color:#315d8b;margin-top:6px}
+.attendance{margin-top:10px;padding:12px;border:1px solid #aaa;background:#fff}
+.attendance-title{font-weight:bold;font-size:14px}
+.attendance-desc{margin-top:5px;color:#666;line-height:1.6}
+.attendance-btn{margin-top:10px;padding:6px 18px;background:linear-gradient(#fff,#ccc);border:2px outset #eee;font-size:11px;cursor:pointer}
+.attendance-btn:active{border-style:inset}
+.attendance-btn:disabled{opacity:.5;cursor:not-allowed}
+.notice{margin-top:10px;padding:10px;border:1px solid #d4a300;background:#fffde6;line-height:1.7}
+.info-table{width:100%;border-collapse:collapse;margin-top:8px}
+.info-table td{border:1px solid #ccc;padding:8px;background:#fff}
+.info-table td:first-child{width:105px;background:#eee;font-weight:bold}
+.muted{color:#777}
+.login-needed{padding:25px;text-align:center;border:1px solid #aaa;background:#fff;line-height:1.8}
+#footer{padding:12px;text-align:center;border-top:1px solid #999;background:#eee;color:#666;font-size:11px}
+@media(max-width:800px){
+#site{width:calc(100% - 20px);margin:10px auto}
+#auth-bar{right:8px}
+.auth-name{display:none}
+}
+</style>
+</head>
+
+<body>
+<div id="site">
+
+<div id="top">
+<div id="title">PLACE</div>
+<div id="subtitle">어딘가에 존재하는 작은 장소</div>
+<div id="auth-bar">
+<span id="user-info">로그인 필요</span>
+<button class="auth-btn" id="login-btn" onclick="goLogin()">로그인</button>
+<a class="auth-btn" href="index.html">HOME</a>
+</div>
+</div>
+
+<div id="menu">
+<a href="index.html" class="menu-button">HOME</a>
+<a href="world.html" class="menu-button">WORLD</a>
+<a href="message.html" class="menu-button">MESSAGE</a>
+<a href="chx.html" class="menu-button">CHX</a>
+</div>
+
+<div id="main">
+
+<div class="section">
+<div class="section-title">CHX</div>
+
+<div class="chx-box">
+
+<div class="balance">
+<div class="balance-label">현재 보유 Chx</div>
+<div id="balance" class="balance-value">- Chx</div>
+</div>
+
+<div id="login-needed" class="login-needed">
+Chx를 확인하고 출석 보상을 받으려면 로그인이 필요합니다<br>
+<button class="auth-btn" onclick="goLogin()">로그인하러 가기</button>
+</div>
+
+<div id="member-area" style="display:none">
+
+<div class="attendance">
+<div class="attendance-title">일일 출석</div>
+
+<div class="attendance-desc">
+하루에 한 번 출석하면 <b>10 Chx</b>를 받을 수 있습니다<br>
+<span class="muted">출석 기준은 대한민국 표준시(KST)입니다</span>
+</div>
+
+<button id="attendance-btn" class="attendance-btn" onclick="claimAttendance()">
+출석 +10 Chx
+</button>
+</div>
+
+<div class="notice">
+<b>Chx란?</b><br>
+Chx는 PLACE 안에서 사용하는 기본 화폐입니다<br>
+숨겨진 장소를 발견하거나 이벤트 및 운영 보상을 통해 획득할 수 있습니다
+</div>
+
+<div class="section" style="margin-top:10px">
+
+<div class="section-title">Chx 안내</div>
+
+<div style="padding:10px">
+
+<table class="info-table">
+
+<tr>
+<td>화폐 이름</td>
+<td>Chx</td>
+</tr>
+
+<tr>
+<td>용도</td>
+<td>PLACE 내부의 아이템, 기능 및 각종 보상에 사용될 예정입니다</td>
+</tr>
+
+<tr>
+<td>출석 보상</td>
+<td>하루 1회 · 10 Chx</td>
+</tr>
+
+<tr>
+<td>획득 방법</td>
+<td>출석, 숨겨진 장소 발견 보상, 이벤트 및 운영진 지급</td>
+</tr>
+
+<tr>
+<td>주의</td>
+<td>일반 사용자는 임의로 Chx를 생성하거나 다른 사용자에게 지급할 수 없습니다</td>
+</tr>
+
+</table>
+
+</div>
+</div>
+
+<div class="notice">
+<b>출석 보상 안내</b><br>
+출석 보상은 매일 대한민국 시간 기준으로 한 번만 받을 수 있습니다<br>
+이미 오늘 출석했다면 버튼이 <b>출석 완료</b>로 표시됩니다
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="footer">
+PLACE © 2026
+</div>
+
+</div>
+
+<script>
+const SUPABASE_URL="https://exeoqvfidmtmnwqejyvg.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
+
+const supabaseClient=supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
+);
+
+let currentUser=null;
+
+function goLogin(){
+window.location.href="index.html";
+}
+
+async function load(){
+
+const {data:{session}}=await supabaseClient.auth.getSession();
+
+currentUser=session?.user||null;
+
+if(!currentUser){
+document.getElementById("login-needed").style.display="block";
+return;
+}
+
+document.getElementById("login-needed").style.display="none";
+document.getElementById("member-area").style.display="block";
+
+const {data:profile}=await supabaseClient
+.from("profiles")
+.select("nickname,username")
+.eq("id",currentUser.id)
+.maybeSingle();
+
+document.getElementById("user-info").textContent=
+profile?.nickname||profile?.username||"사용자";
+
+await loadBalance();
+await updateAttendance();
+
+}
+
+async function loadBalance(){
+
+const {data,error}=await supabaseClient.rpc("chx_get_balance");
+
+if(error){
+document.getElementById("balance").textContent="확인 불가";
+console.error(error);
+return;
+}
+
+document.getElementById("balance").textContent=
+Number(data||0).toLocaleString("ko-KR")+" Chx";
+
+}
+
+async function updateAttendance(){
+
+const btn=document.getElementById("attendance-btn");
+
+const {data,error}=await supabaseClient
+.from("chx_transactions")
+.select("created_at")
+.eq("user_id",currentUser.id)
+.eq("transaction_type","attendance")
+.order("created_at",{ascending:false})
+.limit(1);
+
+if(error){
+console.error(error);
+btn.disabled=false;
+btn.textContent="출석 +10 Chx";
+return;
+}
+
+const last=data?.[0];
+
+if(!last){
+btn.disabled=false;
+btn.textContent="출석 +10 Chx";
+return;
+}
+
+const fmt=d=>new Intl.DateTimeFormat(
+"en-CA",
+{
+timeZone:"Asia/Seoul",
+year:"numeric",
+month:"2-digit",
+day:"2-digit"
+}
+).format(new Date(d));
+
+if(fmt(last.created_at)===fmt(new Date())){
+
+btn.disabled=true;
+btn.textContent="출석 완료";
+
+}else{
+
+btn.disabled=false;
+btn.textContent="출석 +10 Chx";
+
+}
+
+}
+
+async function claimAttendance(){
+
+if(!currentUser){
+goLogin();
+return;
+}
+
+const btn=document.getElementById("attendance-btn");
+
+btn.disabled=true;
+
+const {data,error}=await supabaseClient.rpc("chx_attendance");
+
+if(error){
+
+alert("출석 처리 실패\n\n"+error.message);
+
+await updateAttendance();
+
+return;
+
+}
+
+await loadBalance();
+await updateAttendance();
+
+alert("오늘의 출석 보상 10 Chx가 지급되었습니다!");
+
+}
+
+load();
+</script>
+
+</body>
+</html>
