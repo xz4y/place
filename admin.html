@@ -250,6 +250,92 @@ button:hover {
     color: #800;
 }
 
+
+/* =========================
+   REPORT MANAGEMENT
+========================= */
+
+.report-item {
+    position: relative;
+    margin-bottom: 7px;
+    padding: 8px 105px 8px 8px;
+    background: #fff;
+    border: 1px solid #aaa;
+}
+
+.report-item.pending {
+    border-left: 3px solid #b66;
+}
+
+.report-item.reviewing {
+    border-left: 3px solid #6b93ba;
+}
+
+.report-item.resolved {
+    opacity: .62;
+    border-left: 3px solid #777;
+}
+
+.report-item.rejected {
+    border-left: 3px solid #a66;
+}
+
+.report-head {
+    font-weight: bold;
+}
+
+.report-meta {
+    margin-top: 4px;
+    color: #777;
+    font-size: 10px;
+}
+
+.report-reason {
+    margin-top: 6px;
+    padding: 6px;
+    background: #f1f1f1;
+    border: 1px solid #ddd;
+    white-space: pre-wrap;
+}
+
+.report-actions {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: flex;
+    gap: 3px;
+    flex-direction: column;
+}
+
+.report-actions button {
+    padding: 3px 6px;
+}
+
+.report-empty {
+    padding: 10px;
+    color: #777;
+}
+
+.report-filter {
+    width: auto;
+    margin-bottom: 7px;
+}
+
+.forum-content-preview {
+    margin-top: 5px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    max-height: 55px;
+    overflow: hidden;
+}
+
+.forum-comment-preview {
+    margin-top: 5px;
+    padding: 5px;
+    background: #f6f6f6;
+    border: 1px solid #ddd;
+}
+
 #message {
     margin-bottom: 8px;
 
@@ -587,6 +673,39 @@ button:hover {
             </div>
 
 
+            <!-- =========================
+                 FORUM REPORT MANAGEMENT
+            ========================== -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    FORUM REPORTS
+                </div>
+
+                <div class="section-body">
+
+                    <div class="small" style="margin-bottom:7px">
+                        COMMUNITY에서 접수된 게시물 및 댓글 신고를 확인하고 처리합니다
+                    </div>
+
+                    <select id="report-filter" class="report-filter">
+                        <option value="all">전체 신고</option>
+                        <option value="pending">대기중</option>
+                        <option value="reviewing">검토중</option>
+                        <option value="resolved">처리됨</option>
+                        <option value="rejected">반려됨</option>
+                    </select>
+
+                    <div id="report-list">
+                        신고를 불러오는 중...
+                    </div>
+
+                </div>
+
+            </div>
+
+
         </div>
 
     </div>
@@ -624,6 +743,7 @@ const supabaseClient =
 
 let currentUser = null;
 let currentProfile = null;
+let isAdmin = false;
 
 
 /* =========================
@@ -658,6 +778,8 @@ function showMessage(
 ========================= */
 
 async function checkAdmin() {
+
+    isAdmin = false;
 
     console.log(
         "PLACE ADMIN: 관리자 확인 시작"
@@ -806,6 +928,9 @@ async function checkAdmin() {
     currentProfile =
         profile;
 
+    isAdmin =
+        profile.is_admin === true;
+
 
     /*
        디버깅용
@@ -889,9 +1014,7 @@ async function checkAdmin() {
        관리자 권한 확인
     */
 
-    if (
-        profile.is_admin !== true
-    ) {
+    if (!isAdmin) {
 
         console.error(
             "관리자 권한 없음"
@@ -958,6 +1081,7 @@ async function checkAdmin() {
 
 
     await loadBanners();
+    await loadReports();
 
 
     return true;
@@ -1648,6 +1772,754 @@ async function runUserAction(
         "error"
     );
 }
+
+
+
+/* =========================
+   REPORT MANAGEMENT
+========================= */
+
+function formatReportDate(value) {
+
+    if (!value) {
+        return "-";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "-";
+    }
+
+    return date.toLocaleString("ko-KR");
+}
+
+
+async function loadReports() {
+
+    if (!isAdmin || !currentUser) {
+        return;
+    }
+
+    const list =
+        document.getElementById(
+            "report-list"
+        );
+
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML =
+        '<div class="small">신고를 불러오는 중...</div>';
+
+
+    const filter =
+        document.getElementById(
+            "report-filter"
+        )?.value || "all";
+
+
+    let query =
+        supabaseClient
+            .from("reports")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+    if (filter !== "all") {
+        query =
+            query.eq(
+                "status",
+                filter
+            );
+    }
+
+
+    const {
+        data: reports,
+        error
+    } =
+        await query;
+
+
+    if (error) {
+
+        console.error(
+            "신고 불러오기 실패:",
+            error
+        );
+
+        list.innerHTML =
+            '<div class="report-empty">신고를 불러오지 못했습니다: ' +
+            escapeHtml(error.message) +
+            '</div>';
+
+        return;
+    }
+
+
+    if (
+        !reports ||
+        reports.length === 0
+    ) {
+
+        list.innerHTML =
+            '<div class="report-empty">등록된 신고가 없습니다</div>';
+
+        return;
+    }
+
+
+    const reporterIds =
+        [
+            ...new Set(
+                reports
+                    .map(
+                        report =>
+                            report.reporter_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+    const reportedUserIds =
+        [
+            ...new Set(
+                reports
+                    .map(
+                        report =>
+                            report.reported_user_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+    const postIds =
+        [
+            ...new Set(
+                reports
+                    .map(
+                        report =>
+                            report.post_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+    const commentIds =
+        [
+            ...new Set(
+                reports
+                    .map(
+                        report =>
+                            report.comment_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+    let reporters = [];
+    let reportedUsers = [];
+    let posts = [];
+    let comments = [];
+
+
+    if (reporterIds.length > 0) {
+
+        const result =
+            await supabaseClient
+                .from("profiles")
+                .select("id, username, nickname")
+                .in(
+                    "id",
+                    reporterIds
+                );
+
+        if (result.error) {
+            console.error(
+                "신고자 프로필 조회 실패:",
+                result.error
+            );
+        }
+
+        reporters =
+            result.data || [];
+    }
+
+
+    if (reportedUserIds.length > 0) {
+
+        const result =
+            await supabaseClient
+                .from("profiles")
+                .select("id, username, nickname")
+                .in(
+                    "id",
+                    reportedUserIds
+                );
+
+        if (result.error) {
+            console.error(
+                "신고 대상 프로필 조회 실패:",
+                result.error
+            );
+        }
+
+        reportedUsers =
+            result.data || [];
+    }
+
+
+    if (postIds.length > 0) {
+
+        const result =
+            await supabaseClient
+                .from("forum_posts")
+                .select("id, title, body, author_id, created_at")
+                .in(
+                    "id",
+                    postIds
+                );
+
+        if (result.error) {
+            console.error(
+                "게시물 조회 실패:",
+                result.error
+            );
+        }
+
+        posts =
+            result.data || [];
+    }
+
+
+    if (commentIds.length > 0) {
+
+        const result =
+            await supabaseClient
+                .from("forum_comments")
+                .select("id, body, author_id, created_at, post_id")
+                .in(
+                    "id",
+                    commentIds
+                );
+
+        if (result.error) {
+            console.error(
+                "댓글 조회 실패:",
+                result.error
+            );
+        }
+
+        comments =
+            result.data || [];
+    }
+
+
+    const reporterMap =
+        Object.fromEntries(
+            reporters.map(
+                profile =>
+                    [profile.id, profile]
+            )
+        );
+
+
+    const reportedUserMap =
+        Object.fromEntries(
+            reportedUsers.map(
+                profile =>
+                    [profile.id, profile]
+            )
+        );
+
+
+    const postMap =
+        Object.fromEntries(
+            posts.map(
+                post =>
+                    [String(post.id), post]
+            )
+        );
+
+
+    const commentMap =
+        Object.fromEntries(
+            comments.map(
+                comment =>
+                    [String(comment.id), comment]
+            )
+        );
+
+
+    const statusLabels = {
+        pending: "대기중",
+        reviewing: "검토중",
+        resolved: "처리됨",
+        rejected: "반려됨"
+    };
+
+
+    const categoryLabels = {
+        spam: "스팸/도배",
+        abuse: "욕설/비방",
+        sexual: "음란/성적 내용",
+        violence: "폭력/위협",
+        discrimination: "차별/혐오",
+        privacy: "개인정보",
+        impersonation: "사칭",
+        scam: "사기/거래",
+        copyright: "저작권",
+        illegal: "불법/위험",
+        self_harm: "자해/위험",
+        other: "기타"
+    };
+
+
+    list.innerHTML =
+        reports.map(
+            report => {
+
+                const reporter =
+                    reporterMap[
+                        report.reporter_id
+                    ];
+
+
+                const reportedUser =
+                    reportedUserMap[
+                        report.reported_user_id
+                    ];
+
+
+                const post =
+                    report.post_id
+                        ? postMap[
+                            String(report.post_id)
+                        ]
+                        : null;
+
+
+                const comment =
+                    report.comment_id
+                        ? commentMap[
+                            String(report.comment_id)
+                        ]
+                        : null;
+
+
+                const reporterName =
+                    reporter
+                        ? (
+                            reporter.nickname ||
+                            reporter.username ||
+                            "알 수 없음"
+                        )
+                        : "알 수 없음";
+
+
+                const reportedName =
+                    reportedUser
+                        ? (
+                            reportedUser.nickname ||
+                            reportedUser.username ||
+                            "알 수 없음"
+                        )
+                        : "삭제된 사용자";
+
+
+                const targetType =
+                    report.target_type === "comment"
+                        ? "댓글"
+                        : "게시물";
+
+
+                const targetTitle =
+                    post?.title ||
+                    (
+                        comment
+                            ? "게시물 댓글"
+                            : "삭제된 게시물"
+                    );
+
+
+                const targetBody =
+                    comment?.body ||
+                    post?.body ||
+                    "대상 내용이 삭제되었거나 확인되지 않습니다";
+
+
+                const category =
+                    categoryLabels[
+                        report.category
+                    ] ||
+                    report.category ||
+                    "기타";
+
+
+                const status =
+                    statusLabels[
+                        report.status
+                    ] ||
+                    report.status;
+
+
+                const safeId =
+                    escapeHtml(
+                        String(report.id)
+                    );
+
+
+                let actions = "";
+
+
+                if (
+                    report.status === "resolved" ||
+                    report.status === "rejected"
+                ) {
+
+                    actions += `
+                        <button
+                            type="button"
+                            data-report-action="review"
+                            data-report-id="${safeId}"
+                            data-status="pending"
+                        >
+                            미처리로
+                        </button>
+                    `;
+
+                } else {
+
+                    actions += `
+                        <button
+                            type="button"
+                            data-report-action="review"
+                            data-report-id="${safeId}"
+                            data-status="reviewing"
+                        >
+                            검토중
+                        </button>
+
+                        <button
+                            type="button"
+                            data-report-action="review"
+                            data-report-id="${safeId}"
+                            data-status="resolved"
+                        >
+                            처리
+                        </button>
+
+                        <button
+                            type="button"
+                            data-report-action="review"
+                            data-report-id="${safeId}"
+                            data-status="rejected"
+                        >
+                            반려
+                        </button>
+                    `;
+                }
+
+
+                actions += `
+                    <button
+                        type="button"
+                        class="danger"
+                        data-report-action="delete"
+                        data-report-id="${safeId}"
+                    >
+                        삭제
+                    </button>
+                `;
+
+
+                return `
+                    <div class="report-item ${escapeHtml(report.status)}">
+
+                        <div class="report-head">
+                            [${escapeHtml(targetType)}]
+                            ${escapeHtml(targetTitle)}
+                        </div>
+
+                        <div class="report-meta">
+                            신고자:
+                            ${escapeHtml(reporterName)}
+                            /
+                            대상:
+                            ${escapeHtml(reportedName)}
+                            /
+                            ${escapeHtml(status)}
+                            /
+                            ${escapeHtml(formatReportDate(report.created_at))}
+                        </div>
+
+                        <div class="report-meta">
+                            신고 사유:
+                            ${escapeHtml(category)}
+                            /
+                            ${escapeHtml(report.subcategory || "세부 사유 없음")}
+                        </div>
+
+                        <div class="forum-content-preview">
+                            ${escapeHtml(targetBody)}
+                        </div>
+
+                        ${
+                            report.description
+                                ? `
+                                    <div class="report-reason">
+                                        ${escapeHtml(report.description)}
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                        <div class="report-actions">
+                            ${actions}
+                        </div>
+
+                    </div>
+                `;
+            }
+        ).join("");
+}
+
+
+async function reviewReport(
+    id,
+    status
+) {
+
+    if (
+        !isAdmin ||
+        !currentUser
+    ) {
+
+        showMessage(
+            "관리자 권한을 확인할 수 없습니다.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const labels = {
+        pending: "미처리",
+        reviewing: "검토중",
+        resolved: "처리됨",
+        rejected: "반려됨"
+    };
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("reports")
+            .update({
+                status:
+                    status,
+                reviewed_at:
+                    new Date().toISOString(),
+                reviewed_by:
+                    currentUser.id,
+                admin_note:
+                    null
+            })
+            .eq(
+                "id",
+                id
+            );
+
+
+    if (error) {
+
+        console.error(
+            "신고 처리 실패:",
+            error
+        );
+
+        showMessage(
+            "신고 처리에 실패했습니다: " +
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    await loadReports();
+
+
+    showMessage(
+        "신고 상태가 " +
+        (
+            labels[status] ||
+            status
+        ) +
+        "으로 변경되었습니다.",
+        "success"
+    );
+}
+
+
+async function removeReport(
+    id
+) {
+
+    if (
+        !isAdmin ||
+        !currentUser
+    ) {
+
+        showMessage(
+            "관리자 권한을 확인할 수 없습니다.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        !confirm(
+            "정말 이 신고 기록을 삭제하시겠습니까?\n\n삭제하면 복구할 수 없습니다."
+        )
+    ) {
+
+        return;
+    }
+
+
+    if (
+        !confirm(
+            "한 번 더 확인합니다.\n\n이 신고 기록을 영구적으로 삭제하시겠습니까?"
+        )
+    ) {
+
+        return;
+    }
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("reports")
+            .delete()
+            .eq(
+                "id",
+                id
+            );
+
+
+    if (error) {
+
+        console.error(
+            "신고 삭제 실패:",
+            error
+        );
+
+        showMessage(
+            "신고 삭제에 실패했습니다: " +
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    await loadReports();
+
+
+    showMessage(
+        "신고 기록이 삭제되었습니다.",
+        "success"
+    );
+}
+
+
+/* =========================
+   REPORT EVENTS
+========================= */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const button =
+            event.target.closest(
+                "button[data-report-action]"
+            );
+
+
+        if (!button) {
+            return;
+        }
+
+
+        event.preventDefault();
+
+
+        const id =
+            button.dataset.reportId;
+
+
+        const action =
+            button.dataset.reportAction;
+
+
+        if (action === "review") {
+
+            reviewReport(
+                id,
+                button.dataset.status
+            );
+
+            return;
+        }
+
+
+        if (action === "delete") {
+
+            removeReport(id);
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "change",
+    function(event) {
+
+        if (
+            event.target.id ===
+            "report-filter"
+        ) {
+
+            loadReports();
+
+        }
+
+    }
+);
+
 
 
 /* =========================
