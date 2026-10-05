@@ -803,10 +803,11 @@ body.account-suspended #suspension-screen {
         </a>
 
         <a
-            href="admin.html"
+            href="#"
             class="menu-button"
             id="admin-menu"
             style="display:none;"
+            onclick="event.preventDefault(); openAdminPanel();"
         >
             ADMIN
         </a>
@@ -1511,6 +1512,30 @@ const CURRENT_MAP_NAME = "main";
 let currentUser = null;
 let currentProfile = null;
 let isAdmin = false;
+
+/* =========================================================
+   관리자 권한
+   - profiles.is_admin === true
+   - 또는 username === "Place"
+========================================================= */
+function hasAdminAccess(profile = currentProfile) {
+    if (!profile) {
+        return false;
+    }
+
+    const username = String(profile.username || "").trim().toLowerCase();
+
+    return profile.is_admin === true || username === "place";
+}
+
+function openAdminPanel() {
+    if (!currentUser || !currentProfile || !hasAdminAccess(currentProfile)) {
+        alert("관리자 권한이 없습니다.");
+        return;
+    }
+
+    window.location.href = "admin.html";
+}
 let isSuspended = false;
 
 let presenceChannel = null;
@@ -2427,7 +2452,7 @@ async function checkAuthStatus() {
             profile.nickname;
 
         isAdmin =
-            profile.is_admin === true;
+            hasAdminAccess(profile);
 
         document.getElementById(
             "login-btn"
@@ -2828,7 +2853,7 @@ async function subscribeToMyProfile() {
                         payload.new;
 
                     isAdmin =
-                        currentProfile.is_admin === true;
+                        hasAdminAccess(currentProfile);
 
                     setupAdminChannel();
 
@@ -3087,7 +3112,7 @@ async function handleAdminCommand(
     fullText
 ) {
 
-    if (!isAdmin) {
+    if (!hasAdminAccess(currentProfile)) {
         return false;
     }
 
@@ -4248,12 +4273,18 @@ async function forumFetchPosts(){
 
     let profiles=[];
     if(profileIds.length){
+        /*
+         * 게시판 작성자 정보는 public_profiles에서 가져옵니다.
+         * profiles 테이블의 RLS 때문에 일반 사용자에게 작성자 정보가
+         * 비어 오는 경우가 있어 "알 수 없음"으로 표시되던 문제를 방지합니다.
+         */
         const q=await supabaseClient
-            .from("profiles")
+            .from("public_profiles")
             .select("id,username,nickname")
             .in("id",profileIds);
+
         if(q.error){
-            console.error("forum profiles select error",q.error);
+            console.error("forum public_profiles select error",q.error);
         }else{
             profiles=q.data||[];
         }
@@ -4281,7 +4312,7 @@ async function forumFetchPosts(){
             const cp=profileMap.get(c.author_id);
             return {
                 ...c,
-                nickname:cp?.nickname||"알 수 없음",
+                nickname:cp?.nickname||cp?.username||"알 수 없음",
                 username:cp?.username||"",
                 likes:commentRx.filter(x=>x.target_id===c.id&&x.reaction==="like").map(x=>x.user_id),
                 dislikes:commentRx.filter(x=>x.target_id===c.id&&x.reaction==="dislike").map(x=>x.user_id)
@@ -4289,7 +4320,7 @@ async function forumFetchPosts(){
         });
         return {
             ...p,
-            nickname:profile?.nickname||"알 수 없음",
+            nickname:profile?.nickname||profile?.username||"알 수 없음",
             username:profile?.username||"",
             comments:pc,
             likes:rx.filter(x=>x.target_id===p.id&&x.reaction==="like").map(x=>x.user_id),
