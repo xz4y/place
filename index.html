@@ -108,6 +108,7 @@ body {
     background: linear-gradient(#eeeeee, #cccccc);
 }
 
+
 /* =========================================================
    배너
 ========================================================= */
@@ -146,6 +147,7 @@ body {
     border-top: 1px dotted #d4c98f;
 }
 
+
 /* =========================================================
    메인
 ========================================================= */
@@ -175,6 +177,7 @@ body {
     border: 1px solid #999;
     background: #f7f7f7;
 }
+
 
 /* =========================================================
    WORLD
@@ -272,762 +275,818 @@ body {
     cursor: pointer;
 }
 
+
 /* =========================================================
    COMMUNITY FORUM
 ========================================================= */
-
-#forum-wrap {
-    padding: 8px;
-    background: #f7f7f7;
+#forum-wrap{padding:8px;background:#f7f7f7}
+.forum-toolbar{display:flex;justify-content:space-between;align-items:center;padding:7px 8px;margin-bottom:7px;border:1px solid #aaa;background:#eee}
+.forum-heading strong{display:block;font-size:13px;color:#333}
+.forum-heading span{display:block;margin-top:2px;color:#777;font-size:11px}
+.forum-composer{margin-bottom:8px;padding:8px;border:1px solid #aaa;background:#fff}
+.forum-sortbar{display:flex;align-items:center;justify-content:flex-end;gap:5px;padding:4px 0 6px;font:11px Arial;color:#555}
+.forum-sortbar select{font:11px Arial;border:1px solid #999;background:#fff;padding:2px 4px}
+#forum-title,#forum-body{box-sizing:border-box;width:100%;border:1px inset #aaa;padding:6px;font:12px Arial;color:#222}
+#forum-title{height:28px;margin-bottom:6px}
+#forum-body{height:100px;resize:vertical;display:block}
+.forum-compose-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:10px;color:#777}
+.forum-row{display:grid;grid-template-columns:1fr 58px 58px 85px;align-items:center;min-height:54px;padding:0 8px;border:1px solid #aaa;border-top:0;background:#fff;cursor:pointer}
+.forum-row:first-child{border-top:1px solid #aaa}
+.forum-row:hover{background:#f0f5fa}
+.forum-main{min-width:0}
+.forum-title{font-weight:bold;color:#254f78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.forum-pin-icon{
+  display:inline-block;
+  position:relative;
+  width:13px;
+  height:15px;
+  margin-right:5px;
+  vertical-align:-2px;
 }
-
-.forum-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 8px;
-    margin-bottom: 7px;
-    border: 1px solid #aaa;
-    background: #eee;
+.forum-pin-icon:before{
+  content:"";
+  position:absolute;
+  left:1px;
+  top:0;
+  width:9px;
+  height:8px;
+  background:linear-gradient(#e56a62,#b62d28);
+  border:1px solid #7f1e1b;
+  border-radius:5px 5px 2px 2px;
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.55),1px 1px 0 #999;
 }
-
-.forum-heading strong {
-    display: block;
-    font-size: 13px;
-    color: #333;
+.forum-pin-icon:after{
+  content:"";
+  position:absolute;
+  left:5px;
+  top:7px;
+  width:3px;
+  height:9px;
+  background:linear-gradient(90deg,#777,#ddd,#666);
+  border-left:1px solid #555;
+  border-right:1px solid #555;
+  transform:rotate(32deg);
+  transform-origin:top center;
 }
-
-.forum-heading span {
-    display: block;
-    margin-top: 2px;
-    color: #777;
-    font-size: 11px;
+.forum-row.forum-pinned{
+  background:#f5f7f9;
+  box-shadow:inset 3px 0 0 #777;
 }
+.forum-row.forum-pinned:hover{background:#edf2f6}
+.forum-meta{margin-top:4px;color:#888;font-size:10px}
+.forum-count{text-align:center;color:#666;font-size:11px}
+.forum-time{text-align:right;color:#888;font-size:10px}
+.forum-empty{padding:25px 8px;text-align:center;color:#888;border:1px solid #aaa;background:#fff}
+.forum-detail-head{padding:6px 0 8px}
+.forum-back{border:0;background:none;color:#315d8b;font-size:11px;cursor:pointer;padding:2px}
+.forum-article{border:1px solid #aaa;background:#fff}
+.forum-article-header{padding:12px;border-bottom:1px solid #ccc;background:#eee}
+.forum-article-title{font-size:16px;font-weight:bold;color:#222;word-break:break-word}
+.forum-article-meta{margin-top:7px;color:#777;font-size:10px}
+.forum-article-body{padding:14px;min-height:90px;white-space:pre-wrap;line-height:1.7;word-break:break-word}
+.forum-comments{border-top:1px solid #aaa;background:#f7f7f7;padding:8px}
+.forum-comments-title{font-weight:bold;margin-bottom:6px}
+.forum-comment{padding:7px 8px;border:1px solid #ccc;border-bottom:0;background:#fff}
+.forum-comment:last-child{border-bottom:1px solid #ccc}
+.forum-comment-meta{font-size:10px;color:#777;margin-bottom:4px}
+.forum-comment-body{white-space:pre-wrap;line-height:1.5;word-break:break-word}
+.forum-comment-actions{margin-top:5px;display:flex;align-items:center;gap:4px}
+.forum-comment-pin{display:inline-block;position:relative;width:10px;height:12px;margin-right:3px;vertical-align:-2px}
+.forum-comment-pin:before{content:"";position:absolute;left:0;top:0;width:7px;height:6px;background:linear-gradient(#e56a62,#b62d28);border:1px solid #7f1e1b;border-radius:4px 4px 1px 1px;box-shadow:inset 1px 1px 0 rgba(255,255,255,.5)}
+.forum-comment-pin:after{content:"";position:absolute;left:4px;top:5px;width:2px;height:7px;background:#777;transform:rotate(32deg);transform-origin:top center}
+.forum-comment-pinned{background:#fffdf0}
+.forum-comment-owner-btn{padding:2px 6px;background:#fff;border:1px solid #bbb;font:10px Arial;color:#555;cursor:pointer}
+.forum-comment-owner-btn:hover{background:#eee}
+.forum-comment-like{padding:2px 6px;background:#fff;border:1px solid #bbb;font:10px Arial;color:#555;cursor:pointer}
+.forum-comment-like.liked{background:#e5eef8;color:#174b7a;border-color:#8aaaca;font-weight:bold}
 
-.forum-composer {
-    margin-bottom: 8px;
-    padding: 8px;
-    border: 1px solid #aaa;
-    background: #fff;
-}
+.forum-actions{display:flex;align-items:center;gap:5px;padding:8px 12px;border-top:1px solid #ddd;background:#f7f7f7}
+.forum-action-btn{padding:4px 9px;background:linear-gradient(#fff,#ddd);border:2px outset #eee;font:11px Arial;color:#333;cursor:pointer}
+.forum-action-btn:active{border-style:inset}
+.forum-action-btn.liked{background:#e5eef8;color:#174b7a;font-weight:bold}
+.forum-action-btn.disliked{background:#fbe1e1;color:#c62828;font-weight:bold}
+.forum-action-btn.report{margin-left:auto;color:#a33}
 
-.forum-sortbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 5px;
-    padding: 4px 0 6px;
-    font: 11px Arial;
-    color: #555;
-}
+.forum-comment-form{display:flex;gap:5px;margin-top:7px}
+#forum-comment-input{flex:1;min-height:30px;box-sizing:border-box;resize:vertical;border:1px inset #aaa;padding:5px;font:12px Arial}
+@media(max-width:700px){.forum-row{grid-template-columns:1fr 48px 48px}.forum-time{display:none}}
 
-.forum-sortbar select {
-    font: 11px Arial;
-    border: 1px solid #999;
-    background: #fff;
-    padding: 2px 4px;
-}
+/* =========================================================
+   CHAT
+========================================================= */
 
-#forum-title,
-#forum-body {
-    box-sizing: border-box;
-    width: 100%;
-    border: 1px inset #aaa;
+#messages {
+    height: 145px;
+    margin: 8px;
+    overflow-y: auto;
+    background: white;
+    border: 2px inset #aaa;
     padding: 6px;
-    font: 12px Arial;
-    color: #222;
+    font-size: 12px;
 }
 
-#forum-title {
-    height: 28px;
-    margin-bottom: 6px;
+.message {
+    margin-bottom: 5px;
 }
 
-#forum-body {
-    height: 100px;
-    resize: vertical;
-    display: block;
-}
-
-.forum-compose-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 7px;
-    font-size: 10px;
-    color: #777;
-}
-
-.forum-row {
-    display: grid;
-    grid-template-columns: 1fr 58px 58px 85px;
-    align-items: center;
-    min-height: 54px;
-    padding: 0 8px;
-    border: 1px solid #aaa;
-    border-top: 0;
-    background: #fff;
+.message-name {
+    color: #003399;
+    font-weight: bold;
     cursor: pointer;
 }
 
-.forum-row:first-child {
-    border-top: 1px solid #aaa;
+.message-name:hover {
+    text-decoration: underline;
 }
 
-.forum-row:hover {
-    background: #f0f5fa;
-}
-
-.forum-main {
-    min-width: 0;
-}
-
-.forum-title {
+.msg-shout {
+    color: #d9381e;
     font-weight: bold;
-    color: #254f78;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-.forum-pin-icon {
-    display: inline-block;
-    position: relative;
-    width: 13px;
-    height: 15px;
-    margin-right: 5px;
-    vertical-align: -2px;
+.msg-whisper {
+    color: #8e44ad;
+    font-style: italic;
 }
 
-.forum-pin-icon:before {
-    content: "";
-    position: absolute;
-    left: 1px;
-    top: 0;
-    width: 9px;
-    height: 8px;
-    background: linear-gradient(#e56a62,#b62d28);
-    border: 1px solid #7f1e1b;
-    border-radius: 5px 5px 2px 2px;
-    box-shadow: inset 1px 1px 0 rgba(255,255,255,.55),1px 1px 0 #999;
-}
-
-.forum-pin-icon:after {
-    content: "";
-    position: absolute;
-    left: 5px;
-    top: 7px;
-    width: 3px;
-    height: 9px;
-    background: linear-gradient(90deg,#777,#ddd,#666);
-    border-left: 1px solid #555;
-    border-right: 1px solid #555;
-    transform: rotate(32deg);
-    transform-origin: top center;
-}
-
-.forum-row.forum-pinned {
-    background: #f5f7f9;
-    box-shadow: inset 3px 0 0 #777;
-}
-
-.forum-row.forum-pinned:hover {
-    background: #edf2f6;
-}
-
-.forum-meta {
-    margin-top: 4px;
-    color: #888;
-    font-size: 10px;
-}
-
-.forum-count {
-    text-align: center;
-    color: #666;
-    font-size: 11px;
-}
-
-.forum-time {
-    text-align: right;
-    color: #888;
-    font-size: 10px;
-}
-
-.forum-empty {
-    padding: 25px 8px;
-    text-align: center;
-    color: #888;
-    border: 1px solid #aaa;
-    background: #fff;
-}
-
-.forum-detail-head {
-    padding: 6px 0 8px;
-}
-
-.forum-back {
-    border: 0;
-    background: none;
-    color: #315d8b;
-    font-size: 11px;
-    cursor: pointer;
-    padding: 2px;
-}
-
-.forum-article {
-    border: 1px solid #aaa;
-    background: #fff;
-}
-
-.forum-article-header {
-    padding: 12px;
-    border-bottom: 1px solid #ccc;
-    background: #eee;
-}
-
-.forum-article-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #222;
-    word-break: break-word;
-}
-
-.forum-article-meta {
-    margin-top: 7px;
-    color: #777;
-    font-size: 10px;
-}
-
-.forum-article-body {
-    padding: 14px;
-    min-height: 90px;
-    white-space: pre-wrap;
-    line-height: 1.7;
-    word-break: break-word;
-}
-
-.forum-comments {
-    border-top: 1px solid #aaa;
-    background: #f7f7f7;
-    padding: 8px;
-}
-
-.forum-comments-title {
-    font-weight: bold;
-    margin-bottom: 6px;
-}
-
-.forum-comment {
-    padding: 7px 8px;
-    border: 1px solid #ccc;
-    border-bottom: 0;
-    background: #fff;
-}
-
-.forum-comment:last-child {
-    border-bottom: 1px solid #ccc;
-}
-
-.forum-comment-meta {
-    font-size: 10px;
-    color: #777;
-    margin-bottom: 4px;
-}
-
-.forum-comment-body {
-    white-space: pre-wrap;
-    line-height: 1.5;
-    word-break: break-word;
-}
-
-.forum-comment-actions {
-    margin-top: 5px;
+#chat-input-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    padding: 0 8px 8px 8px;
     gap: 4px;
 }
 
-.forum-comment-pin {
-    display: inline-block;
-    position: relative;
-    width: 10px;
-    height: 12px;
-    margin-right: 3px;
-    vertical-align: -2px;
-}
-
-.forum-comment-pin:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 7px;
-    height: 6px;
-    background: linear-gradient(#e56a62,#b62d28);
-    border: 1px solid #7f1e1b;
-    border-radius: 4px 4px 1px 1px;
-    box-shadow: inset 1px 1px 0 rgba(255,255,255,.5);
-}
-
-.forum-comment-pin:after {
-    content: "";
-    position: absolute;
-    left: 4px;
-    top: 5px;
-    width: 2px;
-    height: 7px;
-    background: #777;
-    transform: rotate(32deg);
-    transform-origin: top center;
-}
-
-.forum-comment-pinned {
-    background: #fffdf0;
-}
-
-.forum-comment-owner-btn {
-    padding: 2px 6px;
-    background: #fff;
-    border: 1px solid #bbb;
-    font: 10px Arial;
-    color: #555;
-    cursor: pointer;
-}
-
-.forum-comment-owner-btn:hover {
-    background: #eee;
-}
-
-.forum-comment-like {
-    padding: 2px 6px;
-    background: #fff;
-    border: 1px solid #bbb;
-    font: 10px Arial;
-    color: #555;
-    cursor: pointer;
-}
-
-.forum-comment-like.liked {
-    background: #e5eef8;
-    color: #174b7a;
-    border-color: #8aaaca;
-    font-weight: bold;
-}
-
-.forum-actions {
+#chat-controls {
     display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 12px;
-    border-top: 1px solid #ddd;
-    background: #f7f7f7;
+    gap: 4px;
 }
 
-.forum-action-btn {
-    padding: 4px 9px;
-    background: linear-gradient(#fff,#ddd);
-    border: 2px outset #eee;
-    font: 11px Arial;
-    color: #333;
-    cursor: pointer;
-}
-
-.forum-action-btn:active {
-    border-style: inset;
-}
-
-.forum-action-btn.liked {
-    background: #e5eef8;
-    color: #174b7a;
-    font-weight: bold;
-}
-
-.forum-action-btn.disliked {
-    background: #fbe1e1;
-    color: #c62828;
-    font-weight: bold;
-}
-
-.forum-action-btn.report {
-    margin-left: auto;
-    color: #a33;
-}
-
-.forum-comment-form {
+#chat-input {
     display: flex;
-    gap: 5px;
-    margin-top: 7px;
+    gap: 4px;
 }
 
-#forum-comment-input {
+select,
+input {
+    border: 2px inset #aaa;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+#channelSelect {
+    width: 80px;
+}
+
+#whisperTargetInput {
+    width: 90px;
+    display: none;
+}
+
+#usernameInput {
+    width: 85px;
+    background-color: #eee;
+}
+
+#messageInput {
     flex: 1;
-    min-height: 30px;
-    resize: vertical;
-    border: 1px inset #aaa;
-    padding: 6px;
-    font: 12px Arial;
 }
+
+#sendButton {
+    height: 26px;
+    padding: 0 14px;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 2px outset #eeeeee;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   RIGHT
+========================================================= */
 
 #right {
-    width: 220px;
+    width: 210px;
 }
 
 .side-box {
     margin-bottom: 10px;
-    border: 1px solid #999;
-    background: #f7f7f7;
+    border: 1px solid #888;
+    background: #eeeeee;
 }
 
 .side-title {
-    padding: 5px 7px;
+    padding: 5px;
     color: white;
     font-weight: bold;
-    background: linear-gradient(#6f9bc2,#3c6b99);
+    background: linear-gradient(#777777, #444444);
 }
 
 .side-content {
     padding: 8px;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .online {
-    color: #277a27;
+    color: green;
     font-weight: bold;
 }
 
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
 #footer {
-    padding: 10px;
-    border-top: 1px solid #999;
-    background: #eee;
+    padding: 12px;
     text-align: center;
-    color: #777;
-    font-size: 10px;
+    border-top: 1px solid #999;
+    background: #eeeeee;
+    color: #666;
+    font-size: 11px;
 }
+
+#footer a {
+    color: #666;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   ACCOUNT STATUS
+   밴 + 경고 공통 화면
+========================================================= */
+
+#suspension-screen {
+    display: none;
+    padding: 55px 60px 70px 60px;
+    min-height: 330px;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.suspension-inner {
+    border: 1px solid #999;
+    background: #f7f7f7;
+}
+
+.suspension-header {
+    padding: 9px 12px;
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(#777777, #444444);
+    border-bottom: 1px solid #555;
+}
+
+.suspension-body {
+    padding: 30px 28px 35px 28px;
+}
+
+.suspension-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 24px;
+}
+
+.suspension-text {
+    line-height: 1.8;
+    font-size: 12px;
+    color: #333;
+}
+
+.suspension-info {
+    margin-top: 24px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+
+.suspension-row {
+    display: flex;
+    padding: 9px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.suspension-row:last-child {
+    border-bottom: none;
+}
+
+.suspension-label {
+    width: 80px;
+    color: #666;
+    font-weight: bold;
+}
+
+.suspension-value {
+    flex: 1;
+    color: #222;
+}
+
+.suspension-bottom {
+    margin-top: 24px;
+    line-height: 1.8;
+    color: #444;
+}
+
+.suspension-date {
+    font-weight: bold;
+    color: #d9381e;
+}
+
+
+/* =========================================================
+   경고 확인 버튼
+========================================================= */
+
+.warning-confirm-area {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+}
+
+.warning-confirm-text {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.warning-confirm-button {
+    padding: 6px 18px;
+    background: linear-gradient(#ffffff, #cccccc);
+    border: 2px outset #eeeeee;
+    color: #222;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.warning-confirm-button:active {
+    border-style: inset;
+}
+
+.warning-confirm-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 15px;
+    border: 2px solid #555;
+    width: 300px;
+    box-shadow: 3px 3px 0 #333;
+}
+
+.modal-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 8px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.form-group input {
+    width: 93%;
+    padding: 4px;
+    border: 1px solid #777;
+    font-size: 12px;
+}
+
+.modal-buttons {
+    text-align: right;
+    margin-top: 12px;
+}
+
+.profile-row {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.report-modal-options{margin:8px 0}
+.report-modal-option{display:block;margin:6px 0;padding:6px 7px;border:1px solid #ccc;background:#f7f7f7;cursor:pointer;font-size:11px}
+.report-modal-option:hover{background:#eee}
+.report-modal-option input{vertical-align:-1px;margin-right:6px}
+#forumReportReason{width:100%;box-sizing:border-box;min-height:60px;resize:vertical;border:1px inset #aaa;padding:5px;font:11px Arial;margin-top:5px}
+.report-modal-help{font-size:10px;color:#777;line-height:1.4;margin-top:5px}
+/* 신고하기 헤더: 사이트 공지 배너와 동일한 노란 계열 */
+#forumReportModal .modal-header{background:#fffde6;border:1px solid #d4a300;color:#333;box-sizing:border-box;margin:-10px -10px 10px;padding:8px 9px;font-weight:bold;}
+
+
+/* =========================================================
+   실제 ACCOUNT STATUS 상태
+========================================================= */
+
+body.account-suspended #notice,
+body.account-suspended #main,
+body.account-suspended #menu,
+body.account-suspended #footer {
+    display: none !important;
+}
+
+body.account-suspended #suspension-screen {
+    display: block;
+}
+
+/* PLACE report modal */
+.place-report-modal .place-report-box{border-top:4px solid #e6b800}
+.place-report-modal .place-report-title{background:linear-gradient(#fff7b8,#ffd84d);border-bottom:1px solid #c7a600;color:#5b4b00}
+.place-report-modal .place-report-extra{display:none}
+.place-report-modal .place-report-extra.show{display:block}
 </style>
 </head>
+
 <body>
 
 <div id="site">
 
     <div id="top">
+
         <div id="title">PLACE</div>
-        <div id="subtitle">작은 장소</div>
+
+        <div id="subtitle">
+            어딘가에 존재하는 작은 장소
+        </div>
 
         <div id="auth-bar">
-            <span id="user-status">로그인되지 않음</span>
-            <button class="auth-btn" id="login-button" onclick="openModal('loginModal')">LOGIN</button>
-            <button class="auth-btn" id="signup-button" onclick="openModal('signupModal')">SIGN UP</button>
-            <button class="auth-btn" id="logout-button" onclick="logout()" style="display:none;">LOGOUT</button>
+
+            <span
+                id="user-info"
+                style="font-size:11px; color:#fff;"
+            >
+                로그인 필요
+            </span>
+
+            <button
+                class="auth-btn"
+                id="login-btn"
+                onclick="openModal('loginModal')"
+            >
+                로그인
+            </button>
+
+            <button
+                class="auth-btn"
+                id="signup-btn"
+                onclick="openModal('signupModal')"
+            >
+                회원가입
+            </button>
+
+            <button
+                class="auth-btn"
+                id="logout-btn"
+                onclick="handleLogout()"
+                style="display:none;"
+            >
+                로그아웃
+            </button>
+
         </div>
+
     </div>
+
 
     <div id="menu">
-        <a href="#" class="menu-button" onclick="showHome();return false;">HOME</a>
-        <a href="#" class="menu-button" onclick="showWorld();return false;">WORLD</a>
-        <a href="#" class="menu-button" onclick="showForum();return false;">COMMUNITY</a>
-        <a href="#" class="menu-button" onclick="showChat();return false;">CHAT</a>
-        <a href="#" class="menu-button" onclick="showProfile();return false;">PROFILE</a>
-        <a href="#" class="menu-button" onclick="showAbout();return false;">ABOUT</a>
+
+        <a href="index.html" class="menu-button">
+            HOME
+        </a>
+
+        <a href="world.html" class="menu-button">
+            WORLD
+        </a>
+
+        <a href="message.html" class="menu-button">
+            MESSAGE
+        </a>
+
+        <span
+            class="menu-button"
+            onclick="handleMenuProfileClick()"
+        >
+            PROFILE
+        </span>
+
+        <a href="#about" class="menu-button">
+            ABOUT
+        </a>
+
+        <a
+            href="admin.html"
+            class="menu-button"
+            id="admin-menu"
+            style="display:none;"
+        >
+            ADMIN
+        </a>
+
     </div>
 
-    <div id="banner-container"></div>
 
-    <div id="notice"></div>
+    <!-- =====================================================
+         배너
+    ====================================================== -->
+
+    <div id="notice">
+
+        <div id="banner-container">
+            배너를 불러오는 중...
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACCOUNT STATUS
+         밴 / 경고 공통 화면
+    ====================================================== -->
+
+    <div id="suspension-screen">
+
+        <div class="suspension-inner">
+
+            <div class="suspension-header">
+                ACCOUNT STATUS
+            </div>
+
+            <div class="suspension-body">
+
+                <div
+                    id="suspension-title"
+                    class="suspension-title"
+                >
+                    회원님의 계정은 정지 처리되었습니다.
+                </div>
+
+                <div
+                    id="suspension-description"
+                    class="suspension-text"
+                >
+                    콘텐츠 검열 결과,
+                    회원님은 PLACE 이용 약관을 위반한 것으로
+                    확인되었습니다.
+                </div>
+
+                <div class="suspension-info">
+
+                    <div class="suspension-row">
+
+                        <div class="suspension-label">
+                            처리 일시
+                        </div>
+
+                        <div
+                            class="suspension-value"
+                            id="suspension-date"
+                        >
+                            -
+                        </div>
+
+                    </div>
+
+                    <div class="suspension-row">
+
+                        <div class="suspension-label">
+                            처리 사유
+                        </div>
+
+                        <div
+                            class="suspension-value"
+                            id="suspension-reason"
+                        >
+                            사유 미작성
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="suspension-until"
+                    class="suspension-bottom"
+                >
+                    -
+                </div>
+
+
+                <!-- =================================================
+                     경고 확인 영역
+                ================================================== -->
+
+                <div
+                    id="warning-confirm-area"
+                    class="warning-confirm-area"
+                    style="display:none;"
+                >
+
+                    <div class="warning-confirm-text">
+
+                        위 경고 내용을 확인하셨다면
+                        아래 버튼을 눌러 계정을 다시 활성화할 수 있습니다.
+
+                    </div>
+
+                    <label
+                        style="
+                            display:block;
+                            margin-bottom:12px;
+                            cursor:pointer;
+                        "
+                    >
+
+                        <input
+                            type="checkbox"
+                            id="warningAgreeCheckbox"
+                            onchange="toggleReactivateBtn()"
+                        >
+
+                        위 내용을 확인했습니다.
+
+                    </label>
+
+                    <button
+                        id="reactivateBtn"
+                        class="warning-confirm-button"
+                        onclick="handleReactivateAccount()"
+                        disabled
+                    >
+                        확인했습니다
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         메인
+    ====================================================== -->
 
     <div id="main">
 
         <div id="left">
+            <div id="community-greeting" style="display:none;padding:0 8px 7px 8px;font-size:21px;font-weight:700;color:#222;">안녕하세요, 님!</div>
 
-            <!-- HOME -->
-            <div id="home-page">
+            <div class="section" id="community-section">
 
-                <div class="section">
-                    <div class="section-title">WELCOME TO PLACE</div>
-
-                    <div style="padding:12px;line-height:1.7;">
-                        <b>PLACE</b>에 오신 것을 환영합니다
-                        <br>
-                        이곳에는 아직 발견되지 않은 장소들이 있습니다
-                        <br>
-                        천천히 둘러보고, 숨겨진 장소를 찾아보세요
-                    </div>
+                <div class="section-title">
+                    COMMUNITY
                 </div>
 
-                <div class="section">
-                    <div class="section-title">COMMUNITY</div>
-
-                    <div id="home-forum-preview" style="padding:8px;">
-                        불러오는 중...
+                <div id="forum-wrap">
+                    <div class="forum-toolbar">
+                        <div class="forum-heading">
+                            <strong>PLACE COMMUNITY</strong>
+                            <span>사람들이 남긴 이야기</span>
+                        </div>
+                        <button class="auth-btn" onclick="forumOpenComposer()">WRITE</button>
                     </div>
-                </div>
 
-            </div>
-
-
-            <!-- WORLD -->
-            <div id="world-page" style="display:none;">
-
-                <div class="section">
-                    <div class="section-title">WORLD</div>
-
-                    <div id="world">
-
-                        <div class="tree tree1">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree2">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree3">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree4">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="tree tree5">
-                            <div class="tree-top"></div>
-                            <div class="tree-trunk"></div>
-                        </div>
-
-                        <div class="character">
-                            <div class="character-head"></div>
-                        </div>
-
-                        <button id="secret" onclick="findSecretPlace()">
-                            숨겨진 장소 찾기
-                        </button>
-
-                    </div>
-                </div>
-
-            </div>
-
-
-            <!-- FORUM -->
-            <div id="forum-page" style="display:none;">
-
-                <div class="section">
-
-                    <div id="forum-wrap">
-
-                        <div class="forum-toolbar">
-
-                            <div class="forum-heading">
-                                <strong>PLACE COMMUNITY</strong>
-                                <span>사람들이 남긴 이야기</span>
+                    <div id="forum-composer" class="forum-composer" style="display:none;">
+                        <input id="forum-title" type="text" maxlength="80" placeholder="제목을 입력하세요">
+                        <textarea id="forum-body" maxlength="4000" placeholder="내용을 작성하세요"></textarea>
+                        <div class="forum-compose-bottom">
+                            <span id="forum-login-hint">로그인 후 작성할 수 있습니다</span>
+                            <div>
+                                <button class="auth-btn" onclick="closeForumComposer()">CANCEL</button>
+                                <button class="auth-btn" onclick="createForumPost()">POST</button>
                             </div>
-
-                            <button
-                                type="button"
-                                class="auth-btn"
-                                onclick="forumOpenComposer()">
-                                WRITE
-                            </button>
-
                         </div>
-
-
-                        <div
-                            id="forum-composer"
-                            class="forum-composer"
-                            style="display:none;">
-
-                            <input
-                                id="forum-title"
-                                type="text"
-                                maxlength="80"
-                                placeholder="제목을 입력하세요">
-
-                            <textarea
-                                id="forum-body"
-                                maxlength="4000"
-                                placeholder="내용을 작성하세요"></textarea>
-
-                            <div class="forum-compose-bottom">
-
-                                <span id="forum-login-hint">
-                                    로그인 후 작성할 수 있습니다
-                                </span>
-
-                                <div>
-
-                                    <button
-                                        type="button"
-                                        class="auth-btn"
-                                        onclick="closeForumComposer()">
-                                        CANCEL
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="auth-btn"
-                                        onclick="createForumPost()">
-                                        POST
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="forum-sortbar">
-
-                            <span>정렬</span>
-
-                            <select
-                                id="forum-sort"
-                                onchange="renderForumList()">
-
-                                <option value="latest">
-                                    최신순
-                                </option>
-
-                                <option value="oldest">
-                                    오래된순
-                                </option>
-
-                                <option value="popular">
-                                    인기순
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div id="forum-list">
-                            불러오는 중...
-                        </div>
-
-                        <div
-                            id="forum-detail"
-                            style="display:none;">
-                        </div>
-
                     </div>
 
-                </div>
+                    <div class="forum-sortbar">
+                        <span>정렬</span>
+                        <select id="forum-sort" onchange="renderForumList()">
+                            <option value="likes" selected>인기순</option>
+                            <option value="latest">최신순</option>
+                        </select>
+                    </div>
 
+                    <div id="forum-list"></div>
+
+                    <div id="forum-detail" style="display:none;">
+                        <div class="forum-detail-head">
+                            <button class="forum-back" onclick="closeForumDetail()">← 목록</button>
+                        </div>
+                        <div id="forum-detail-content"></div>
+                    </div>
+                </div>
             </div>
 
 
-            <!-- CHAT -->
-            <div id="chat-page" style="display:none;">
+            <!-- =================================================
+                 채팅
+            ================================================== -->
 
-                <div class="section">
+            <div
+                class="section"
+                id="chat-section"
+            >
 
-                    <div class="section-title">
-                        CHAT
-                    </div>
-
-                    <div style="padding:10px;">
-
-                        <div
-                            id="chat-messages"
-                            style="
-                                height:260px;
-                                overflow-y:auto;
-                                border:1px inset #aaa;
-                                background:#fff;
-                                padding:6px;
-                                box-sizing:border-box;
-                            ">
-                        </div>
-
-                        <div
-                            style="
-                                display:flex;
-                                gap:5px;
-                                margin-top:6px;
-                            ">
-
-                            <input
-                                id="chat-input"
-                                type="text"
-                                maxlength="500"
-                                placeholder="메시지를 입력하세요"
-                                style="
-                                    flex:1;
-                                    border:1px inset #aaa;
-                                    padding:5px;
-                                ">
-
-                            <button
-                                type="button"
-                                class="auth-btn"
-                                onclick="sendMessage()">
-                                SEND
-                            </button>
-
-                        </div>
-
-                    </div>
-
+                <div class="section-title">
+                    REALTIME CHAT
                 </div>
 
-            </div>
+                <div id="messages">
 
+                    <div class="message">
 
-            <!-- PROFILE -->
-            <div id="profile-page" style="display:none;">
-
-                <div class="section">
-
-                    <div class="section-title">
-                        PROFILE
-                    </div>
-
-                    <div
-                        id="profile-content"
-                        style="padding:12px;">
-                        로그인 후 이용할 수 있습니다
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ABOUT -->
-            <div id="about-page" style="display:none;">
-
-                <div class="section">
-
-                    <div class="section-title">
-                        ABOUT PLACE
-                    </div>
-
-                    <div style="padding:12px;line-height:1.8;">
-
-                        <b>PLACE</b>
-
-                        <br><br>
-
-                        작은 장소를 찾고,
-                        <br>
-                        그곳에 이야기를 남기는 공간입니다
-
-                        <br><br>
-
-                        아직 발견되지 않은 장소가 있고,
-                        <br>
-                        누군가는 그곳을 먼저 발견할 수 있습니다
-
-                        <br><br>
-
-                        <span style="color:#777;">
-                            PLACE
+                        <span class="message-name">
+                            SYSTEM
                         </span>
+
+                        :
+                        채팅 서버 연결 완료
+
+                    </div>
+
+                </div>
+
+                <div id="chat-input-container">
+
+                    <div id="chat-controls">
+
+                        <select
+                            id="channelSelect"
+                            onchange="handleChannelChange()"
+                        >
+
+                            <option value="all">
+                                전체
+                            </option>
+
+                            <option value="whisper">
+                                귓속말
+                            </option>
+
+                        </select>
+
+                        <input
+                            id="whisperTargetInput"
+                            type="text"
+                            placeholder="상대 아이디"
+                        >
+
+                        <input
+                            id="usernameInput"
+                            type="text"
+                            placeholder="닉네임"
+                            value="Guest"
+                            readonly
+                        >
+
+                    </div>
+
+                    <div id="chat-input">
+
+                        <input
+                            id="messageInput"
+                            type="text"
+                            placeholder="로그인 후 채팅을 입력할 수 있습니다."
+                            onclick="checkInputPermission()"
+                        >
+
+                        <button
+                            id="sendButton"
+                            onclick="sendMessage()"
+                        >
+                            SEND
+                        </button>
 
                     </div>
 
@@ -1038,38 +1097,11 @@ body {
         </div>
 
 
-        <!-- RIGHT -->
+        <!-- =====================================================
+             오른쪽
+        ====================================================== -->
+
         <div id="right">
-
-            <div class="side-box">
-
-                <div class="side-title">
-                    STATUS
-                </div>
-
-                <div
-                    class="side-content"
-                    id="side-status">
-                    로그인되지 않음
-                </div>
-
-            </div>
-
-
-            <div class="side-box">
-
-                <div class="side-title">
-                    PLACE NEWS
-                </div>
-
-                <div
-                    class="side-content"
-                    id="side-news">
-                    새로운 소식을 기다리는 중...
-                </div>
-
-            </div>
-
 
             <div class="side-box">
 
@@ -1078,18 +1110,60 @@ body {
                 </div>
 
                 <div class="side-content">
+                    이곳은 사람들이 잠시 머물다 가는 작은 장소입니다.
+                </div>
 
-                    <b>PLACE</b>
-                    <br>
-                    작은 장소
+            </div>
 
-                    <br><br>
 
-                    발견하고,
+            <div class="side-box">
+
+                <div class="side-title">
+                    ONLINE
+                </div>
+
+                <div class="side-content">
+
+                    <span class="online">
+                        ● ONLINE
+                    </span>
+
                     <br>
-                    기록하고,
+
+                    <span id="side-online-text">
+                        0 users online
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="side-box">
+
+                <div class="side-title">
+                    MENU
+                </div>
+
+                <div class="side-content">
+
+                    <a href="index.html">
+                        Home
+                    </a>
+
                     <br>
-                    공유하세요
+
+                    <a href="world.html">
+                        World
+                    </a>
+
+                    <br>
+
+                    <a href="room.html">
+                        오래된 방
+                    </a>
+
+                    <br>
 
                 </div>
 
@@ -1100,94 +1174,317 @@ body {
     </div>
 
 
+    <!-- =====================================================
+         푸터
+    ====================================================== -->
+
     <div id="footer">
+
         PLACE © 2026
+
+        <span style="margin: 0 8px; color:#aaa;">
+            |
+        </span>
+
+        <a href="terms.html">
+            이용약관
+        </a>
+
+        <span style="margin: 0 8px; color:#aaa;">
+            |
+        </span>
+
+        <a href="privacy.html">
+            개인정보처리방침
+        </a>
+
+        <span style="margin: 0 8px; color:#aaa;">
+            |
+        </span>
+
+        <a href="accessibility.html">
+            접근성 안내
+        </a>
+
+    </div>
+
+
+<!-- =========================================================
+     로그인
+========================================================= -->
+
+<div id="loginModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            🔑 로그인
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                아이디
+            </label>
+
+            <input
+                type="text"
+                id="loginUsername"
+                placeholder="영어, 숫자, 언더바(_)"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                비밀번호
+            </label>
+
+            <input
+                type="password"
+                id="loginPassword"
+            >
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="auth-btn"
+                onclick="handleLogin()"
+            >
+                로그인
+            </button>
+
+            <button
+                class="auth-btn"
+                onclick="closeModal('loginModal')"
+            >
+                취소
+            </button>
+
+        </div>
+
     </div>
 
 </div>
 
 
-<!-- =====================================================
-     LOGIN MODAL
-===================================================== -->
+<!-- =========================================================
+     회원가입
+========================================================= -->
 
-<div
-    id="loginModal"
-    class="modal"
-    style="
-        display:none;
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,.45);
-        z-index:9999;
-    ">
+<div id="signupModal" class="modal">
 
-    <div
-        style="
-            width:320px;
-            margin:120px auto;
-            background:#eee;
-            border:2px outset #fff;
-            box-shadow:4px 4px 0 #333;
-        ">
+    <div class="modal-content">
 
-        <div
-            style="
-                padding:5px 8px;
-                color:white;
-                font-weight:bold;
-                background:linear-gradient(#6f9bc2,#315d8b);
-            ">
-            PLACE LOGIN
+        <div class="modal-header">
+            📝 계정 생성
         </div>
 
-        <div style="padding:12px;">
+        <div class="form-group">
+
+            <label>
+                아이디 (영어, 숫자, _ 만 가능)
+            </label>
 
             <input
-                id="login-username"
                 type="text"
-                placeholder="아이디"
-                style="
-                    width:100%;
-                    box-sizing:border-box;
-                    padding:6px;
-                    margin-bottom:6px;
-                ">
+                id="signupUsername"
+                placeholder="예: user_123"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                닉네임 (2~16자, 연속 공백 최대 2개)
+            </label>
 
             <input
-                id="login-password"
+                type="text"
+                id="signupNickname"
+                placeholder="예: 모험가"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                비밀번호
+            </label>
+
+            <input
                 type="password"
-                placeholder="비밀번호"
-                style="
-                    width:100%;
-                    box-sizing:border-box;
-                    padding:6px;
-                    margin-bottom:8px;
-                ">
+                id="signupPassword"
+            >
 
-            <div
-                style="
-                    display:flex;
-                    justify-content:flex-end;
-                    gap:5px;
-                ">
+        </div>
 
-                <button
-                    type="button"
-                    class="auth-btn"
-                    onclick="closeModal('loginModal')">
-                    CANCEL
-                </button>
+        <div class="form-group">
 
-                <button
-                    type="button"
-                    class="auth-btn"
-                    onclick="login()">
-                    LOGIN
-                </button>
+            <label>
+                비밀번호 확인
+            </label>
+
+            <input
+                type="password"
+                id="signupPasswordConfirm"
+            >
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="auth-btn"
+                onclick="handleSignup()"
+            >
+                가입하기
+            </button>
+
+            <button
+                class="auth-btn"
+                onclick="closeModal('signupModal')"
+            >
+                취소
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     포럼 신고
+========================================================= -->
+<div id="forumReportProfileModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">신고 대상 확인</div>
+    <div style="border:1px solid #ccc;background:#f7f7f7;padding:10px;line-height:1.7;font-size:11px;">
+      <div><b>작성자</b> : <span id="forumReportProfileName">-</span></div>
+      <div><b>아이디</b> : <span id="forumReportProfileUsername">-</span></div>
+      <div><b>대상</b> : <span id="forumReportProfileTarget">-</span></div>
+    </div>
+    <div style="margin-top:10px;line-height:1.6;font-size:11px;">위 사용자의 콘텐츠를 신고하시겠습니까?</div>
+    <div class="modal-buttons">
+      <button class="auth-btn" onclick="closeForumReportProfileModal()">취소</button>
+      <button class="auth-btn" onclick="confirmForumReportTarget()">신고 계속</button>
+    </div>
+  </div>
+</div>
+
+<div id="forumReportModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">신고하기</div>
+    <div class="form-group"><label>신고 유형</label><select id="forumReportCategory" onchange="forumReportCategoryChanged()" style="width:100%;box-sizing:border-box;padding:5px;"></select></div>
+    <div class="form-group"><label>세부 사유</label><select id="forumReportSubcategory" disabled style="width:100%;box-sizing:border-box;padding:5px;"></select></div>
+    <div class="form-group"><label>추가 설명 <span style="font-weight:normal;color:#888;">(선택)</span></label><textarea id="forumReportReason" maxlength="1000" placeholder="신고 내용을 추가로 설명해 주세요" style="width:100%;box-sizing:border-box;min-height:75px;resize:vertical;border:1px inset #aaa;padding:5px;font:11px Arial;"></textarea></div>
+    <div class="report-modal-help">허위 신고나 신고 시스템의 악용은 제재 대상이 될 수 있습니다</div>
+    <div class="modal-buttons"><button class="auth-btn" onclick="closeForumReportModal()">취소</button><button class="auth-btn" onclick="submitForumReport()">신고하기</button></div>
+  </div>
+</div>
+
+<!-- =========================================================
+     프로필
+========================================================= -->
+
+<div id="profileModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            👤 유저 프로필
+        </div>
+
+        <div class="profile-row">
+
+            <b>계정 번호:</b>
+
+            <span
+                id="profAccountNumber"
+                style="color:#d9381e; font-weight:bold;"
+            >
+                -
+            </span>
+
+            번 유저
+
+        </div>
+
+        <div class="profile-row">
+
+            <b>아이디:</b>
+
+            <span id="profUsername">
+                -
+            </span>
+
+        </div>
+
+        <div class="profile-row">
+
+            <b>닉네임:</b>
+
+            <span id="profNickname">
+                -
+            </span>
+
+        </div>
+
+        <div class="profile-row">
+
+            <b>가입일:</b>
+
+            <span id="profCreatedAt">
+                -
+            </span>
+
+        </div>
+
+        <div
+            id="nicknameChangeBox"
+            style="margin-top:12px; border-top:1px dashed #ccc; padding-top:10px;"
+        >
+
+            <div class="form-group">
+
+                <label>
+                    새 닉네임 변경 (30분에 1회 가능)
+                </label>
+
+                <input
+                    type="text"
+                    id="newNicknameInput"
+                    placeholder="새 닉네임 (2~16자)"
+                >
 
             </div>
 
+            <button
+                class="auth-btn"
+                onclick="changeNickname()"
+            >
+                닉네임 변경하기
+            </button>
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="auth-btn"
+                onclick="closeModal('profileModal')"
+            >
+                닫기
+            </button>
+
         </div>
 
     </div>
@@ -1195,107 +1492,7 @@ body {
 </div>
 
 
-<!-- =====================================================
-     SIGN UP MODAL
-===================================================== -->
-
-<div
-    id="signupModal"
-    class="modal"
-    style="
-        display:none;
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,.45);
-        z-index:9999;
-    ">
-
-    <div
-        style="
-            width:320px;
-            margin:100px auto;
-            background:#eee;
-            border:2px outset #fff;
-            box-shadow:4px 4px 0 #333;
-        ">
-
-        <div
-            style="
-                padding:5px 8px;
-                color:white;
-                font-weight:bold;
-                background:linear-gradient(#6f9bc2,#315d8b);
-            ">
-            PLACE SIGN UP
-        </div>
-
-        <div style="padding:12px;">
-
-            <input
-                id="signup-username"
-                type="text"
-                placeholder="아이디"
-                style="
-                    width:100%;
-                    box-sizing:border-box;
-                    padding:6px;
-                    margin-bottom:6px;
-                ">
-
-            <input
-                id="signup-nickname"
-                type="text"
-                placeholder="닉네임"
-                style="
-                    width:100%;
-                    box-sizing:border-box;
-                    padding:6px;
-                    margin-bottom:6px;
-                ">
-
-            <input
-                id="signup-password"
-                type="password"
-                placeholder="비밀번호"
-                style="
-                    width:100%;
-                    box-sizing:border-box;
-                    padding:6px;
-                    margin-bottom:8px;
-                ">
-
-            <div
-                style="
-                    display:flex;
-                    justify-content:flex-end;
-                    gap:5px;
-                ">
-
-                <button
-                    type="button"
-                    class="auth-btn"
-                    onclick="closeModal('signupModal')">
-                    CANCEL
-                </button>
-
-                <button
-                    type="button"
-                    class="auth-btn"
-                    onclick="signup()">
-                    SIGN UP
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 <script>
-/* =========================================================
-   SUPABASE
-========================================================= */
 
 const SUPABASE_URL =
     "https://exeoqvfidmtmnwqejyvg.supabase.co";
@@ -1304,616 +1501,443 @@ const SUPABASE_ANON_KEY =
     "sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
 
 const supabaseClient =
-    window.supabase.createClient(
+    supabase.createClient(
         SUPABASE_URL,
         SUPABASE_ANON_KEY
     );
 
-
-/* =========================================================
-   GLOBAL STATE
-========================================================= */
+const CURRENT_MAP_NAME = "main";
 
 let currentUser = null;
 let currentProfile = null;
 let isAdmin = false;
+let isSuspended = false;
 
-let forumSelectedPostId = null;
-let forumRealtimeChannel = null;
+let presenceChannel = null;
+let profileRealtimeChannel = null;
+let chatRealtimeChannel = null;
+let bannerRealtimeChannel = null;
 
 
 /* =========================================================
-   MODAL
+   기본 UI
 ========================================================= */
 
 function openModal(id) {
-    const el = document.getElementById(id);
-
-    if (el) {
-        el.style.display = "block";
-    }
+    document.getElementById(id).style.display = "block";
 }
 
 function closeModal(id) {
-    const el = document.getElementById(id);
-
-    if (el) {
-        el.style.display = "none";
-    }
+    document.getElementById(id).style.display = "none";
 }
 
 
 /* =========================================================
-   PAGE
+   날짜
 ========================================================= */
 
-function hideAllPages() {
+function formatDateTime(dateValue) {
 
-    const pages = [
-        "home-page",
-        "world-page",
-        "forum-page",
-        "chat-page",
-        "profile-page",
-        "about-page"
-    ];
+    if (!dateValue) {
+        return "-";
+    }
 
-    pages.forEach(id => {
+    const date = new Date(dateValue);
 
-        const el = document.getElementById(id);
+    if (isNaN(date.getTime())) {
+        return "-";
+    }
 
-        if (el) {
-            el.style.display = "none";
-        }
+    const year = date.getFullYear();
 
-    });
+    const month =
+        String(date.getMonth() + 1)
+            .padStart(2, "0");
 
-}
+    const day =
+        String(date.getDate())
+            .padStart(2, "0");
 
+    const hours = date.getHours();
 
-function showHome() {
+    const minutes =
+        String(date.getMinutes())
+            .padStart(2, "0");
 
-    hideAllPages();
+    const seconds =
+        String(date.getSeconds())
+            .padStart(2, "0");
 
-    document.getElementById("home-page").style.display = "block";
+    const ampm =
+        hours < 12
+            ? "오전"
+            : "오후";
 
-    renderHomePreview();
-}
+    const displayHour =
+        hours % 12 || 12;
 
-
-function showWorld() {
-
-    hideAllPages();
-
-    document.getElementById("world-page").style.display = "block";
-}
-
-
-function showForum() {
-
-    hideAllPages();
-
-    document.getElementById("forum-page").style.display = "block";
-
-    forumSelectedPostId = null;
-
-    document.getElementById("forum-list").style.display = "block";
-    document.getElementById("forum-detail").style.display = "none";
-
-    renderForumList();
-}
-
-
-function showChat() {
-
-    hideAllPages();
-
-    document.getElementById("chat-page").style.display = "block";
-
-    loadMessages();
-}
-
-
-function showProfile() {
-
-    hideAllPages();
-
-    document.getElementById("profile-page").style.display = "block";
-
-    renderProfile();
-}
-
-
-function showAbout() {
-
-    hideAllPages();
-
-    document.getElementById("about-page").style.display = "block";
+    return (
+        `${year}/${month}/${day} ` +
+        `${displayHour}:${minutes}:${seconds} ` +
+        `${ampm}`
+    );
 }
 
 
 /* =========================================================
-   AUTH STATUS
+   배너
 ========================================================= */
 
-async function checkAuthStatus() {
+async function loadBanners() {
 
-    const {
-        data: {
-            session
-        },
-        error: sessionError
-    } = await supabaseClient.auth.getSession();
-
-
-    if (sessionError) {
-
-        console.error(
-            "세션 확인 실패:",
-            sessionError
-        );
-
-        return;
-    }
-
-
-    if (!session) {
-
-        currentUser = null;
-        currentProfile = null;
-        isAdmin = false;
-
-        updateAuthUI();
-
-        return;
-    }
-
-
-    currentUser = session.user;
-
-
-    /*
-       프로필이 없더라도
-       로그인 자체는 유지하도록 처리
-    */
-
-    const {
-        data: profile,
-        error: profileError
-    } = await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .maybeSingle();
-
-
-    if (profileError) {
-
-        console.error(
-            "프로필 조회 실패:",
-            profileError
-        );
-
-        currentProfile = null;
-        isAdmin = false;
-
-    } else {
-
-        currentProfile = profile || null;
-
-        isAdmin =
-            currentProfile?.is_admin === true;
-
-    }
-
-
-    updateAuthUI();
-}
-
-
-/* =========================================================
-   AUTH UI
-========================================================= */
-
-function updateAuthUI() {
-
-    const status =
-        document.getElementById("user-status");
-
-    const loginButton =
-        document.getElementById("login-button");
-
-    const signupButton =
-        document.getElementById("signup-button");
-
-    const logoutButton =
-        document.getElementById("logout-button");
-
-    const sideStatus =
-        document.getElementById("side-status");
-
-    const forumHint =
-        document.getElementById("forum-login-hint");
-
-
-    if (!currentUser) {
-
-        if (status)
-            status.textContent = "로그인되지 않음";
-
-        if (loginButton)
-            loginButton.style.display = "";
-
-        if (signupButton)
-            signupButton.style.display = "";
-
-        if (logoutButton)
-            logoutButton.style.display = "none";
-
-        if (sideStatus)
-            sideStatus.innerHTML =
-                "로그인되지 않음";
-
-        if (forumHint)
-            forumHint.textContent =
-                "로그인 후 작성할 수 있습니다";
-
-        return;
-    }
-
-
-    const nickname =
-        currentProfile?.nickname ||
-        currentProfile?.username ||
-        currentUser.email ||
-        "사용자";
-
-
-    if (status)
-        status.textContent =
-            nickname;
-
-
-    if (loginButton)
-        loginButton.style.display = "none";
-
-
-    if (signupButton)
-        signupButton.style.display = "none";
-
-
-    if (logoutButton)
-        logoutButton.style.display = "";
-
-
-    if (sideStatus) {
-
-        sideStatus.innerHTML =
-            "로그인됨<br>" +
-            "<b>" +
-            escapeHtml(nickname) +
-            "</b>";
-
-        if (isAdmin) {
-
-            sideStatus.innerHTML +=
-                "<br><span style='color:#8a2b2b;'>관리자</span>";
-
-        }
-
-    }
-
-
-    if (forumHint)
-        forumHint.textContent =
-            "로그인 상태입니다";
-}
-
-
-/* =========================================================
-   SIGN UP
-========================================================= */
-
-async function signup() {
-
-    const username =
-        document
-            .getElementById("signup-username")
-            .value
-            .trim();
-
-    const nickname =
-        document
-            .getElementById("signup-nickname")
-            .value
-            .trim();
-
-    const password =
-        document
-            .getElementById("signup-password")
-            .value;
-
-
-    if (!username || !nickname || !password) {
-
-        alert(
-            "아이디, 닉네임, 비밀번호를 모두 입력해 주세요."
-        );
-
-        return;
-    }
-
-
-    if (username.length < 3) {
-
-        alert(
-            "아이디는 3자 이상 입력해 주세요."
-        );
-
-        return;
-    }
-
-
-    if (password.length < 6) {
-
-        alert(
-            "비밀번호는 6자 이상 입력해 주세요."
-        );
-
-        return;
-    }
-
-
-    /*
-       기존 PLACE 구조처럼
-       username을 Supabase Auth 이메일 형식으로 사용
-    */
-
-    const email =
-        username.toLowerCase() +
-        "@place.local";
-
+    const now =
+        new Date().toISOString();
 
     const {
         data,
         error
-    } = await supabaseClient.auth.signUp({
-
-        email,
-        password,
-
-        options: {
-            data: {
-                username,
-                nickname
-            }
-        }
-
-    });
-
+    } =
+        await supabaseClient
+            .from("banners")
+            .select("*")
+            .lte(
+                "starts_at",
+                now
+            )
+            .or(
+                "ends_at.is.null,ends_at.gt." +
+                now
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            )
+            .limit(3);
 
     if (error) {
 
-        alert(
-            "회원가입 실패:\n" +
-            error.message
+        console.error(
+            "배너 불러오기 오류:",
+            error
         );
 
         return;
+    }
+
+    const notice =
+        document.getElementById(
+            "notice"
+        );
+
+    const container =
+        document.getElementById(
+            "banner-container"
+        );
+
+    if (!notice || !container) {
+        return;
+    }
+
+    container.innerHTML = "";
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        notice.style.display =
+            "none";
+
+        return;
+    }
+
+    notice.style.display =
+        "block";
+
+    data.forEach(
+        banner => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.className =
+                "site-banner";
+
+            element.textContent =
+                "📢 " +
+                (banner.message || "");
+
+            container.appendChild(
+                element
+            );
+        }
+    );
+}
+
+
+function subscribeBannerRealtime() {
+
+    if (bannerRealtimeChannel) {
+
+        supabaseClient.removeChannel(
+            bannerRealtimeChannel
+        );
+
+        bannerRealtimeChannel = null;
+    }
+
+    bannerRealtimeChannel =
+        supabaseClient
+            .channel(
+                "public:banners"
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "banners"
+                },
+                async () => {
+
+                    await loadBanners();
+                }
+            )
+            .subscribe();
+}
+
+
+/* =========================================================
+   정지 기간
+========================================================= */
+
+function getBanPeriodText(banType) {
+
+    switch (banType) {
+
+        case "ban":
+            return "1일 정지";
+
+        case "softban":
+            return "7일 정지";
+
+        case "hardban":
+            return "30일 정지";
+
+        case "idban":
+            return "영구 정지";
+
+        case "warning":
+            return "경고";
+
+        default:
+            return "계정 정지";
+    }
+}
+
+
+/* =========================================================
+   ACCOUNT STATUS 화면
+   밴 + 경고 통합
+========================================================= */
+
+function showSuspensionScreen(profile) {
+
+    isSuspended = true;
+
+    document.body.classList.add(
+        "account-suspended"
+    );
+
+
+    /* =====================================================
+       제목
+    ====================================================== */
+
+    const periodText =
+        getBanPeriodText(
+            profile.ban_type
+        );
+
+    document.getElementById(
+        "suspension-title"
+    ).innerText =
+        `회원님의 계정은 ${periodText} 처리되었습니다.`;
+
+
+    /* =====================================================
+       처리 일시
+    ====================================================== */
+
+    document.getElementById(
+        "suspension-date"
+    ).innerText =
+        formatDateTime(
+            profile.ban_started_at
+        );
+
+
+    /* =====================================================
+       처리 사유
+    ====================================================== */
+
+    document.getElementById(
+        "suspension-reason"
+    ).innerText =
+        profile.ban_reason ||
+        "사유 미작성";
+
+
+   /* =====================================================
+   정지 기간 / 경고 안내
+====================================================== */
+
+const untilElement =
+    document.getElementById(
+        "suspension-until"
+    );
+
+
+/*
+ * 영구 정지는 idban일 때만
+ */
+if (
+    profile.ban_type === "idban"
+) {
+
+    untilElement.innerHTML =
+        "계정이 영구적으로 비활성화된 상태입니다.";
+
+}
+
+
+/*
+ * 기간 정지
+ *
+ * ban_until이 존재하면
+ * 실제 정지 종료 시간을 표시
+ */
+else if (
+    profile.ban_until
+) {
+
+    const untilDate =
+        new Date(
+            profile.ban_until
+        );
+
+
+    /*
+     * 날짜가 정상적으로 변환된 경우
+     */
+    if (
+        !isNaN(
+            untilDate.getTime()
+        )
+    ) {
+
+        untilElement.innerHTML =
+            `계정이 비활성화 처리가 되었습니다.<br>` +
+            `<span class="suspension-date">` +
+            `${formatDateTime(untilDate)}` +
+            `</span> 이후로 재활성화가 가능합니다.`;
+
     }
 
 
     /*
-       Auth 계정 생성 후 profiles 생성
-    */
+     * 날짜 데이터가 잘못된 경우
+     */
+    else {
 
-    if (data?.user) {
+        untilElement.innerHTML =
+            "정지 기간 정보를 확인할 수 없습니다.";
 
-        const {
-            error: profileError
-        } = await supabaseClient
-            .from("profiles")
-            .upsert({
+    }
 
-                id: data.user.id,
-                username,
-                nickname
-
-            });
+}
 
 
-        if (profileError) {
+/*
+ * 경고
+ */
+else if (
+    profile.ban_type === "warning"
+) {
 
-            console.error(
-                "프로필 생성 실패:",
-                profileError
+    untilElement.innerHTML =
+        "경고 조치가 적용되었습니다.";
+
+}
+
+
+/*
+ * 예상하지 못한 데이터
+ */
+else {
+
+    untilElement.innerHTML =
+        "정지 기간 정보를 확인할 수 없습니다.";
+
+}
+
+
+/* =====================================================
+   경고 확인 영역
+====================================================== */
+
+const warningConfirmArea =
+    document.getElementById(
+        "warning-confirm-area"
+    );
+
+
+if (warningConfirmArea) {
+
+    if (
+        profile.ban_type === "warning"
+    ) {
+
+        warningConfirmArea.style.display =
+            "block";
+
+
+        const checkbox =
+            document.getElementById(
+                "warningAgreeCheckbox"
             );
 
-            alert(
-                "계정은 생성되었지만 프로필 생성에 실패했습니다.\n\n" +
-                profileError.message
+
+        const button =
+            document.getElementById(
+                "reactivateBtn"
             );
 
-            return;
+
+        if (checkbox) {
+
+            checkbox.checked =
+                false;
+
+        }
+
+
+        if (button) {
+
+            button.disabled =
+                true;
+
         }
 
     }
 
+    else {
 
-    closeModal("signupModal");
-
-    alert(
-        "PLACE에 가입되었습니다!"
-    );
-
-
-    await checkAuthStatus();
-
-    showHome();
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function login() {
-
-    const username =
-        document
-            .getElementById("login-username")
-            .value
-            .trim();
-
-    const password =
-        document
-            .getElementById("login-password")
-            .value;
-
-
-    if (!username || !password) {
-
-        alert(
-            "아이디와 비밀번호를 입력해 주세요."
-        );
-
-        return;
-    }
-
-
-    const email =
-        username.toLowerCase() +
-        "@place.local";
-
-
-    const {
-        error
-    } = await supabaseClient.auth.signInWithPassword({
-
-        email,
-        password
-
-    });
-
-
-    if (error) {
-
-        alert(
-            "로그인 실패:\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    closeModal("loginModal");
-
-
-    document.getElementById(
-        "login-username"
-    ).value = "";
-
-    document.getElementById(
-        "login-password"
-    ).value = "";
-
-
-    await checkAuthStatus();
-
-    showHome();
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-async function logout() {
-
-    const {
-        error
-    } = await supabaseClient.auth.signOut();
-
-
-    if (error) {
-
-        alert(
-            "로그아웃 실패:\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    currentUser = null;
-    currentProfile = null;
-    isAdmin = false;
-
-
-    updateAuthUI();
-
-    showHome();
-}
-
-
-/* =========================================================
-   FORUM COMPOSER
-========================================================= */
-
-function forumOpenComposer() {
-
-    if (!currentUser) {
-
-        alert(
-            "게시글을 작성하려면 로그인해 주세요."
-        );
-
-        openModal("loginModal");
-
-        return;
-    }
-
-
-    const composer =
-        document.getElementById(
-            "forum-composer"
-        );
-
-
-    if (!composer) {
-        return;
-    }
-
-
-    composer.style.display = "block";
-
-
-    const title =
-        document.getElementById(
-            "forum-title"
-        );
-
-
-    if (title) {
-        title.focus();
-    }
-
-}
-
-
-function closeForumComposer() {
-
-    const composer =
-        document.getElementById(
-            "forum-composer"
-        );
-
-
-    if (composer) {
-
-        composer.style.display =
+        warningConfirmArea.style.display =
             "none";
 
     }
@@ -1921,2042 +1945,2539 @@ function closeForumComposer() {
 }
 
 
+    /* =====================================================
+       채팅 잠금
+    ====================================================== */
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    const sendButton =
+        document.getElementById(
+            "sendButton"
+        );
+
+    const channelSelect =
+        document.getElementById(
+            "channelSelect"
+        );
+
+    const whisperTargetInput =
+        document.getElementById(
+            "whisperTargetInput"
+        );
+
+    if (messageInput) {
+
+        messageInput.disabled =
+            true;
+
+        messageInput.placeholder =
+            "현재 계정이 정지되어 채팅을 이용할 수 없습니다.";
+    }
+
+    if (sendButton) {
+        sendButton.disabled = true;
+    }
+
+    if (channelSelect) {
+        channelSelect.disabled = true;
+    }
+
+    if (whisperTargetInput) {
+        whisperTargetInput.disabled = true;
+    }
+}
+
+
+function hideSuspensionScreen() {
+
+    isSuspended = false;
+
+    document.body.classList.remove(
+        "account-suspended"
+    );
+
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    const sendButton =
+        document.getElementById(
+            "sendButton"
+        );
+
+    const channelSelect =
+        document.getElementById(
+            "channelSelect"
+        );
+
+    const whisperTargetInput =
+        document.getElementById(
+            "whisperTargetInput"
+        );
+
+    if (messageInput) {
+        messageInput.disabled = false;
+    }
+
+    if (sendButton) {
+        sendButton.disabled = false;
+    }
+
+    if (channelSelect) {
+        channelSelect.disabled = false;
+    }
+
+    if (whisperTargetInput) {
+        whisperTargetInput.disabled = false;
+    }
+
+
+    const warningConfirmArea =
+        document.getElementById(
+            "warning-confirm-area"
+        );
+
+    if (warningConfirmArea) {
+        warningConfirmArea.style.display =
+            "none";
+    }
+}
+
+
 /* =========================================================
-   CREATE FORUM POST
+   입력 검사
 ========================================================= */
 
-async function createForumPost() {
+function isValidUsername(username) {
+
+    return /^[a-zA-Z0-9_]+$/.test(
+        username
+    );
+}
+
+
+function isValidNickname(nickname) {
+
+    if (
+        nickname.length < 2 ||
+        nickname.length > 16
+    ) {
+
+        return {
+            valid: false,
+            msg:
+                "닉네임은 2글자 이상 16글자 이하이어야 합니다."
+        };
+    }
+
+    if (/\s{3,}/.test(nickname)) {
+
+        return {
+            valid: false,
+            msg:
+                "공백은 연속해서 최대 2개까지만 사용할 수 있습니다."
+        };
+    }
+
+    return {
+        valid: true
+    };
+}
+
+
+/* =========================================================
+   채널
+========================================================= */
+
+function handleChannelChange() {
+
+    if (isSuspended) {
+        return;
+    }
+
+    const channel =
+        document.getElementById(
+            "channelSelect"
+        ).value;
+
+    const whisperInput =
+        document.getElementById(
+            "whisperTargetInput"
+        );
+
+    whisperInput.style.display =
+        channel === "whisper"
+            ? "inline-block"
+            : "none";
+}
+
+
+function checkInputPermission() {
+
+    if (isSuspended) {
+        return;
+    }
+
+    if (
+        !currentUser ||
+        !currentProfile
+    ) {
+
+        alert(
+            "로그인이 필요한 기능입니다."
+        );
+
+        document
+            .getElementById("messageInput")
+            .blur();
+
+        openModal(
+            "loginModal"
+        );
+    }
+}
+
+
+/* =========================================================
+   회원가입
+========================================================= */
+
+async function handleSignup() {
+
+    const username =
+        document
+            .getElementById("signupUsername")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const nickname =
+        document
+            .getElementById("signupNickname")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("signupPassword")
+            .value;
+
+    const passwordConfirm =
+        document
+            .getElementById("signupPasswordConfirm")
+            .value;
+
+    if (
+        !username ||
+        !nickname ||
+        !password
+    ) {
+
+        return alert(
+            "모든 항목을 입력해 주세요."
+        );
+    }
+
+    if (!isValidUsername(username)) {
+
+        return alert(
+            "아이디는 영문, 숫자, 언더바(_)만 사용할 수 있습니다."
+        );
+    }
+
+    const nickCheck =
+        isValidNickname(
+            nickname
+        );
+
+    if (!nickCheck.valid) {
+        return alert(nickCheck.msg);
+    }
+
+    if (
+        password !==
+        passwordConfirm
+    ) {
+
+        return alert(
+            "비밀번호가 일치하지 않습니다."
+        );
+    }
+
+    if (password.length < 6) {
+
+        return alert(
+            "비밀번호는 최소 6자리 이상이어야 합니다."
+        );
+    }
+
+    const fakeEmail =
+        username +
+        "@place.local";
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signUp({
+            email: fakeEmail,
+            password: password,
+
+            options: {
+                data: {
+                    username: username,
+                    nickname: nickname
+                }
+            }
+        });
+
+    if (error) {
+
+        return alert(
+            "가입 실패: " +
+            error.message
+        );
+    }
+
+    if (data.user) {
+
+        alert(
+            "🎉 회원가입이 완료되었습니다! 로그인해 주세요."
+        );
+
+        closeModal(
+            "signupModal"
+        );
+
+        document.getElementById(
+            "signupUsername"
+        ).value = "";
+
+        document.getElementById(
+            "signupNickname"
+        ).value = "";
+
+        document.getElementById(
+            "signupPassword"
+        ).value = "";
+
+        document.getElementById(
+            "signupPasswordConfirm"
+        ).value = "";
+    }
+}
+
+
+/* =========================================================
+   로그인
+========================================================= */
+
+async function handleLogin() {
+
+    const username =
+        document
+            .getElementById("loginUsername")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+    if (!username || !password) {
+        return;
+    }
+
+    const fakeEmail =
+        username +
+        "@place.local";
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signInWithPassword({
+            email: fakeEmail,
+            password: password
+        });
+
+    if (error) {
+
+        alert(
+            "로그인 실패: 아이디 또는 비밀번호를 확인해 주세요."
+        );
+
+    } else {
+
+        closeModal(
+            "loginModal"
+        );
+
+        await checkAuthStatus();
+        await updatePresenceIdentity();
+    }
+}
+
+
+/* =========================================================
+   로그아웃
+========================================================= */
+
+async function handleLogout() {
+
+    await supabaseClient.auth.signOut();
+
+    currentUser = null;
+    currentProfile = null;
+    isAdmin = false;
+
+    closeModal("profileModal");
+
+    await updatePresenceIdentity();
+    await checkAuthStatus();
+}
+
+
+/* =========================================================
+   인증 상태
+========================================================= */
+
+function updateCommunityGreeting(){
+    const el=document.getElementById("community-greeting");
+    if(!el) return;
+    if(currentUser && currentProfile && currentProfile.nickname){
+        el.textContent="안녕하세요, "+currentProfile.nickname+"님!";
+        el.style.display="block";
+    }else{
+        el.style.display="none";
+    }
+}
+
+async function checkAuthStatus() {
+
+    const {
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth.getSession();
+
+    const usernameInput =
+        document.getElementById(
+            "usernameInput"
+        );
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    if (session) {
+
+        currentUser =
+            session.user;
+
+        const {
+            data: profile,
+            error
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+                .single();
+
+        if (
+            error ||
+            !profile
+        ) {
+
+            console.error(
+                "프로필 불러오기 실패:",
+                error
+            );
+
+            return;
+        }
+
+        currentProfile =
+            profile;
+
+        updateCommunityGreeting();
+
+        document.getElementById(
+            "user-info"
+        ).innerText =
+            "👤 " +
+            profile.nickname +
+            "님";
+
+        usernameInput.value =
+            profile.nickname;
+
+        isAdmin =
+            profile.is_admin === true;
+
+        document.getElementById(
+            "login-btn"
+        ).style.display =
+            "none";
+
+        document.getElementById(
+            "signup-btn"
+        ).style.display =
+            "none";
+
+        document.getElementById(
+            "logout-btn"
+        ).style.display =
+            "inline-block";
+
+        const adminMenu =
+            document.getElementById(
+                "admin-menu"
+            );
+
+        if (adminMenu) {
+
+            adminMenu.style.display =
+                isAdmin
+                    ? "inline-block"
+                    : "none";
+        }
+
+        setupAdminChannel();
+
+        await subscribeToMyProfile();
+
+        const banned =
+            await checkBanStatus(
+                profile
+            );
+
+        /*
+         * 정지 / 경고 계정은 온라인 Presence에서 제외
+         */
+        if (banned) {
+
+            await updatePresenceIdentity();
+
+            return;
+        }
+
+        hideSuspensionScreen();
+
+        /*
+         * 정상 계정은 온라인 Presence 등록
+         */
+        await updatePresenceIdentity();
+
+        messageInput.placeholder =
+            "메시지를 입력하세요";
+
+    } else {
+
+        currentUser = null;
+        currentProfile = null;
+        isAdmin = false;
+        updateCommunityGreeting();
+
+        hideSuspensionScreen();
+
+        /*
+         * 로그아웃 / 비로그인 상태에서는
+         * 게스트 Presence를 다시 등록
+         */
+        await updatePresenceIdentity();
+
+        document.getElementById(
+            "user-info"
+        ).innerText =
+            "로그인 필요";
+
+        document.getElementById(
+            "login-btn"
+        ).style.display =
+            "inline-block";
+
+        document.getElementById(
+            "signup-btn"
+        ).style.display =
+            "inline-block";
+
+        document.getElementById(
+            "logout-btn"
+        ).style.display =
+            "none";
+
+        const adminMenu =
+            document.getElementById(
+                "admin-menu"
+            );
+
+        if (adminMenu) {
+
+            adminMenu.style.display =
+                "none";
+        }
+
+        usernameInput.value =
+            "Guest";
+
+        messageInput.placeholder =
+            "로그인 후 채팅을 입력할 수 있습니다.";
+
+        removeAdminChannel();
+
+        removeProfileRealtime();
+    }
+}
+
+
+/* =========================================================
+   관리자 채널
+========================================================= */
+
+function setupAdminChannel() {
+
+    const channelSelect =
+        document.getElementById(
+            "channelSelect"
+        );
+
+    let shoutOption =
+        channelSelect.querySelector(
+            "option[value='shout']"
+        );
+
+    if (isAdmin) {
+
+        if (!shoutOption) {
+
+            shoutOption =
+                document.createElement(
+                    "option"
+                );
+
+            shoutOption.value =
+                "shout";
+
+            shoutOption.innerText =
+                "확성기";
+
+            channelSelect.appendChild(
+                shoutOption
+            );
+        }
+
+    } else {
+
+        if (shoutOption) {
+            shoutOption.remove();
+        }
+
+        if (
+            channelSelect.value ===
+            "shout"
+        ) {
+
+            channelSelect.value =
+                "all";
+        }
+    }
+}
+
+
+function removeAdminChannel() {
+
+    const shoutOption =
+        document.querySelector(
+            "#channelSelect option[value='shout']"
+        );
+
+    if (shoutOption) {
+        shoutOption.remove();
+    }
+}
+
+
+/* =========================================================
+   밴 / 경고 상태 확인
+========================================================= */
+
+async function checkBanStatus(profile) {
+
+    if (!profile.ban_type) {
+
+        hideSuspensionScreen();
+
+        return false;
+    }
+
+    const now =
+        new Date();
+
 
     /*
-       가장 중요한 부분
+     * 기간이 있는 제재의 만료 처리
+     */
 
-       currentProfile을 요구하지 않습니다.
-       Supabase Auth의 currentUser만 있으면
-       게시글 INSERT를 시도합니다.
-    */
+    if (profile.ban_until) {
+
+        const banUntil =
+            new Date(
+                profile.ban_until
+            );
+
+        if (
+            now >= banUntil
+        ) {
+
+            const {
+                error
+            } =
+                await supabaseClient.rpc(
+                    "admin_unban_self_if_expired"
+                );
+
+            if (!error) {
+
+                currentProfile.ban_type = null;
+                currentProfile.ban_until = null;
+                currentProfile.ban_reason = null;
+                currentProfile.ban_started_at = null;
+
+                hideSuspensionScreen();
+
+                return false;
+            }
+        }
+    }
+
+
+    /*
+     * 일반 정지
+     */
+
+    if (
+        profile.ban_type === "idban" ||
+        profile.ban_type === "hardban" ||
+        profile.ban_type === "softban" ||
+        profile.ban_type === "ban"
+    ) {
+
+        showSuspensionScreen(
+            profile
+        );
+
+        return true;
+    }
+
+
+    /*
+     * 경고
+     */
+
+    if (
+        profile.ban_type === "warning"
+    ) {
+
+        showSuspensionScreen(
+            profile
+        );
+
+        return true;
+    }
+
+    return false;
+}
+
+
+/* =========================================================
+   경고 확인 버튼
+========================================================= */
+
+function toggleReactivateBtn() {
+
+    const agree =
+        document.getElementById(
+            "warningAgreeCheckbox"
+        ).checked;
+
+    document.getElementById(
+        "reactivateBtn"
+    ).disabled =
+        !agree;
+}
+
+
+async function handleReactivateAccount() {
+
+    if (!currentUser) {
+        return;
+    }
+
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "reactivate_my_warning"
+        );
+
+    if (error) {
+
+        alert(
+            "재활성화 오류: " +
+            error.message
+        );
+
+        return;
+    }
+
+
+    /*
+     * 로컬 상태 초기화
+     */
+
+    if (currentProfile) {
+
+        currentProfile.ban_type =
+            null;
+
+        currentProfile.ban_until =
+            null;
+
+        currentProfile.ban_reason =
+            null;
+
+        currentProfile.ban_started_at =
+            null;
+    }
+
+
+    document.getElementById(
+        "warningAgreeCheckbox"
+    ).checked =
+        false;
+
+    document.getElementById(
+        "reactivateBtn"
+    ).disabled =
+        true;
+
+
+    hideSuspensionScreen();
+
+    /*
+     * 경고 해제 후 즉시 온라인 Presence 갱신
+     */
+    await updatePresenceIdentity();
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    messageInput.placeholder =
+        "메시지를 입력하세요";
+}
+
+
+/* =========================================================
+   프로필 Realtime
+========================================================= */
+
+async function subscribeToMyProfile() {
+
+    removeProfileRealtime();
+
+    if (!currentUser) {
+        return;
+    }
+
+    profileRealtimeChannel =
+        supabaseClient
+            .channel(
+                "profile-" +
+                currentUser.id
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "profiles",
+                    filter:
+                        "id=eq." +
+                        currentUser.id
+                },
+                async payload => {
+
+                    currentProfile =
+                        payload.new;
+
+                    isAdmin =
+                        currentProfile.is_admin === true;
+
+                    setupAdminChannel();
+
+                    const adminMenu =
+                        document.getElementById(
+                            "admin-menu"
+                        );
+
+                    if (adminMenu) {
+
+                        adminMenu.style.display =
+                            isAdmin
+                                ? "inline-block"
+                                : "none";
+                    }
+
+                    const banned =
+                        await checkBanStatus(
+                            currentProfile
+                        );
+
+                    /*
+                     * 실시간으로 정지된 경우
+                     * 즉시 Presence에서 제거
+                     */
+                    if (banned) {
+
+                        await updatePresenceIdentity();
+
+                        return;
+                    }
+
+                    /*
+                     * 실시간으로 정지가 해제된 경우
+                     * 즉시 Presence에 다시 등록
+                     */
+                    hideSuspensionScreen();
+
+                    await updatePresenceIdentity();
+
+                    document.getElementById(
+                        "user-info"
+                    ).innerText =
+                        "👤 " +
+                        currentProfile.nickname +
+                        "님";
+
+                    document.getElementById(
+                        "usernameInput"
+                    ).value =
+                        currentProfile.nickname;
+                }
+            )
+            .subscribe();
+}
+
+
+function removeProfileRealtime() {
+
+    if (
+        profileRealtimeChannel
+    ) {
+
+        supabaseClient.removeChannel(
+            profileRealtimeChannel
+        );
+
+        profileRealtimeChannel =
+            null;
+    }
+}
+
+
+/* =========================================================
+   프로필
+========================================================= */
+
+function handleMenuProfileClick() {
+
+    if (isSuspended) {
+        return;
+    }
 
     if (!currentUser) {
 
         alert(
-            "게시글을 작성하려면 로그인해 주세요."
+            "로그인이 필요한 기능입니다."
         );
 
-        openModal("loginModal");
+        openModal(
+            "loginModal"
+        );
 
+    } else {
+
+        openProfileModal(
+            currentUser.id
+        );
+    }
+}
+
+
+async function openProfileModal(
+    targetUserId
+) {
+
+    if (!targetUserId) {
         return;
     }
 
+    const {
+        data: profile,
+        error
+    } =
+        await supabaseClient
+            .from("public_profiles")
+            .select("*")
+            .eq(
+                "id",
+                targetUserId
+            )
+            .single();
 
-    const titleInput =
+    if (
+        error ||
+        !profile
+    ) {
+
+        return alert(
+            "프로필 정보를 불러올 수 없습니다."
+        );
+    }
+
+    document.getElementById(
+        "profAccountNumber"
+    ).innerText =
+        profile.account_number ||
+        "-";
+
+    document.getElementById(
+        "profUsername"
+    ).innerText =
+        profile.username;
+
+    document.getElementById(
+        "profNickname"
+    ).innerText =
+        profile.nickname;
+
+    document.getElementById(
+        "profCreatedAt"
+    ).innerText =
+        new Date(
+            profile.created_at
+        ).toLocaleDateString();
+
+    const nickBox =
         document.getElementById(
-            "forum-title"
+            "nicknameChangeBox"
         );
 
-    const bodyInput =
+    nickBox.style.display =
+        (
+            currentUser &&
+            currentUser.id ===
+            profile.id
+        )
+            ? "block"
+            : "none";
+
+    openModal(
+        "profileModal"
+    );
+}
+
+
+/* =========================================================
+   닉네임 변경
+========================================================= */
+
+async function changeNickname() {
+
+    if (
+        !currentUser ||
+        !currentProfile ||
+        isSuspended
+    ) {
+
+        return;
+    }
+
+    const newNick =
         document.getElementById(
-            "forum-body"
+            "newNicknameInput"
+        ).value.trim();
+
+    if (!newNick) {
+
+        return alert(
+            "새 닉네임을 입력하세요."
+        );
+    }
+
+    const nickCheck =
+        isValidNickname(
+            newNick
         );
 
+    if (!nickCheck.valid) {
+        return alert(nickCheck.msg);
+    }
 
-    if (!titleInput || !bodyInput) {
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "change_my_nickname",
+            {
+                new_nickname:
+                    newNick
+            }
+        );
+
+    if (error) {
 
         alert(
-            "게시글 입력창을 찾을 수 없습니다."
+            "닉네임 변경 실패: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            "🎉 닉네임이 성공적으로 변경되었습니다!"
+        );
+
+        document.getElementById(
+            "newNicknameInput"
+        ).value =
+            "";
+
+        closeModal(
+            "profileModal"
+        );
+
+        await checkAuthStatus();
+    }
+}
+
+
+/* =========================================================
+   관리자 명령어
+========================================================= */
+
+async function handleAdminCommand(
+    fullText
+) {
+
+    if (!isAdmin) {
+        return false;
+    }
+
+    const parts =
+        fullText
+            .trim()
+            .split(/\s+/);
+
+    const command =
+        parts[0];
+
+    const targetUser =
+        parts[1];
+
+    const reason =
+        parts
+            .slice(2)
+            .join(" ") ||
+        "사유 미작성";
+
+    const now =
+        new Date();
+
+    switch (command) {
+
+        case "/idban":
+
+            await updateBan(
+                targetUser,
+                "idban",
+                null,
+                reason
+            );
+
+            break;
+
+
+        case "/hardban":
+
+            await updateBan(
+                targetUser,
+                "hardban",
+                new Date(
+                    now.getTime() +
+                    30 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/softban":
+
+            await updateBan(
+                targetUser,
+                "softban",
+                new Date(
+                    now.getTime() +
+                    7 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/ban":
+
+            await updateBan(
+                targetUser,
+                "ban",
+                new Date(
+                    now.getTime() +
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/warning":
+
+            await updateBan(
+                targetUser,
+                "warning",
+                null,
+                reason
+            );
+
+            break;
+
+
+        case "/unban":
+
+            await unbanUser(
+                targetUser
+            );
+
+            break;
+
+
+        case "/chatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    6 *
+                    60 *
+                    60 *
+                    1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/softchatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    3 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/hardchatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    7 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/0chatlock":
+
+            await updateChatlock(
+                targetUser,
+                new Date(
+                    now.getTime() +
+                    365 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                ),
+                reason
+            );
+
+            break;
+
+
+        case "/cleanchat":
+
+            await cleanAllChatSoft();
+
+            break;
+
+
+        default:
+
+            return false;
+    }
+
+    return true;
+}
+
+
+/* =========================================================
+   관리자 밴
+========================================================= */
+
+async function updateBan(
+    targetUsername,
+    banType,
+    banUntil,
+    reason
+) {
+
+    if (!targetUsername) {
+
+        return alert(
+            "대상 아이디를 입력하세요."
+        );
+    }
+
+    const {
+        data: targetId,
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_set_ban",
+            {
+                target_username:
+                    targetUsername
+                        .toLowerCase(),
+
+                new_ban_type:
+                    banType,
+
+                new_ban_until:
+                    banUntil
+                        ? banUntil.toISOString()
+                        : null,
+
+                new_ban_reason:
+                    reason || "사유 미작성"
+            }
+        );
+
+    if (error) {
+
+        alert(
+            "제재 처리 실패: " +
+            error.message
         );
 
         return;
     }
 
 
-    const title =
-        titleInput.value.trim();
+    let periodText =
+        "경고";
 
-    const body =
-        bodyInput.value.trim();
+    if (banType === "ban") {
+        periodText = "1일 정지";
+    }
+
+    if (banType === "softban") {
+        periodText = "7일 정지";
+    }
+
+    if (banType === "hardban") {
+        periodText = "30일 정지";
+    }
+
+    if (banType === "idban") {
+        periodText = "영구 정지";
+    }
 
 
-    if (!title) {
+    alert(
+        `🚨 [${targetUsername}] 유저에게 ` +
+        `[${periodText}] 제재를 적용했습니다.`
+    );
 
-        alert(
-            "제목을 입력해 주세요."
+
+    if (
+        currentUser &&
+        targetId === currentUser.id
+    ) {
+
+        await checkAuthStatus();
+    }
+}
+
+
+/* =========================================================
+   밴 해제
+========================================================= */
+
+async function unbanUser(
+    targetUsername
+) {
+
+    if (!targetUsername) {
+
+        return alert(
+            "사용법: /unban 아이디"
+        );
+    }
+
+    const {
+        data: targetId,
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_unban",
+            {
+                target_username:
+                    targetUsername
+                        .toLowerCase()
+            }
         );
 
-        titleInput.focus();
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "밴 해제 실패: " +
+            error.message
+        );
 
         return;
     }
 
+    alert(
+        `🔓 [${targetUsername}] 유저의 밴을 해제했습니다.`
+    );
 
-    if (!body) {
+    if (
+        currentUser &&
+        targetId === currentUser.id
+    ) {
 
-        alert(
-            "내용을 입력해 주세요."
+        await checkAuthStatus();
+    }
+}
+
+
+/* =========================================================
+   채팅 잠금
+========================================================= */
+
+async function updateChatlock(
+    targetUsername,
+    lockUntil,
+    reason
+) {
+
+    if (!targetUsername) {
+
+        return alert(
+            "대상 아이디를 입력하세요."
         );
-
-        bodyInput.focus();
-
-        return;
     }
 
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_set_chatlock",
+            {
+                target_username:
+                    targetUsername
+                        .toLowerCase(),
 
-    if (title.length > 80) {
+                new_until:
+                    lockUntil.toISOString(),
 
-        alert(
-            "제목은 80자 이하로 입력해 주세요."
+                new_reason:
+                    reason || "사유 미작성"
+            }
         );
 
-        return;
-    }
-
-
-    if (body.length > 4000) {
+    if (error) {
 
         alert(
-            "내용은 4000자 이하로 입력해 주세요."
+            "채팅 정지 실패: " +
+            error.message
         );
 
-        return;
+    } else {
+
+        alert(
+            `🤐 [${targetUsername}] 유저에게 ` +
+            `채팅 정지를 적용했습니다.`
+        );
     }
+}
 
 
-    /*
-       실제 Supabase INSERT
+/* =========================================================
+   채팅 청소
+========================================================= */
 
-       profiles가 없어도
-       Auth 사용자 ID만 있으면
-       INSERT 요청을 보냅니다.
-    */
+async function cleanAllChatSoft() {
+
+    const {
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_clean_chat"
+        );
+
+    if (error) {
+
+        alert(
+            "채팅 청소 실패: " +
+            error.message
+        );
+
+    } else {
+
+        alert(
+            "🧹 모든 채팅 화면을 소프트 청소했습니다. " +
+            "(DB 기록은 보존됩니다)"
+        );
+    }
+}
+
+
+/* =========================================================
+   채팅 불러오기
+========================================================= */
+
+async function loadMessages() {
 
     const {
         data,
         error
     } = await supabaseClient
-        .from("forum_posts")
-        .insert({
-
-            author_id: currentUser.id,
-            title: title,
-            body: body
-
+        .from("chats")
+        .select("*")
+        .order("id", {
+            ascending: false
         })
-        .select("id")
-        .single();
-
+        .limit(100);
 
     if (error) {
 
         console.error(
-            "forum_posts INSERT ERROR:",
+            "채팅 불러오기 오류:",
             error
-        );
-
-        alert(
-            "게시글 작성 실패\n\n" +
-            "오류 코드: " +
-            (error.code || "없음") +
-            "\n\n" +
-            error.message
         );
 
         return;
     }
 
-
-    console.log(
-        "게시글 등록 성공:",
-        data
-    );
-
-
-    titleInput.value = "";
-    bodyInput.value = "";
-
-
-    closeForumComposer();
-
-
-    await renderForumList();
-
-
-    alert(
-        "게시글이 등록되었습니다!"
-    );
-}
-
-
-/* =========================================================
-   FORUM FETCH
-========================================================= */
-
-async function forumFetchPosts() {
-
-    /*
-       profiles 관계를 직접 JOIN하지 않습니다.
-
-       관계 설정 문제 때문에
-       게시글 전체가 로딩되지 않는 것을 방지합니다.
-    */
-
-    const {
-        data: posts,
-        error
-    } = await supabaseClient
-        .from("forum_posts")
-        .select(
-            "id,author_id,title,body,pinned,created_at"
-        )
-        .order(
-            "pinned",
-            {
-                ascending: false
-            }
-        )
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
+    const messagesContainer =
+        document.getElementById(
+            "messages"
         );
 
+    if (!messagesContainer) {
+        return;
+    }
 
-    if (error) {
+    const messages =
+        (data || []).reverse();
 
-        console.error(
-            "게시글 불러오기 실패:",
-            error
-        );
+    messagesContainer.innerHTML = "";
 
-        const list =
-            document.getElementById(
-                "forum-list"
-            );
+    let lastClearedIndex = -1;
 
-        if (list) {
+    messages.forEach(
+        (message, index) => {
 
-            list.innerHTML =
-                "<div class='forum-empty'>" +
-                "게시판을 불러오지 못했습니다<br><br>" +
-                escapeHtml(error.message) +
-                "</div>";
+            if (
+                message.message ===
+                    "__CHAT_CLEARED__" &&
+                message.username ===
+                    "SYSTEM"
+            ) {
 
+                lastClearedIndex =
+                    index;
+            }
         }
+    );
 
-        return [];
-
-    }
-
-
-    const result =
-        posts || [];
-
-
-    if (!result.length) {
-        return [];
-    }
-
-
-    /*
-       작성자 ID 목록
-    */
-
-    const authorIds = [
-        ...new Set(
-            result
-                .map(post => post.author_id)
-                .filter(Boolean)
-        )
-    ];
-
-
-    let profiles = [];
-
-
-    if (authorIds.length) {
-
-        const {
-            data: profileData,
-            error: profileError
-        } = await supabaseClient
-            .from("profiles")
-            .select(
-                "id,username,nickname"
+    const visibleMessages =
+        lastClearedIndex >= 0
+            ? messages.slice(
+                lastClearedIndex + 1
             )
-            .in(
-                "id",
-                authorIds
+            : messages;
+
+    visibleMessages.forEach(
+        message => {
+
+            processAndAppendMessage(
+                message
             );
-
-
-        if (profileError) {
-
-            console.error(
-                "작성자 프로필 조회 실패:",
-                profileError
-            );
-
-        } else {
-
-            profiles =
-                profileData || [];
-
         }
-
-    }
-
-
-    const profileMap =
-        new Map(
-            profiles.map(
-                profile => [
-                    profile.id,
-                    profile
-                ]
-            )
-        );
-
-
-    return result.map(post => {
-
-        const profile =
-            profileMap.get(
-                post.author_id
-            );
-
-
-        return {
-
-            ...post,
-
-            author:
-                profile?.nickname ||
-                profile?.username ||
-                "알 수 없는 사용자"
-
-        };
-
-    });
-
-}
-
-
-/* =========================================================
-   FORUM LIST
-========================================================= */
-
-async function renderForumList() {
-
-    const list =
-        document.getElementById(
-            "forum-list"
-        );
-
-    const detail =
-        document.getElementById(
-            "forum-detail"
-        );
-
-
-    if (!list) {
-        return;
-    }
-
-
-    if (detail) {
-        detail.style.display = "none";
-    }
-
-
-    list.style.display = "block";
-
-    list.innerHTML =
-        "<div class='forum-empty'>" +
-        "게시글을 불러오는 중..." +
-        "</div>";
-
-
-    let posts =
-        await forumFetchPosts();
-
-
-    const sort =
-        document.getElementById(
-            "forum-sort"
-        )?.value || "latest";
-
-
-    if (sort === "oldest") {
-
-        posts.sort(
-            (a,b) =>
-                new Date(a.created_at) -
-                new Date(b.created_at)
-        );
-
-    }
-
-
-    if (sort === "popular") {
-
-        /*
-           현재는 최신순과 동일하게 유지
-           반응 수 집계 기능은 아래쪽에서 처리
-        */
-
-        posts.sort(
-            (a,b) =>
-                new Date(b.created_at) -
-                new Date(a.created_at)
-        );
-
-    }
-
-
-    if (!posts.length) {
-
-        list.innerHTML =
-            "<div class='forum-empty'>" +
-            "아직 게시글이 없습니다" +
-            "</div>";
-
-        return;
-    }
-
-
-    list.innerHTML =
-        posts
-            .map(post => {
-
-                const date =
-                    formatForumDate(
-                        post.created_at
-                    );
-
-
-                return `
-                    <div
-                        class="forum-row ${post.pinned ? "forum-pinned" : ""}"
-                        onclick="openForumPost('${post.id}')">
-
-                        <div class="forum-main">
-
-                            <div class="forum-title">
-
-                                ${
-                                    post.pinned
-                                    ? "<span class='forum-pin-icon'></span>"
-                                    : ""
-                                }
-
-                                ${escapeHtml(post.title)}
-
-                            </div>
-
-                            <div class="forum-meta">
-
-                                ${escapeHtml(post.author)}
-
-                            </div>
-
-                        </div>
-
-                        <div class="forum-count">
-                            —
-                        </div>
-
-                        <div class="forum-count">
-                            —
-                        </div>
-
-                        <div class="forum-time">
-                            ${date}
-                        </div>
-
-                    </div>
-                `;
-
-            })
-            .join("");
-
-}
-
-
-/* =========================================================
-   OPEN POST
-========================================================= */
-
-async function openForumPost(postId) {
-
-    forumSelectedPostId =
-        postId;
-
-
-    const list =
-        document.getElementById(
-            "forum-list"
-        );
-
-    const detail =
-        document.getElementById(
-            "forum-detail"
-        );
-
-
-    if (!detail) {
-        return;
-    }
-
-
-    if (list) {
-        list.style.display = "none";
-    }
-
-
-    detail.style.display = "block";
-
-
-    await renderForumDetail(
-        postId
     );
 
+    const systemMessage =
+        document.createElement(
+            "div"
+        );
+
+    systemMessage.className =
+        "message";
+
+    systemMessage.innerHTML =
+        '<span class="message-name">SYSTEM</span> : ' +
+        '채팅 서버 연결 완료';
+
+    messagesContainer.insertBefore(
+        systemMessage,
+        messagesContainer.firstChild
+    );
+
+    messagesContainer.scrollTop =
+        messagesContainer.scrollHeight;
 }
 
 
 /* =========================================================
-   FORUM DETAIL
+   메시지 처리
 ========================================================= */
 
-async function renderForumDetail(postId) {
-
-    const detail =
-        document.getElementById(
-            "forum-detail"
-        );
-
-
-    if (!detail) {
-        return;
-    }
-
-
-    const {
-        data: post,
-        error
-    } = await supabaseClient
-        .from("forum_posts")
-        .select(
-            "id,author_id,title,body,pinned,created_at"
-        )
-        .eq(
-            "id",
-            postId
-        )
-        .maybeSingle();
-
-
-    if (error || !post) {
-
-        detail.innerHTML =
-            "<div class='forum-empty'>" +
-            "게시글을 찾을 수 없습니다" +
-            "</div>";
-
-        return;
-    }
-
-
-    let profile = null;
-
-
-    if (post.author_id) {
-
-        const {
-            data
-        } = await supabaseClient
-            .from("profiles")
-            .select(
-                "id,username,nickname"
-            )
-            .eq(
-                "id",
-                post.author_id
-            )
-            .maybeSingle();
-
-        profile = data || null;
-
-    }
-
-
-    const author =
-        profile?.nickname ||
-        profile?.username ||
-        "알 수 없는 사용자";
-
-
-    const {
-        data: comments
-    } = await supabaseClient
-        .from("forum_comments")
-        .select(
-            "id,post_id,author_id,body,pinned,created_at"
-        )
-        .eq(
-            "post_id",
-            postId
-        )
-        .order(
-            "pinned",
-            {
-                ascending: false
-            }
-        )
-        .order(
-            "created_at",
-            {
-                ascending: true
-            }
-        );
-
-
-    const commentList =
-        comments || [];
-
-
-    const authorIds = [
-        ...new Set(
-            commentList
-                .map(comment => comment.author_id)
-                .filter(Boolean)
-        )
-    ];
-
-
-    let commentProfiles = [];
-
-
-    if (authorIds.length) {
-
-        const {
-            data
-        } = await supabaseClient
-            .from("profiles")
-            .select(
-                "id,username,nickname"
-            )
-            .in(
-                "id",
-                authorIds
-            );
-
-        commentProfiles =
-            data || [];
-
-    }
-
-
-    const commentProfileMap =
-        new Map(
-            commentProfiles.map(
-                profile => [
-                    profile.id,
-                    profile
-                ]
-            )
-        );
-
-
-    detail.innerHTML = `
-
-        <div class="forum-detail-head">
-
-            <button
-                type="button"
-                class="forum-back"
-                onclick="backToForumList()">
-
-                ← COMMUNITY
-
-            </button>
-
-        </div>
-
-
-        <div class="forum-article">
-
-            <div class="forum-article-header">
-
-                <div class="forum-article-title">
-
-                    ${
-                        post.pinned
-                        ? "<span class='forum-pin-icon'></span>"
-                        : ""
-                    }
-
-                    ${escapeHtml(post.title)}
-
-                </div>
-
-
-                <div class="forum-article-meta">
-
-                    ${escapeHtml(author)}
-                    ·
-                    ${formatForumDate(post.created_at)}
-
-                </div>
-
-            </div>
-
-
-            <div class="forum-article-body">
-
-                ${escapeHtml(post.body)}
-
-            </div>
-
-
-            <div class="forum-actions">
-
-                ${
-                    currentUser
-                    ? `
-                        <button
-                            type="button"
-                            class="forum-action-btn"
-                            onclick="reportForumPost('${post.id}')">
-                            신고
-                        </button>
-                    `
-                    : ""
-                }
-
-
-                ${
-                    currentUser &&
-                    (
-                        currentUser.id === post.author_id ||
-                        isAdmin
-                    )
-                    ? `
-                        <button
-                            type="button"
-                            class="forum-action-btn"
-                            onclick="deleteForumPost('${post.id}')">
-                            삭제
-                        </button>
-                    `
-                    : ""
-                }
-
-
-                ${
-                    isAdmin
-                    ? `
-                        <button
-                            type="button"
-                            class="forum-action-btn"
-                            onclick="toggleForumPostPin('${post.id}', ${post.pinned})">
-                            ${post.pinned ? "고정 해제" : "게시글 고정"}
-                        </button>
-                    `
-                    : ""
-                }
-
-            </div>
-
-
-            <div class="forum-comments">
-
-                <div class="forum-comments-title">
-                    댓글
-                </div>
-
-
-                ${
-                    commentList.length
-                    ? commentList.map(comment => {
-
-                        const cp =
-                            commentProfileMap.get(
-                                comment.author_id
-                            );
-
-                        const cname =
-                            cp?.nickname ||
-                            cp?.username ||
-                            "알 수 없는 사용자";
-
-
-                        return `
-
-                            <div
-                                class="forum-comment ${
-                                    comment.pinned
-                                    ? "forum-comment-pinned"
-                                    : ""
-                                }">
-
-                                <div class="forum-comment-meta">
-
-                                    ${
-                                        comment.pinned
-                                        ? "<span class='forum-comment-pin'></span>"
-                                        : ""
-                                    }
-
-                                    ${escapeHtml(cname)}
-                                    ·
-                                    ${formatForumDate(comment.created_at)}
-
-                                </div>
-
-
-                                <div class="forum-comment-body">
-
-                                    ${escapeHtml(comment.body)}
-
-                                </div>
-
-
-                                <div class="forum-comment-actions">
-
-                                    ${
-                                        currentUser &&
-                                        (
-                                            currentUser.id === comment.author_id ||
-                                            isAdmin
-                                        )
-                                        ? `
-                                            <button
-                                                type="button"
-                                                class="forum-comment-owner-btn"
-                                                onclick="deleteForumComment('${comment.id}')">
-                                                삭제
-                                            </button>
-                                        `
-                                        : ""
-                                    }
-
-
-                                    ${
-                                        isAdmin
-                                        ? `
-                                            <button
-                                                type="button"
-                                                class="forum-comment-owner-btn"
-                                                onclick="toggleForumCommentPin('${comment.id}', ${comment.pinned})">
-                                                ${
-                                                    comment.pinned
-                                                    ? "고정 해제"
-                                                    : "고정"
-                                                }
-                                            </button>
-                                        `
-                                        : ""
-                                    }
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }).join("")
-                    : `
-                        <div
-                            style="
-                                padding:12px;
-                                text-align:center;
-                                color:#888;
-                            ">
-                            아직 댓글이 없습니다
-                        </div>
-                    `
-                }
-
-
-                ${
-                    currentUser
-                    ? `
-                        <div class="forum-comment-form">
-
-                            <textarea
-                                id="forum-comment-input"
-                                maxlength="1000"
-                                placeholder="댓글을 입력하세요"></textarea>
-
-                            <button
-                                type="button"
-                                class="auth-btn"
-                                onclick="createForumComment('${post.id}')">
-                                등록
-                            </button>
-
-                        </div>
-                    `
-                    : `
-                        <div
-                            style="
-                                padding:8px;
-                                color:#777;
-                                text-align:center;
-                            ">
-                            댓글을 작성하려면 로그인해 주세요
-                        </div>
-                    `
-                }
-
-            </div>
-
-        </div>
-    `;
-}
-
-
-/* =========================================================
-   BACK
-========================================================= */
-
-function backToForumList() {
-
-    forumSelectedPostId =
-        null;
-
-
-    const list =
-        document.getElementById(
-            "forum-list"
-        );
-
-    const detail =
-        document.getElementById(
-            "forum-detail"
-        );
-
-
-    if (list)
-        list.style.display = "block";
-
-
-    if (detail)
-        detail.style.display = "none";
-
-
-    renderForumList();
-}
-    <script>
-
-/* =========================================================
-   CREATE COMMENT
-========================================================= */
-
-async function createForumComment(postId) {
-
-    if (!currentUser) {
-
-        alert("댓글을 작성하려면 로그인해 주세요.");
-
-        openModal("loginModal");
-
-        return;
-    }
-
-
-    const input =
-        document.getElementById(
-            "forum-comment-input"
-        );
-
-
-    if (!input) {
-        return;
-    }
-
-
-    const body =
-        input.value.trim();
-
-
-    if (!body) {
-
-        alert("댓글 내용을 입력해 주세요.");
-
-        input.focus();
-
-        return;
-    }
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("forum_comments")
-        .insert({
-
-            post_id: postId,
-            author_id: currentUser.id,
-            body: body
-
-        });
-
-
-    if (error) {
-
-        console.error(
-            "댓글 작성 실패:",
-            error
-        );
-
-        alert(
-            "댓글 작성 실패\n\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    input.value = "";
-
-    await renderForumDetail(postId);
-}
-
-
-/* =========================================================
-   DELETE POST
-========================================================= */
-
-async function deleteForumPost(postId) {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    const {
-        data: post,
-        error: fetchError
-    } = await supabaseClient
-        .from("forum_posts")
-        .select("id,author_id")
-        .eq("id", postId)
-        .maybeSingle();
-
-
-    if (fetchError || !post) {
-
-        alert("게시글을 찾을 수 없습니다.");
-
-        return;
-    }
-
+function processAndAppendMessage(msg) {
 
     if (
-        currentUser.id !== post.author_id &&
-        !isAdmin
+        msg.message ===
+        "__CHAT_CLEARED__"
     ) {
 
-        alert(
-            "이 게시글을 삭제할 권한이 없습니다."
-        );
-
-        return;
-    }
-
-
-    if (
-        !confirm(
-            "이 게시글을 삭제하시겠습니까?"
-        )
-    ) {
-        return;
-    }
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("forum_posts")
-        .delete()
-        .eq("id", postId);
-
-
-    if (error) {
-
-        console.error(
-            "게시글 삭제 실패:",
-            error
-        );
-
-        alert(
-            "게시글 삭제 실패\n\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    forumSelectedPostId = null;
-
-    const list =
         document.getElementById(
-            "forum-list"
-        );
-
-    const detail =
-        document.getElementById(
-            "forum-detail"
-        );
-
-
-    if (detail)
-        detail.style.display = "none";
-
-
-    if (list)
-        list.style.display = "block";
-
-
-    await renderForumList();
-}
-
-
-/* =========================================================
-   DELETE COMMENT
-========================================================= */
-
-async function deleteForumComment(commentId) {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    const {
-        data: comment,
-        error: fetchError
-    } = await supabaseClient
-        .from("forum_comments")
-        .select(
-            "id,author_id,post_id"
-        )
-        .eq("id", commentId)
-        .maybeSingle();
-
-
-    if (fetchError || !comment) {
-
-        alert(
-            "댓글을 찾을 수 없습니다."
-        );
+            "messages"
+        ).innerHTML =
+            '<div class="message">' +
+            '<span class="message-name">SYSTEM</span> : ' +
+            '채팅창이 청소되었습니다.' +
+            '</div>';
 
         return;
     }
 
+    const channel =
+        msg.channel ||
+        "all";
 
     if (
-        currentUser.id !== comment.author_id &&
-        !isAdmin
+        channel === "all" &&
+        msg.map &&
+        msg.map !== CURRENT_MAP_NAME
     ) {
 
-        alert(
-            "이 댓글을 삭제할 권한이 없습니다."
-        );
-
         return;
     }
 
-
-    if (
-        !confirm(
-            "이 댓글을 삭제하시겠습니까?"
-        )
-    ) {
-        return;
-    }
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("forum_comments")
-        .delete()
-        .eq("id", commentId);
-
-
-    if (error) {
-
-        console.error(
-            "댓글 삭제 실패:",
-            error
-        );
-
-        alert(
-            "댓글 삭제 실패\n\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    await renderForumDetail(
-        comment.post_id
+    appendMessageUI(
+        msg.username,
+        msg.message,
+        msg.user_id,
+        channel,
+        msg.target_username
     );
 }
 
 
 /* =========================================================
-   PIN POST
+   메시지 UI
 ========================================================= */
 
-async function toggleForumPostPin(
-    postId,
-    currentPinned
+function appendMessageUI(
+    name,
+    text,
+    userId,
+    channel,
+    targetUsername
 ) {
 
-    if (!isAdmin) {
-
-        alert(
-            "관리자만 사용할 수 있습니다."
-        );
-
-        return;
-    }
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("forum_posts")
-        .update({
-            pinned: !currentPinned
-        })
-        .eq(
-            "id",
-            postId
-        );
-
-
-    if (error) {
-
-        console.error(
-            "게시글 고정 변경 실패:",
-            error
-        );
-
-        alert(
-            "고정 변경 실패\n\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    await renderForumDetail(
-        postId
-    );
-
-}
-
-
-/* =========================================================
-   PIN COMMENT
-========================================================= */
-
-async function toggleForumCommentPin(
-    commentId,
-    currentPinned
-) {
-
-    if (!isAdmin) {
-
-        alert(
-            "관리자만 사용할 수 있습니다."
-        );
-
-        return;
-    }
-
-
-    const {
-        data: comment,
-        error: fetchError
-    } = await supabaseClient
-        .from("forum_comments")
-        .select(
-            "id,post_id"
-        )
-        .eq(
-            "id",
-            commentId
-        )
-        .maybeSingle();
-
-
-    if (fetchError || !comment) {
-
-        alert(
-            "댓글을 찾을 수 없습니다."
-        );
-
-        return;
-    }
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("forum_comments")
-        .update({
-            pinned: !currentPinned
-        })
-        .eq(
-            "id",
-            commentId
-        );
-
-
-    if (error) {
-
-        console.error(
-            "댓글 고정 변경 실패:",
-            error
-        );
-
-        alert(
-            "댓글 고정 변경 실패\n\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    await renderForumDetail(
-        comment.post_id
-    );
-}
-
-
-/* =========================================================
-   REPORT
-========================================================= */
-
-async function reportForumPost(postId) {
-
-    if (!currentUser) {
-
-        alert(
-            "신고하려면 로그인해 주세요."
-        );
-
-        openModal("loginModal");
-
-        return;
-    }
-
-
-    const reason =
-        prompt(
-            "신고 사유를 입력해 주세요."
-        );
-
-
-    if (reason === null) {
-        return;
-    }
-
-
-    const trimmed =
-        reason.trim();
-
-
-    if (!trimmed) {
-
-        alert(
-            "신고 사유를 입력해 주세요."
-        );
-
-        return;
-    }
-
-
-    const {
-        data: existing,
-        error: existingError
-    } = await supabaseClient
-        .from("reports")
-        .select("id,status")
-        .eq(
-            "reporter_id",
-            currentUser.id
-        )
-        .eq(
-            "target_type",
-            "post"
-        )
-        .eq(
-            "target_id",
-            postId
-        )
-        .in(
-            "status",
-            [
-                "pending",
-                "reviewing"
-            ]
-        );
-
-
-    if (existingError) {
-
-        console.error(
-            "신고 확인 실패:",
-            existingError
-        );
-
-        alert(
-            "신고 처리 중 오류가 발생했습니다.\n\n" +
-            existingError.message
-        );
-
-        return;
-    }
-
-
-    if (existing && existing.length) {
-
-        alert(
-            "이미 처리 중인 신고가 있습니다."
-        );
-
-        return;
-    }
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("reports")
-        .insert({
-
-            reporter_id:
-                currentUser.id,
-
-            target_type:
-                "post",
-
-            target_id:
-                postId,
-
-            reason:
-                trimmed
-
-        });
-
-
-    if (error) {
-
-        console.error(
-            "신고 등록 실패:",
-            error
-        );
-
-        alert(
-            "신고 등록 실패\n\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    alert(
-        "신고가 접수되었습니다."
-    );
-}
-
-
-/* =========================================================
-   REALTIME
-========================================================= */
-
-function subscribeForum() {
-
-    if (forumRealtimeChannel) {
-
-        supabaseClient
-            .removeChannel(
-                forumRealtimeChannel
-            );
-
-    }
-
-
-    forumRealtimeChannel =
-        supabaseClient
-            .channel("place-forum-live")
-
-
-            .on(
-                "postgres_changes",
-                {
-                    event: "*",
-                    schema: "public",
-                    table: "forum_posts"
-                },
-                () => {
-
-                    if (
-                        document.getElementById(
-                            "forum-page"
-                        )?.style.display !== "none"
-                    ) {
-
-                        if (
-                            forumSelectedPostId
-                        ) {
-
-                            renderForumDetail(
-                                forumSelectedPostId
-                            );
-
-                        } else {
-
-                            renderForumList();
-
-                        }
-
-                    }
-
-                }
-            )
-
-
-            .on(
-                "postgres_changes",
-                {
-                    event: "*",
-                    schema: "public",
-                    table: "forum_comments"
-                },
-                () => {
-
-                    if (
-                        forumSelectedPostId
-                    ) {
-
-                        renderForumDetail(
-                            forumSelectedPostId
-                        );
-
-                    }
-
-                }
-            )
-
-
-            .subscribe();
-
-}
-
-
-/* =========================================================
-   HOME PREVIEW
-========================================================= */
-
-async function renderHomePreview() {
-
-    const target =
+    const messages =
         document.getElementById(
-            "home-forum-preview"
+            "messages"
         );
 
-
-    if (!target) {
-        return;
-    }
-
-
-    const posts =
-        await forumFetchPosts();
-
-
-    if (!posts.length) {
-
-        target.innerHTML =
-            "아직 등록된 이야기가 없습니다";
-
-        return;
-    }
-
-
-    target.innerHTML =
-        posts
-            .slice(0, 5)
-            .map(post => `
-
-                <div
-                    style="
-                        padding:6px 3px;
-                        border-bottom:1px dotted #aaa;
-                        cursor:pointer;
-                    "
-                    onclick="
-                        showForum();
-                        openForumPost('${post.id}');
-                    ">
-
-                    ${
-                        post.pinned
-                        ? "<span class='forum-pin-icon'></span>"
-                        : ""
-                    }
-
-                    <b>
-                        ${escapeHtml(post.title)}
-                    </b>
-
-                    <span
-                        style="
-                            float:right;
-                            color:#999;
-                            font-size:10px;
-                        ">
-                        ${formatForumDate(post.created_at)}
-                    </span>
-
-                </div>
-
-            `)
-            .join("");
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-function renderProfile() {
-
-    const target =
-        document.getElementById(
-            "profile-content"
+    const message =
+        document.createElement(
+            "div"
         );
 
+    message.className =
+        "message";
 
-    if (!target) {
-        return;
+    let channelTag =
+        "";
+
+    if (
+        channel === "shout"
+    ) {
+
+        channelTag =
+            '<b class="msg-shout">' +
+            '[📢 확성기]' +
+            '</b> ';
+
+    } else if (
+        channel === "whisper"
+    ) {
+
+        channelTag =
+            `<b class="msg-whisper">` +
+            `[귓속말 ➔ ${escapeHtml(
+                targetUsername || "?"
+            )}]` +
+            `</b> `;
     }
 
+    let nameHtml;
 
-    if (!currentUser) {
+    if (userId) {
 
-        target.innerHTML =
-            "로그인 후 이용할 수 있습니다";
+        nameHtml =
+            `<span class="message-name" ` +
+            `onclick="openProfileModal('${escapeHtml(userId)}')">` +
+            `${escapeHtml(name)}` +
+            `</span>`;
 
-        return;
+    } else {
+
+        nameHtml =
+            `<span class="message-name">` +
+            `${escapeHtml(name)}` +
+            `</span>`;
     }
 
+    message.innerHTML =
+        `${channelTag}${nameHtml} : ${escapeHtml(text)}`;
 
-    const username =
-        currentProfile?.username ||
-        "알 수 없음";
-
-    const nickname =
-        currentProfile?.nickname ||
-        username;
-
-
-    target.innerHTML = `
-
-        <table
-            style="
-                border-collapse:collapse;
-                width:100%;
-            ">
-
-            <tr>
-
-                <td
-                    style="
-                        width:100px;
-                        padding:6px;
-                        border-bottom:1px solid #ccc;
-                    ">
-                    아이디
-                </td>
-
-                <td
-                    style="
-                        padding:6px;
-                        border-bottom:1px solid #ccc;
-                    ">
-                    ${escapeHtml(username)}
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td
-                    style="
-                        padding:6px;
-                        border-bottom:1px solid #ccc;
-                    ">
-                    닉네임
-                </td>
-
-                <td
-                    style="
-                        padding:6px;
-                        border-bottom:1px solid #ccc;
-                    ">
-                    ${escapeHtml(nickname)}
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td
-                    style="
-                        padding:6px;
-                        border-bottom:1px solid #ccc;
-                    ">
-                    권한
-                </td>
-
-                <td
-                    style="
-                        padding:6px;
-                        border-bottom:1px solid #ccc;
-                    ">
-
-                    ${
-                        isAdmin
-                        ? "관리자"
-                        : "일반 사용자"
-                    }
-
-                </td>
-
-            </tr>
-
-        </table>
-
-    `;
-}
-
-
-/* =========================================================
-   SECRET PLACE
-========================================================= */
-
-function findSecretPlace() {
-
-    alert(
-        "아직 발견되지 않은 장소입니다."
+    messages.appendChild(
+        message
     );
 
+    messages.scrollTop =
+        messages.scrollHeight;
+}
+
+
+function escapeHtml(text) {
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
 /* =========================================================
-   CHAT
+   메시지 전송
 ========================================================= */
 
 async function sendMessage() {
 
-    if (!currentUser) {
-
-        alert(
-            "채팅하려면 로그인해 주세요."
-        );
-
-        openModal("loginModal");
-
+    if (isSuspended) {
         return;
     }
 
+    if (
+        !currentUser ||
+        !currentProfile
+    ) {
+
+        alert(
+            "로그인이 필요한 기능입니다."
+        );
+
+        openModal(
+            "loginModal"
+        );
+
+        return;
+    }
 
     const input =
         document.getElementById(
-            "chat-input"
+            "messageInput"
         );
 
+    const channelSelect =
+        document.getElementById(
+            "channelSelect"
+        );
 
-    if (!input) {
-        return;
-    }
+    const whisperTargetInput =
+        document.getElementById(
+            "whisperTargetInput"
+        );
 
-
-    const body =
+    const text =
         input.value.trim();
 
+    const channel =
+        channelSelect.value;
 
-    if (!body) {
+    const targetUsername =
+        whisperTargetInput.value.trim()
+            .toLowerCase();
+
+    if (
+        text === ""
+    ) {
+
         return;
     }
 
+    if (
+        text.startsWith("/")
+    ) {
 
-    /*
-       기존 messages 테이블 구조를
-       사용하는 경우에 맞춘 부분
-    */
+        const executed =
+            await handleAdminCommand(
+                text
+            );
+
+        if (executed) {
+
+            input.value =
+                "";
+
+            return;
+        }
+    }
+
+    if (
+        channel === "whisper" &&
+        !targetUsername
+    ) {
+
+        alert(
+            "귓속말할 상대방의 아이디를 입력해 주세요."
+        );
+
+        return;
+    }
 
     const {
         error
-    } = await supabaseClient
-        .from("messages")
-        .insert({
+    } =
+        await supabaseClient.rpc(
+            "send_chat",
+            {
+                p_message:
+                    text,
 
-            user_id:
-                currentUser.id,
+                p_channel:
+                    channel,
 
-            content:
-                body
+                p_map:
+                    CURRENT_MAP_NAME,
 
-        });
-
+                p_target_username:
+                    channel === "whisper"
+                        ? targetUsername
+                        : null
+            }
+        );
 
     if (error) {
 
-        console.error(
-            "메시지 전송 실패:",
-            error
-        );
-
         alert(
-            "메시지 전송 실패\n\n" +
+            "메시지 전송 실패: " +
             error.message
         );
 
         return;
     }
 
-
-    input.value = "";
-
-    await loadMessages();
-}
-
-
-async function loadMessages() {
-
-    const target =
-        document.getElementById(
-            "chat-messages"
-        );
-
-
-    if (!target) {
-        return;
-    }
-
-
-    const {
-        data,
-        error
-    } = await supabaseClient
-        .from("messages")
-        .select("*")
-        .order(
-            "created_at",
-            {
-                ascending: true
-            }
-        )
-        .limit(100);
-
-
-    if (error) {
-
-        console.error(
-            "채팅 불러오기 실패:",
-            error
-        );
-
-        target.innerHTML =
-            "채팅을 불러오지 못했습니다";
-
-        return;
-    }
-
-
-    target.innerHTML =
-        (data || [])
-            .map(message => `
-
-                <div
-                    style="
-                        margin-bottom:6px;
-                        padding-bottom:5px;
-                        border-bottom:1px dotted #ccc;
-                    ">
-
-                    <b>
-                        ${escapeHtml(
-                            message.username ||
-                            message.nickname ||
-                            "사용자"
-                        )}
-                    </b>
-
-                    :
-                    ${escapeHtml(
-                        message.content || ""
-                    )}
-
-                </div>
-
-            `)
-            .join("");
-
-
-    target.scrollTop =
-        target.scrollHeight;
+    input.value =
+        "";
 }
 
 
 /* =========================================================
-   UTILITY
+   엔터 채팅
 ========================================================= */
 
-function escapeHtml(value) {
-
-    return String(
-        value ?? ""
+document
+    .getElementById(
+        "messageInput"
     )
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    .addEventListener(
+        "keydown",
+        (e) => {
+
+            if (
+                e.key === "Enter"
+            ) {
+
+                sendMessage();
+            }
+        }
+    );
+
+
+/* =========================================================
+   실시간 채팅
+========================================================= */
+
+function subscribeRealtime() {
+
+    if (chatRealtimeChannel) {
+
+        supabaseClient.removeChannel(
+            chatRealtimeChannel
+        );
+
+        chatRealtimeChannel = null;
+    }
+
+    chatRealtimeChannel =
+        supabaseClient
+            .channel(
+                "public:chats"
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "chats"
+                },
+                payload => {
+
+                    if (isSuspended) {
+                        return;
+                    }
+
+                    processAndAppendMessage(
+                        payload.new
+                    );
+                }
+            )
+            .subscribe();
 }
 
 
-function formatForumDate(value) {
+/* =========================================================
+   접속자
+========================================================= */
 
-    if (!value) {
-        return "";
+async function trackPresence() {
+
+    if (presenceChannel) {
+
+        await supabaseClient.removeChannel(
+            presenceChannel
+        );
+
+        presenceChannel = null;
     }
 
+    presenceChannel =
+        supabaseClient.channel(
+            "online-users"
+        );
 
-    const date =
-        new Date(value);
+    presenceChannel.on(
+        "presence",
+        {
+            event: "sync"
+        },
+        () => {
 
+            const state =
+                presenceChannel.presenceState();
 
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
+            const uniqueUsers =
+                new Set();
 
-        return "";
+            Object.values(state)
+                .forEach(
+                    entries => {
 
-    }
+                        entries.forEach(
+                            entry => {
 
+                                if (
+                                    entry.presence_key
+                                ) {
 
-    const y =
-        date.getFullYear();
+                                    uniqueUsers.add(
+                                        entry.presence_key
+                                    );
+                                }
+                            }
+                        );
+                    }
+                );
 
-    const m =
-        String(
-            date.getMonth() + 1
-        ).padStart(2, "0");
+            const count =
+                uniqueUsers.size;
 
-    const d =
-        String(
-            date.getDate()
-        ).padStart(2, "0");
+            const onlineText =
+                document.getElementById(
+                    "side-online-text"
+                );
 
-    const h =
-        String(
-            date.getHours()
-        ).padStart(2, "0");
+            if (onlineText) {
 
-    const min =
-        String(
-            date.getMinutes()
-        ).padStart(2, "0");
+                onlineText.innerText =
+                    count +
+                    " users online";
+            }
+        }
+    );
 
+    await presenceChannel.subscribe(
+        async status => {
 
-    return (
-        y +
-        "-" +
-        m +
-        "-" +
-        d +
-        " " +
-        h +
-        ":" +
-        min
+            if (
+                status ===
+                "SUBSCRIBED"
+            ) {
+
+                await updatePresenceIdentity();
+            }
+        }
     );
 }
 
 
 /* =========================================================
-   START
+   접속자 신원 업데이트
 ========================================================= */
 
-window.addEventListener(
-    "load",
-    async function() {
+async function updatePresenceIdentity() {
 
-        await checkAuthStatus();
+    if (!presenceChannel) {
+        return;
+    }
 
-        await renderHomePreview();
+    /*
+     * 정지 / 경고 계정은 온라인 상태로 등록하지 않음
+     */
+    if (isSuspended) {
 
-        await renderForumList();
+        try {
 
-        subscribeForum();
+            await presenceChannel.untrack();
 
-        showHome();
+        } catch (error) {
 
+            console.error(
+                "Presence 해제 실패:",
+                error
+            );
+        }
+
+        return;
+    }
+
+
+    let presenceKey =
+        sessionStorage.getItem(
+            "place_presence_key"
+        );
+
+    if (!presenceKey) {
+
+        presenceKey =
+            crypto.randomUUID();
+
+        sessionStorage.setItem(
+            "place_presence_key",
+            presenceKey
+        );
+    }
+
+
+    /*
+     * 로그인한 일반 계정은
+     * 계정 ID를 Presence 키로 사용
+     */
+    if (currentUser) {
+
+        presenceKey =
+            "user:" +
+            currentUser.id;
+    }
+
+
+    try {
+
+        await presenceChannel.track({
+
+            presence_key:
+                presenceKey,
+
+            online_at:
+                new Date().toISOString()
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Presence 업데이트 실패:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   Auth 상태 변화
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+    async (event, session) => {
+
+        if (
+            event === "SIGNED_IN" ||
+            event === "SIGNED_OUT" ||
+            event === "TOKEN_REFRESHED"
+        ) {
+
+            await checkAuthStatus();
+            await updatePresenceIdentity();
+        }
     }
 );
 
 
 /* =========================================================
-   AUTH STATE CHANGE
+   시작
 ========================================================= */
 
-supabaseClient.auth.onAuthStateChange(
-    async function(event, session) {
+window.onload = async () => {
 
-        currentUser =
-            session?.user || null;
+    await checkAuthStatus();
+    await renderForumList();
+    subscribeForum();
+
+    await trackPresence();
+
+    await loadMessages();
+
+    await loadBanners();
+
+    subscribeRealtime();
+
+    subscribeBannerRealtime();
+};
 
 
-        /*
-           인증 상태가 바뀌면
-           프로필과 관리자 상태도 다시 가져옵니다
-        */
+/* =========================================================
+   COMMUNITY FORUM
+========================================================= */
+/* =========================================================
+   COMMUNITY FORUM — SUPABASE
+   게시글/댓글/반응/신고를 브라우저가 아닌 서버 데이터로 관리
+========================================================= */
+let forumSelectedPostId = null;
+let forumRealtimeChannel = null;
+let forumReportTarget = null;
 
-        if (currentUser) {
+const FORUM_REPORT_CATEGORIES = {
+    "다른 사람을 모욕 및 비하함": [
+        "학대 또는 괴롭힘","무례하거나 공격적인 언사","지속적인 괴롭힘 또는 특정 사용자 괴롭히기","타인 또는 특정 집단에 대한 혐오·차별 조장","위협 또는 협박","노골적이거나 선정적인 콘텐츠","성적인 괴롭힘 또는 원치 않는 성적 발언","타인을 조롱하거나 망신을 주기 위한 게시물"
+    ],
+    "홍보성 메시지 / 스팸 유저": [
+        "반복적인 동일 게시물·댓글","광고 또는 상품·서비스 홍보","외부 사이트·커뮤니티 홍보","의미 없는 도배","악의적인 링크 또는 클릭 유도","반복적인 DM·댓글 홍보"
+    ],
+    "신원 파악이 가능한 개인정보 노출": [
+        "전화번호","집 또는 직장 주소","얼굴 사진","사적인 사진","IP 주소","카드 정보 또는 금융 정보","법적 이름 및 신원 정보","학교·직장 등 개인을 특정할 수 있는 정보","계정 비밀번호 또는 인증 정보","가족·지인의 개인정보","기타 개인정보"
+    ],
+    "허위 정보 및 위험한 정보": [
+        "고의적 허위 정보","타인을 속이기 위한 허위 주장","조작된 자료 또는 이미지 이용","사기 또는 금융 피해 유도","위험한 행동 부추김 또는 미화","폭력 또는 잔혹 행위 미화·찬양","범죄 미화 또는 조장","실제 피해를 줄 수 있는 위험한 정보"
+    ],
+    "폭력 및 위협": [
+        "폭력 위협","살해 또는 상해 위협","폭력 조장 또는 선동","특정인 공격 선동","실제 폭력 사건 미화 또는 찬양","잔혹 콘텐츠","테러 또는 대규모 폭력 찬양·선동"
+    ],
+    "성적인 콘텐츠": [
+        "노골적 성적 콘텐츠","성적 행위 또는 신체의 노골적 묘사","원치 않는 성적 메시지","성적 대상화 또는 성희롱","성적 이미지 또는 영상","미성년자를 성적으로 묘사하거나 대상으로 하는 콘텐츠"
+    ],
+    "사기 및 기만 행위": [
+        "금전 또는 상품 사기","사칭을 통한 사기","가짜 이벤트 또는 경품","가짜 거래 또는 거래 사기","피싱 또는 로그인 정보 탈취","악성 링크를 통한 피해 유도"
+    ],
+    "다른 사람 또는 기관 사칭": [
+        "사용자 사칭","관리자 또는 운영진 사칭","유명인 또는 공인 사칭","기업 또는 기관 사칭","사칭을 통한 피해"
+    ],
+    "커뮤니티 운영 방해": [
+        "신고 시스템 악용","고의적인 도배","게시판 정상 이용 방해","정상적인 토론 방해","제재 회피","여러 계정의 악의적 활동","조직적인 공격"
+    ],
+    "불법 또는 위험한 행위": [
+        "불법 행위 조장 또는 안내","범죄 계획 또는 실행 유도","불법 거래","타인 계정 또는 시스템 무단 접근","개인정보 탈취","악성 프로그램 또는 파일 배포","실제 피해를 줄 수 있는 기타 행위"
+    ],
+    "저작권 및 지적재산권 침해": [
+        "창작물 무단 복제","허가 없는 콘텐츠 게시","불법 복제물 공유","작품 도용 또는 자작 사칭","상표 또는 브랜드 사칭·기만"
+    ],
+    "기타": ["위 항목에 해당하지 않는 문제","신고 사유 직접 작성"]
+};
 
-            await checkAuthStatus();
+function forumEscape(v){return escapeHtml(String(v??""));}
+function forumRelativeTime(value){
+    const d=new Date(value), diff=Math.max(0,Date.now()-d.getTime()), min=Math.floor(diff/60000);
+    if(min<1)return "방금 전";
+    if(min<60)return min+"분 전";
+    const h=Math.floor(min/60);
+    if(h<24)return h+"시간 전";
+    const day=Math.floor(h/24);
+    if(day<7)return day+"일 전";
+    return formatDateTime(value);
+}
+function forumCanDelete(authorId){return !!currentUser?.id && (authorId===currentUser.id || isAdmin);}
+function forumCanPin(authorId){return !!currentUser?.id && (authorId===currentUser.id || isAdmin);}
 
-        } else {
+async function forumFetchPosts(){
+    const {data:posts,error}=await supabaseClient
+        .from("forum_posts")
+        .select("id,author_id,title,body,pinned,created_at")
+        .order("pinned",{ascending:false})
+        .order("created_at",{ascending:false});
 
-            currentProfile = null;
-            isAdmin = false;
-
-            updateAuthUI();
-
-        }
-
+    if(error){
+        console.error("forum_posts select error",error);
+        alert("게시판을 불러오지 못했습니다: "+error.message);
+        return [];
     }
-);
+
+    const rows=posts||[];
+    if(!rows.length)return [];
+
+    const postIds=rows.map(p=>p.id);
+    const authorIds=[...new Set(rows.map(p=>p.author_id).filter(Boolean))];
+
+    const [{data:comments,error:ce},{data:reactions,error:re}]=await Promise.all([
+        supabaseClient.from("forum_comments")
+            .select("id,post_id,author_id,body,pinned,created_at")
+            .in("post_id",postIds)
+            .order("created_at",{ascending:true}),
+        supabaseClient.from("forum_reactions")
+            .select("target_type,target_id,user_id,reaction")
+            .in("target_id",postIds)
+    ]);
+
+    if(ce||re){
+        console.error("forum supplementary select error",ce||re);
+        alert("게시판 부가 정보를 불러오지 못했습니다: "+(ce||re).message);
+        return rows.map(p=>({...p,nickname:"알 수 없음",username:"",comments:[],likes:[],dislikes:[]}));
+    }
+
+    const cm=comments||[];
+    const rx=reactions||[];
+    const commentIds=cm.map(c=>c.id);
+    const allCommentAuthorIds=cm.map(c=>c.author_id).filter(Boolean);
+    const profileIds=[...new Set([...authorIds,...allCommentAuthorIds])];
+
+    let profiles=[];
+    if(profileIds.length){
+        const q=await supabaseClient
+            .from("profiles")
+            .select("id,username,nickname")
+            .in("id",profileIds);
+        if(q.error){
+            console.error("forum profiles select error",q.error);
+        }else{
+            profiles=q.data||[];
+        }
+    }
+
+    const profileMap=new Map(profiles.map(p=>[p.id,p]));
+
+    let commentRx=[];
+    if(commentIds.length){
+        const q=await supabaseClient
+            .from("forum_reactions")
+            .select("target_type,target_id,user_id,reaction")
+            .eq("target_type","comment")
+            .in("target_id",commentIds);
+        if(q.error){
+            console.error("comment reaction select error",q.error);
+        }else{
+            commentRx=q.data||[];
+        }
+    }
+
+    return rows.map(p=>{
+        const profile=profileMap.get(p.author_id);
+        const pc=cm.filter(c=>c.post_id===p.id).map(c=>{
+            const cp=profileMap.get(c.author_id);
+            return {
+                ...c,
+                nickname:cp?.nickname||"알 수 없음",
+                username:cp?.username||"",
+                likes:commentRx.filter(x=>x.target_id===c.id&&x.reaction==="like").map(x=>x.user_id),
+                dislikes:commentRx.filter(x=>x.target_id===c.id&&x.reaction==="dislike").map(x=>x.user_id)
+            };
+        });
+        return {
+            ...p,
+            nickname:profile?.nickname||"알 수 없음",
+            username:profile?.username||"",
+            comments:pc,
+            likes:rx.filter(x=>x.target_id===p.id&&x.reaction==="like").map(x=>x.user_id),
+            dislikes:rx.filter(x=>x.target_id===p.id&&x.reaction==="dislike").map(x=>x.user_id)
+        };
+    });
+}
+
+async function forumOpenComposer(){
+    if(!currentUser){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    document.getElementById("forum-composer").style.display="block";
+    document.getElementById("forum-title").focus();
+}
+function closeForumComposer(){const c=document.getElementById("forum-composer");if(c)c.style.display="none";}
+
+async function createForumPost(){
+    if(!currentUser){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const title=document.getElementById("forum-title").value.trim(),body=document.getElementById("forum-body").value.trim();
+    if(!title||!body){alert("제목과 내용을 모두 입력해 주세요.");return;}
+    const {data,error}=await supabaseClient.from("forum_posts").insert({author_id:currentUser.id,title,body}).select("id").single();
+    if(error){console.error("forum_posts insert error",error);alert("게시글 작성 실패\n\n"+error.message);return;}
+    if(!data?.id){alert("게시글 작성 결과를 확인하지 못했습니다.");return;}
+    document.getElementById("forum-title").value="";document.getElementById("forum-body").value="";closeForumComposer();await renderForumList();
+}
+
+async function renderForumList(){
+    const list=document.getElementById("forum-list"),detail=document.getElementById("forum-detail");if(!list)return;
+    if(forumSelectedPostId){list.style.display="none";detail.style.display="block";await renderForumDetail(forumSelectedPostId);return;}
+    list.style.display="block";detail.style.display="none";
+    const sortMode=document.getElementById("forum-sort")?.value||"likes";
+    let posts=await forumFetchPosts();
+    posts.sort((a,b)=>{const pin=(b.pinned?1:0)-(a.pinned?1:0);if(pin)return pin;const ld=(b.likes?.length||0)-(a.likes?.length||0);return sortMode==="likes"?(ld||new Date(b.created_at)-new Date(a.created_at)):new Date(b.created_at)-new Date(a.created_at);});
+    if(!posts.length){list.innerHTML='<div class="forum-empty">아직 게시글이 없습니다</div>';return;}
+    list.innerHTML=posts.map(p=>`<div class="forum-row${p.pinned?" forum-pinned":""}" onclick="openForumDetail('${p.id}')"><div class="forum-main"><div class="forum-title">${p.pinned?'<span class="forum-pin-icon" title="고정된 게시글"></span>':''}${forumEscape(p.title)}</div><div class="forum-meta">${forumEscape(p.nickname)} · ${forumEscape(formatDateTime(p.created_at))}</div></div><div class="forum-count">♥ ${p.likes?.length||0}</div><div class="forum-count">댓글 ${p.comments?.length||0}</div><div class="forum-time">${forumRelativeTime(p.created_at)}</div></div>`).join("");
+}
+async function openForumDetail(id){forumSelectedPostId=id;await renderForumList();}
+async function closeForumDetail(){forumSelectedPostId=null;await renderForumList();}
+
+async function renderForumDetail(id){
+    const box=document.getElementById("forum-detail-content"),posts=await forumFetchPosts(),post=posts.find(p=>p.id===id);
+    if(!post){forumSelectedPostId=null;await renderForumList();return;}
+    const comments=post.comments||[],owner=post.author_id===currentUser?.id;
+    box.innerHTML=`<article class="forum-article"><div class="forum-article-header"><div class="forum-article-title">${forumEscape(post.title)}</div><div class="forum-article-meta">${forumEscape(post.nickname)} · ${forumEscape(formatDateTime(post.created_at))}</div></div><div class="forum-article-body">${forumEscape(post.body)}</div><div class="forum-actions"><button class="forum-action-btn ${post.likes?.includes(currentUser?.id)?"liked":""}" onclick="forumReact('${post.id}','post','like')">좋아요 <span>${post.likes?.length||0}</span></button><button class="forum-action-btn ${post.dislikes?.includes(currentUser?.id)?"disliked":""}" onclick="forumReact('${post.id}','post','dislike')">싫어요</button><button class="forum-action-btn report" onclick="forumReport('${post.id}')">신고</button>${(owner||isAdmin)?`<button class="forum-action-btn" onclick="forumPostDelete('${post.id}')">삭제</button>`:''}${isAdmin?`<button class="forum-action-btn" onclick="forumAdminTogglePin('${post.id}')">${post.pinned?'핀 해제':'핀 고정'}</button>`:''}</div><div class="forum-comments"><div class="forum-comments-title">COMMENTS · ${comments.length}</div>${comments.length?comments.slice().sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)).map(c=>`<div class="forum-comment${c.pinned?" forum-comment-pinned":""}"><div class="forum-comment-meta">${c.pinned?'<span class="forum-comment-pin"></span>':''}${forumEscape(c.nickname)} · ${forumEscape(formatDateTime(c.created_at))}</div><div class="forum-comment-body">${forumEscape(c.body)}</div><div class="forum-comment-actions"><button class="forum-comment-like ${c.likes?.includes(currentUser?.id)?"liked":""}" onclick="forumReact('${c.id}','comment','like');event.stopPropagation();">좋아요 <span>${c.likes?.length||0}</span></button><button class="forum-comment-owner-btn forum-report-btn" onclick="forumCommentReport('${post.id}','${c.id}');event.stopPropagation();">신고</button>${(c.author_id===currentUser?.id||isAdmin)?`<button class="forum-comment-owner-btn" onclick="forumCommentDelete('${post.id}','${c.id}');event.stopPropagation();">삭제</button>`:''}${isAdmin?`<button class="forum-comment-owner-btn" onclick="forumCommentTogglePin('${post.id}','${c.id}');event.stopPropagation();">${c.pinned?'고정 해제':'고정'}</button>`:''}</div></div>`).join(""):'<div class="forum-empty">첫 번째 댓글을 남겨보세요</div>'}<div class="forum-comment-form"><textarea id="forum-comment-input" maxlength="1000" placeholder="댓글을 작성하세요"></textarea><button class="auth-btn" onclick="createForumComment()">COMMENT</button></div></div></article>`;
+}
+
+async function forumPostDelete(id){
+    if(!currentUser){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const posts=await forumFetchPosts(),post=posts.find(p=>p.id===id);if(!post)return;
+    if(post.author_id!==currentUser.id&&!isAdmin){alert("게시글 작성자 또는 운영자만 삭제할 수 있습니다.");return;}
+    if(!confirm("정말 이 게시글을 삭제하시겠습니까?"))return;
+    if(!confirm("최종 확인입니다. 삭제 후 복구할 수 없습니다. 계속하시겠습니까?"))return;
+    const {error}=await supabaseClient.from("forum_posts").delete().eq("id",id);if(error){alert("게시글 삭제 실패: "+error.message);return;}
+    forumSelectedPostId=null;await renderForumList();
+}
+async function forumAdminDelete(id){await forumPostDelete(id);}
+async function forumAdminTogglePin(id){
+    if(!isAdmin){alert("커뮤니티 운영자만 사용할 수 있습니다.");return;}
+    const posts=await forumFetchPosts(),post=posts.find(p=>p.id===id);if(!post)return;
+    const {error}=await supabaseClient.from("forum_posts").update({pinned:!post.pinned}).eq("id",id);if(error){alert("고정 변경 실패: "+error.message);return;}await renderForumList();
+}
+
+async function createForumComment(){
+    if(!currentUser){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const input=document.getElementById("forum-comment-input"),body=input?.value.trim();if(!body){alert("댓글 내용을 입력해 주세요.");return;}
+    const {error}=await supabaseClient.from("forum_comments").insert({post_id:forumSelectedPostId,author_id:currentUser.id,body});
+    if(error){alert("댓글 작성 실패: "+error.message);return;}await renderForumDetail(forumSelectedPostId);
+}
+async function forumCommentDelete(postId,commentId){
+    if(!currentUser){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const {data:c,error:q}=await supabaseClient.from("forum_comments").select("author_id").eq("id",commentId).maybeSingle();if(q||!c)return;
+    if(c.author_id!==currentUser.id&&!isAdmin){alert("댓글 작성자 또는 운영자만 삭제할 수 있습니다.");return;}
+    if(!confirm("정말 이 댓글을 삭제하시겠습니까?"))return;
+    const {error}=await supabaseClient.from("forum_comments").delete().eq("id",commentId);if(error){alert("댓글 삭제 실패: "+error.message);return;}await renderForumDetail(postId);
+}
+async function forumCommentTogglePin(postId,commentId){
+    if(!currentUser||!isAdmin){alert("운영자만 댓글을 고정할 수 있습니다.");return;}
+    const {data:c}=await supabaseClient.from("forum_comments").select("pinned").eq("id",commentId).maybeSingle();if(!c)return;
+    const {error}=await supabaseClient.from("forum_comments").update({pinned:!c.pinned}).eq("id",commentId);if(error){alert("고정 변경 실패: "+error.message);return;}await renderForumDetail(postId);
+}
+async function forumReact(targetId,targetType,reaction){
+    if(!currentUser){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const {data:existing}=await supabaseClient.from("forum_reactions").select("id,reaction").eq("target_id",targetId).eq("target_type",targetType).eq("user_id",currentUser.id).maybeSingle();
+    if(existing?.reaction===reaction){const {error}=await supabaseClient.from("forum_reactions").delete().eq("id",existing.id);if(error){alert("반응 변경 실패: "+error.message);return;}}
+    else {if(existing)await supabaseClient.from("forum_reactions").delete().eq("id",existing.id);const {error}=await supabaseClient.from("forum_reactions").insert({target_id:targetId,target_type:targetType,user_id:currentUser.id,reaction});if(error){alert("반응 등록 실패: "+error.message);return;}}
+    await renderForumDetail(forumSelectedPostId);
+}
+
+async function forumGetTarget(type,postId,commentId){
+    if(type==="post"){
+        const {data,error}=await supabaseClient
+            .from("forum_posts")
+            .select("id,author_id,title,body")
+            .eq("id",postId)
+            .maybeSingle();
+        if(error||!data)return null;
+        const {data:profile}=await supabaseClient
+            .from("profiles")
+            .select("id,username,nickname")
+            .eq("id",data.author_id)
+            .maybeSingle();
+        return {...data,profiles:profile||null};
+    }
+    const {data,error}=await supabaseClient
+        .from("forum_comments")
+        .select("id,author_id,body")
+        .eq("id",commentId)
+        .maybeSingle();
+    if(error||!data)return null;
+    const {data:profile}=await supabaseClient
+        .from("profiles")
+        .select("id,username,nickname")
+        .eq("id",data.author_id)
+        .maybeSingle();
+    return {...data,profiles:profile||null};
+}
+async function openForumReportModal(type,postId,commentId=null){
+    if(!currentUser){alert("로그인이 필요한 기능입니다.");openModal("loginModal");return;}
+    const target=await forumGetTarget(type,postId,commentId);if(!target||!target.author_id){alert("신고 대상의 작성자 정보를 확인할 수 없습니다.");return;}
+    const {data:dup}=await supabaseClient.from("reports").select("id").eq("reporter_id",currentUser.id).eq("target_type",type).eq(type==="post"?"post_id":"comment_id",type==="post"?postId:commentId).in("status",["pending","reviewing"]).limit(1);
+    if(dup?.length){alert(type==="post"?"이미 신고한 게시글입니다.":"이미 신고한 댓글입니다.");return;}
+    forumReportTarget={type,postId,commentId,reportedUserId:target.author_id,targetNickname:target.profiles?.nickname||"알 수 없음",targetUsername:target.profiles?.username||""};
+    document.getElementById("forumReportProfileName").textContent=forumReportTarget.targetNickname;
+    document.getElementById("forumReportProfileUsername").textContent=forumReportTarget.targetUsername?"@"+forumReportTarget.targetUsername:"-";
+    document.getElementById("forumReportProfileTarget").textContent=type==="post"?"게시글":"댓글";
+    closeModal("forumReportModal");openModal("forumReportProfileModal");
+}
+function closeForumReportProfileModal(){forumReportTarget=null;closeModal("forumReportProfileModal");}
+function confirmForumReportTarget(){if(!forumReportTarget)return;closeModal("forumReportProfileModal");forumPopulateReportCategories();openModal("forumReportModal");}
+function forumPopulateReportCategories(){
+    const c=document.getElementById("forumReportCategory"),s=document.getElementById("forumReportSubcategory"),r=document.getElementById("forumReportReason");
+    c.innerHTML='<option value="">신고 유형을 선택해 주세요</option>'+Object.keys(FORUM_REPORT_CATEGORIES).map(x=>`<option value="${forumEscape(x)}">${forumEscape(x)}</option>`).join("");s.innerHTML='<option value="">먼저 신고 유형을 선택해 주세요</option>';s.disabled=true;r.value="";
+}
+function forumReportCategoryChanged(){const c=document.getElementById("forumReportCategory"),s=document.getElementById("forumReportSubcategory"),items=FORUM_REPORT_CATEGORIES[c.value]||[];s.innerHTML='<option value="">세부 사유를 선택해 주세요</option>'+items.map(x=>`<option value="${forumEscape(x)}">${forumEscape(x)}</option>`).join("");s.disabled=!items.length;}
+function closeForumReportModal(){forumReportTarget=null;closeModal("forumReportModal");}
+async function submitForumReport(){
+    if(!forumReportTarget||!currentUser)return;
+    const cat=document.getElementById("forumReportCategory").value,sub=document.getElementById("forumReportSubcategory").value,reason=(document.getElementById("forumReportReason").value||"").trim();
+    if(!cat||!sub){alert("신고 유형과 세부 사유를 선택해 주세요.");return;}
+    if(sub==="신고 사유 직접 작성"&&!reason){alert("신고 사유를 작성해 주세요.");return;}
+    const {error}=await supabaseClient.from("reports").insert({reporter_id:currentUser.id,reported_user_id:forumReportTarget.reportedUserId,post_id:forumReportTarget.type==="post"?forumReportTarget.postId:null,comment_id:forumReportTarget.type==="comment"?forumReportTarget.commentId:null,target_type:forumReportTarget.type,category:cat,subcategory:sub,description:reason||null,status:"pending"});
+    if(error){alert("신고 접수 실패: "+error.message);return;}
+    closeForumReportModal();alert("신고가 접수되었습니다. 운영자가 확인하겠습니다.");
+}
+function forumReport(id){openForumReportModal("post",id);}
+function forumCommentReport(postId,commentId){openForumReportModal("comment",postId,commentId);}
+
+function subscribeForum(){
+    if(forumRealtimeChannel)supabaseClient.removeChannel(forumRealtimeChannel);
+    forumRealtimeChannel=supabaseClient.channel("forum-live").on("postgres_changes",{event:"*",schema:"public",table:"forum_posts"},()=>renderForumList()).on("postgres_changes",{event:"*",schema:"public",table:"forum_comments"},()=>{if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);else renderForumList();}).on("postgres_changes",{event:"*",schema:"public",table:"forum_reactions"},()=>{if(forumSelectedPostId)renderForumDetail(forumSelectedPostId);else renderForumList();}).subscribe();
+}
+
+/* =========================================================
+   숨겨진 장소
+========================================================= */
+
+function goToRoom() {
+
+    if (isSuspended) {
+        return;
+    }
+
+    location.href =
+        "room.html";
+}
 
 </script>
 
+
+<div id="place-report-modal" class="place-report-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:9999;">
+<div class="place-report-box" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:340px;background:#fff;border:1px solid #777;box-shadow:3px 3px 0 rgba(0,0,0,.18);">
+<div class="place-report-title" style="padding:8px 10px;font-weight:bold;">신고</div>
+<div style="padding:10px;">
+<div style="margin-bottom:7px;">신고 사유를 선택해주세요</div>
+<select id="place-report-reason" style="width:100%;box-sizing:border-box;padding:6px;">
+<option value="">선택해주세요</option><option value="욕설/비방">욕설 / 비방</option><option value="광고/도배">광고 / 도배</option><option value="부적절한 내용">부적절한 내용</option><option value="스팸">스팸</option><option value="기타">기타</option>
+</select>
+<div id="place-report-extra" class="place-report-extra" style="margin-top:7px;"><textarea id="place-report-extra-text" rows="4" maxlength="500" placeholder="신고 내용을 작성해주세요" style="width:100%;box-sizing:border-box;resize:vertical;padding:6px;"></textarea></div>
+<div style="display:flex;justify-content:flex-end;gap:5px;margin-top:9px;"><button type="button" onclick="closePlaceReportModal()">취소</button><button type="button" onclick="submitPlaceReport()">신고하기</button></div>
+</div></div></div>
+
+<script>
+(function(){
+let reportTarget=null;
+window.openPlaceReportModal=function(target){reportTarget=target||null;document.getElementById('place-report-modal').style.display='block';document.getElementById('place-report-reason').value='';document.getElementById('place-report-extra').classList.remove('show');document.getElementById('place-report-extra-text').value='';};
+window.closePlaceReportModal=function(){document.getElementById('place-report-modal').style.display='none';reportTarget=null;};
+document.getElementById('place-report-reason').addEventListener('change',function(){const other=this.value==='기타';document.getElementById('place-report-extra').classList.toggle('show',other);if(!other)document.getElementById('place-report-extra-text').value='';});
+window.submitPlaceReport=function(){const r=document.getElementById('place-report-reason').value,t=document.getElementById('place-report-extra-text').value.trim();if(!r){alert('신고 사유를 선택해주세요.');return;}if(r==='기타'&&!t){alert('기타 사유를 작성해주세요.');document.getElementById('place-report-extra-text').focus();return;}if(typeof window.forumSubmitReport==='function')window.forumSubmitReport(reportTarget,r,t);else if(typeof window.submitForumReport==='function')window.submitForumReport(reportTarget,r,t);else document.dispatchEvent(new CustomEvent('place-report-submit',{detail:{target:reportTarget,reason:r,detail:t}}));closePlaceReportModal();};
+})();
+</script>
 </body>
 </html>
