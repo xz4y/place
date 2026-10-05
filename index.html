@@ -739,7 +739,14 @@ body.account-suspended #suspension-screen {
         </div>
 
    <div id="auth-bar">
-  <span id="chx-balance" style="font-size:11px; color:#fff; display:none;">🪙 0</span>
+  <a
+    href="chx.html"
+    id="chx-header"
+    style="display:none; font-size:11px; color:#fff; text-decoration:none; font-weight:bold; cursor:pointer;"
+    title="CHX"
+>
+    Chx <span id="chx-header-balance">0</span>
+</a>
   <span id="user-info" style="font-size:11px; color:#fff;">로그인 필요</span>
 
             <button
@@ -1503,6 +1510,31 @@ const supabaseClient =
     );
 
 const CURRENT_MAP_NAME = "main";
+
+    async function refreshChxHeader() {
+    const el = document.getElementById("chx-header");
+    const balanceEl = document.getElementById("chx-header-balance");
+
+    if (!el || !balanceEl) return;
+
+    if (!currentUser) {
+        el.style.display = "none";
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.rpc("chx_get_balance");
+
+    if (error) {
+        console.error("Chx 불러오기 실패:", error);
+        balanceEl.textContent = "0";
+    } else {
+        balanceEl.textContent =
+            Number(data || 0).toLocaleString("ko-KR");
+    }
+
+    el.style.display = "inline-block";
+}
 
 let currentUser = null;
 let currentProfile = null;
@@ -2342,6 +2374,7 @@ async function handleLogin() {
         );
 
         await checkAuthStatus();
+        await refreshChxHeader();
         await updatePresenceIdentity();
     }
 }
@@ -2745,8 +2778,11 @@ function toggleReactivateBtn() {
 async function handleReactivateAccount() {
 
     if (!currentUser) {
-        return;
-    }
+        const chx = document.getElementById("chx-header");
+        if (chx) chx.style.display = "none";
+
+    // 기존 로그아웃 처리
+}
 
     const {
         error
