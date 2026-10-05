@@ -738,16 +738,23 @@ body.account-suspended #suspension-screen {
             어딘가에 존재하는 작은 장소
         </div>
 
-   <div id="auth-bar">
-  <a
-    href="chx.html"
-    id="chx-header"
-    style="display:none; font-size:11px; color:#fff; text-decoration:none; font-weight:bold; cursor:pointer;"
-    title="CHX"
->
-    Chx <span id="chx-header-balance">0</span>
-</a>
-  <span id="user-info" style="font-size:11px; color:#fff;">로그인 필요</span>
+        <div id="auth-bar">
+
+            <a
+                href="chx.html"
+                id="chx-header"
+                style="display:none; font-size:11px; color:#fff; text-decoration:none; font-weight:bold; cursor:pointer;"
+                title="CHX 서비스"
+            >
+                🪙 <span id="chx-header-balance">0</span>
+            </a>
+
+            <span
+                id="user-info"
+                style="font-size:11px; color:#fff;"
+            >
+                로그인 필요
+            </span>
 
             <button
                 class="auth-btn"
@@ -1511,10 +1518,13 @@ const supabaseClient =
 
 const CURRENT_MAP_NAME = "main";
 
-    async function refreshChxHeader() {
+let currentUser = null;
+let currentProfile = null;
+let isAdmin = false;
+
+async function refreshChxHeader() {
     const el = document.getElementById("chx-header");
     const balanceEl = document.getElementById("chx-header-balance");
-
     if (!el || !balanceEl) return;
 
     if (!currentUser) {
@@ -1522,23 +1532,14 @@ const CURRENT_MAP_NAME = "main";
         return;
     }
 
-    const { data, error } =
-        await supabaseClient.rpc("chx_get_balance");
+    const { data, error } = await supabaseClient.rpc("chx_get_balance");
 
-    if (error) {
-        console.error("Chx 불러오기 실패:", error);
-        balanceEl.textContent = "0";
-    } else {
-        balanceEl.textContent =
-            Number(data || 0).toLocaleString("ko-KR");
-    }
-
+    // 로그인 상태만 확인되면 CHX 영역은 반드시 표시합니다
+    // RPC가 아직 없거나 오류가 나도 0으로 표시합니다
+    balanceEl.textContent = error ? "0" : Number(data || 0).toLocaleString();
     el.style.display = "inline-block";
 }
 
-let currentUser = null;
-let currentProfile = null;
-let isAdmin = false;
 
 /* =========================================================
    관리자 권한
@@ -2374,7 +2375,6 @@ async function handleLogin() {
         );
 
         await checkAuthStatus();
-        await refreshChxHeader();
         await updatePresenceIdentity();
     }
 }
@@ -2437,6 +2437,9 @@ async function checkAuthStatus() {
 
         currentUser =
             session.user;
+
+        // 로그인 세션이 확인되면 프로필 조회와 관계없이 CHX 영역을 먼저 표시
+        await refreshChxHeader();
 
         const {
             data: profile,
@@ -2591,6 +2594,7 @@ async function checkAuthStatus() {
         messageInput.placeholder =
             "로그인 후 채팅을 입력할 수 있습니다.";
 
+        await refreshChxHeader();
         removeAdminChannel();
 
         removeProfileRealtime();
@@ -2778,11 +2782,8 @@ function toggleReactivateBtn() {
 async function handleReactivateAccount() {
 
     if (!currentUser) {
-        const chx = document.getElementById("chx-header");
-        if (chx) chx.style.display = "none";
-
-    // 기존 로그아웃 처리
-}
+        return;
+    }
 
     const {
         error
@@ -2887,6 +2888,7 @@ async function subscribeToMyProfile() {
                         hasAdminAccess(currentProfile);
 
                     setupAdminChannel();
+                    await refreshChxHeader();
 
                     const adminMenu =
                         document.getElementById(
