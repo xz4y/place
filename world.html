@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLACE - WORLD / 라면 물 맞추기</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+html,body{margin:0;padding:0;background:#d6d6d6;font-family:Arial,Helvetica,sans-serif;color:#222;font-size:12px}
+body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90deg,#eeeeee 1px,transparent 1px);background-size:8px 8px}
+#site{width:760px;margin:25px auto;background:#fff;border:1px solid #555;box-shadow:2px 2px 0 #888}
+#top{height:70px;background:linear-gradient(#5f8fbd,#315d8b);border-bottom:3px solid #24496e;color:#fff;position:relative}
+#title{position:absolute;left:18px;top:12px;font-size:28px;font-weight:bold;letter-spacing:-1px}
+#subtitle{position:absolute;left:20px;top:45px;font-size:11px}
+#auth-bar{position:absolute;right:15px;top:18px;display:flex;gap:6px;align-items:center}
+.auth-btn{padding:3px 8px;background:linear-gradient(#fff,#ccc);border:1px outset #eee;font-size:11px;cursor:pointer;color:#222}
+.auth-btn:active{border-style:inset}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+#chx-header{display:none;font-size:11px;color:#fff;text-decoration:none;font-weight:bold;cursor:pointer}
+#menu{height:27px;background:#eee;border-bottom:1px solid #999;padding-left:8px}
+.menu-button{display:inline-block;margin-top:4px;margin-right:3px;padding:3px 12px;color:#222;text-decoration:none;background:linear-gradient(#fff,#cfcfcf);border:1px solid #777;border-radius:2px;box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 #aaa;cursor:pointer}
+.menu-button:hover{background:linear-gradient(#eee,#ccc)}
+#main{padding:10px}
+.section{margin-bottom:10px;border:1px solid #999;background:#f7f7f7}
+.section-title{height:22px;line-height:22px;padding-left:8px;color:#fff;font-weight:bold;background:linear-gradient(#6f9bc2,#3c6b99);border:1px solid #345979}
+.section-body{padding:10px}
+.small{font-size:10px;color:#777;line-height:1.5}
+.hidden{display:none!important}
+.notice{padding:8px;margin-bottom:8px;background:#fffde6;border:1px solid #d4a300;line-height:1.6}
+
+/* LOGIN */
+.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.45)}
+.modal-content{width:330px;margin:120px auto;background:#f4f4f4;border:2px outset #eee;box-shadow:4px 4px 0 rgba(0,0,0,.25)}
+.modal-header{padding:7px 9px;color:#fff;font-weight:bold;background:linear-gradient(#6f9bc2,#3c6b99);border-bottom:1px solid #345979}
+.form-group{padding:9px 10px 0}.form-group label{display:block;margin-bottom:4px;font-weight:bold}.form-group input{width:100%;box-sizing:border-box;padding:6px;border:2px inset #aaa;background:#fff;font:12px Arial}
+.modal-buttons{display:flex;justify-content:flex-end;gap:5px;padding:10px}
+
+/* RAMEN GAME */
+#game-shell{padding:10px}
+.game-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:9px}
+.game-title{font-size:18px;font-weight:bold;letter-spacing:-1px}
+.game-caption{font-size:10px;color:#777;margin-top:3px}
+.round-box{border:1px solid #aaa;background:#fff;padding:7px 9px;text-align:right;min-width:118px;box-sizing:border-box}
+.round-label{font-size:10px;color:#777}.round-value{font-size:15px;font-weight:bold;color:#315d8b}
+.progress{height:16px;border:1px solid #777;background:#ddd;display:flex;margin-bottom:10px}
+.step{flex:1;border-right:1px solid #999;background:linear-gradient(#eee,#ccc);position:relative}
+.step:last-child{border-right:0}
+.step.active{background:linear-gradient(#7aa9d3,#4d7da8)}
+.step.done{background:linear-gradient(#c9dfc3,#99b68f)}
+.step span{position:absolute;left:0;right:0;top:1px;text-align:center;font-size:9px;font-weight:bold;color:#222}
+.stage-card{border:1px solid #aaa;background:#fff;padding:9px;margin-bottom:9px;text-align:center}
+.target-label{font-size:10px;color:#777}.target-number{font-family:"Courier New",monospace;font-size:26px;font-weight:bold;letter-spacing:1px;color:#315d8b;margin-top:2px}.target-unit{font-size:11px;color:#777}
+
+.machine{position:relative;height:360px;border:3px inset #888;background:#a0be80;overflow:hidden}
+.machine-inner{position:absolute;inset:0;background:linear-gradient(#9fbd7f 0%,#9fbd7f 72%,#8aad6e 72%,#8aad6e 100%)}
+.machine-shadow{position:absolute;left:18px;right:18px;bottom:20px;height:16px;background:rgba(57,74,44,.25);border-radius:50%}
+.faucet{position:absolute;left:50%;top:28px;width:220px;height:120px;transform:translateX(-50%)}
+.faucet-body{position:absolute;right:0;top:0;width:115px;height:52px;background:linear-gradient(#d8d8d8,#8d8d8d);border:2px solid #666;border-radius:8px 8px 4px 4px;box-shadow:inset 2px 2px 0 #eee,inset -2px -2px 0 #777}
+.faucet-neck{position:absolute;right:25px;top:42px;width:52px;height:58px;border:2px solid #666;border-top:0;border-radius:0 0 28px 28px;background:linear-gradient(90deg,#aaa,#eee,#999)}
+.faucet-spout{position:absolute;right:25px;top:88px;width:21px;height:16px;border:2px solid #666;border-top:0;border-radius:0 0 8px 8px;background:#aaa}
+.faucet-handle{position:absolute;left:24px;top:9px;width:48px;height:18px;background:linear-gradient(#eee,#aaa);border:2px solid #666;border-radius:5px;transform-origin:left center;transition:transform .15s}
+.faucet.open .faucet-handle{transform:rotate(-26deg)}
+.water-stream{position:absolute;right:33px;top:100px;width:15px;height:112px;opacity:0;transform-origin:top center;background:repeating-linear-gradient(90deg,rgba(228,244,255,.85) 0 4px,rgba(146,201,235,.65) 4px 7px);filter:drop-shadow(0 0 2px rgba(80,150,200,.35));animation:stream .18s infinite alternate ease-in-out}
+.faucet.open~.water-stream{opacity:1}
+@keyframes stream{from{transform:translateX(-2px)}to{transform:translateX(2px)}}
+.drip{position:absolute;right:36px;top:205px;width:5px;height:9px;background:#c9ebff;border-radius:50%;opacity:0}
+.faucet.open~.drip{opacity:0}
+.cup-area{position:absolute;left:50%;bottom:42px;width:280px;height:190px;transform:translateX(-50%)}
+.cup{position:absolute;left:50%;bottom:0;width:150px;height:166px;transform:translateX(-50%);background:rgba(242,247,247,.55);border:4px solid #666;border-top-width:5px;border-radius:8px 8px 18px 18px;overflow:hidden;box-shadow:inset 8px 0 0 rgba(255,255,255,.45),inset -8px 0 0 rgba(120,140,140,.1)}
+.cup-inner{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#7bb8dd,#5297c3);transition:height .08s linear;box-shadow:inset 0 5px 0 rgba(255,255,255,.25)}
+.cup.overflow{border-color:#a33;box-shadow:inset 8px 0 0 rgba(255,255,255,.45),inset -8px 0 0 rgba(120,140,140,.1),0 0 0 2px #d77}.cup-inner:before,.cup-inner:after{content:"";position:absolute;left:8%;right:8%;height:8px;border-radius:50%;border-top:2px solid rgba(255,255,255,.45);animation:wave 1.05s infinite ease-in-out}
+.cup-inner:before{top:4px}.cup-inner:after{top:18px;animation-delay:-.45s;opacity:.6}
+@keyframes wave{0%,100%{transform:translateX(-2%)}50%{transform:translateX(2%)}}
+.cup-scale{position:absolute;right:42px;top:3px;height:160px;width:58px;font-family:"Courier New",monospace;color:#4c5a63;font-size:10px}
+.mark{position:absolute;right:0;width:28px;border-top:1px solid #5d6870}.mark span{position:absolute;right:32px;top:-6px;white-space:nowrap}
+.mark.m500{top:96px}.mark.m550{top:70px}.mark.m600{top:44px}.mark.m650{top:18px}
+.marker-highlight{position:absolute;right:0;top:70px;width:42px;border-top:1px dotted #315d8b;opacity:.65}.magnifier{position:absolute;right:18px;top:48px;width:82px;height:82px;border:3px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(255,255,255,.08);box-shadow:0 0 0 2px #6c777b, inset 0 0 10px rgba(255,255,255,.2);display:none;pointer-events:none}.magnifier-handle{position:absolute;right:-22px;bottom:-12px;width:34px;height:11px;background:#666;border:2px solid #444;transform:rotate(48deg)}
+.measure-box{text-align:center;margin-top:10px}.measure-value{font-family:"Courier New",monospace;font-size:25px;font-weight:bold;color:#222;letter-spacing:1px}.measure-unit{font-size:10px;color:#777}
+.controls{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px}.game-btn{padding:6px 14px;background:linear-gradient(#fff,#ccc);border:2px outset #eee;font-size:11px;cursor:pointer;color:#222}.game-btn:active{border-style:inset}.game-btn.primary{background:linear-gradient(#6f9bc2,#3c6b99);color:#fff;border-color:#345979}.game-btn.danger{background:linear-gradient(#fff,#e7b8b8)}.game-btn:disabled{opacity:.5;cursor:not-allowed}
+.status-box{margin-top:8px;border:1px solid #999;background:#f7f7f7;min-height:38px;padding:7px 9px;box-sizing:border-box;line-height:1.5;text-align:left}.status-title{font-weight:bold}.status-ok{color:#2d6b2d}.status-bad{color:#8b3434}.status-info{color:#315d8b}
+
+/* TOOLS */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tool{border:1px solid #aaa;background:#fff;padding:8px}.tool-name{font-weight:bold}.tool-desc{font-size:10px;color:#777;line-height:1.5;margin-top:3px}.tool-row{display:flex;justify-content:space-between;align-items:center;margin-top:7px}.tool-level{font-size:10px;color:#315d8b;font-weight:bold}.buy-btn{padding:4px 8px;background:linear-gradient(#fff,#ccc);border:1px outset #eee;font-size:10px;cursor:pointer}.buy-btn:disabled{opacity:.5;cursor:not-allowed}
+.footer-note{font-size:10px;color:#777;margin-top:7px;line-height:1.5}
+#footer{padding:12px;text-align:center;border-top:1px solid #999;background:#eee;color:#666;font-size:11px}#footer a{color:#666;text-decoration:none}#footer a:hover{text-decoration:underline}
+
+@media(max-width:800px){#site{width:calc(100% - 20px);margin:10px auto}#auth-bar{right:8px}.auth-name{display:none}.tools-grid{grid-template-columns:1fr}.machine{height:340px}}
+</style>
+</head>
+<body>
+<div id="site">
+  <div id="top">
+    <div id="title">PLACE</div>
+    <div id="subtitle">어딘가에 존재하는 작은 장소</div>
+    <div id="auth-bar">
+      <a href="chx.html" id="chx-header" title="CHX 서비스">🪙 <span id="chx-header-balance">0</span></a>
+      <span id="user-info" style="font-size:11px;color:#fff;">로그인 필요</span>
+      <button class="auth-btn" id="login-btn" onclick="openModal('loginModal')">로그인</button>
+      <button class="auth-btn" id="signup-btn" onclick="goSignup()">회원가입</button>
+      <button class="auth-btn" id="logout-btn" onclick="handleLogout()" style="display:none;">로그아웃</button>
+    </div>
+  </div>
+
+  <div id="menu">
+    <a href="index.html" class="menu-button">HOME</a>
+    <a href="world.html" class="menu-button">WORLD</a>
+    <a href="message.html" class="menu-button">MESSAGE</a>
+    <span class="menu-button" onclick="goProfile()">PROFILE</span>
+    <a href="index.html#about" class="menu-button">ABOUT</a>
+  </div>
+
+  <div id="main">
+    <div class="section">
+      <div class="section-title">WORLD / GAME</div>
+      <div id="game-shell">
+        <div class="game-head">
+          <div>
+            <div class="game-title">라면 물 맞추기</div>
+            <div class="game-caption">정확한 한 그릇을 만들기 위한 아주 진지한 훈련</div>
+          </div>
+          <div class="round-box">
+            <div class="round-label">현재 단계</div>
+            <div class="round-value" id="stage-label">Lv.1</div>
+          </div>
+        </div>
+
+        <div class="progress" aria-label="게임 단계">
+          <div class="step active" id="step-1"><span>550</span></div>
+          <div class="step" id="step-2"><span>550.0</span></div>
+          <div class="step" id="step-3"><span>550.00</span></div>
+          <div class="step" id="step-4"><span>550.000</span></div>
+        </div>
+
+        <div class="stage-card">
+          <div class="target-label">이번 목표</div>
+          <div class="target-number" id="target-number">550</div>
+          <div class="target-unit">ml</div>
+          <div class="small" style="margin-top:5px;">허용 오차: <b id="tolerance-label">±2.000</b> ml · 성공 보상: <b id="reward-label">100 CHX</b></div>
+        </div>
+
+        <div class="machine">
+          <div class="machine-inner"></div>
+          <div class="faucet" id="faucet">
+            <div class="faucet-body"></div>
+            <div class="faucet-neck"></div>
+            <div class="faucet-spout"></div>
+            <div class="faucet-handle"></div>
+          </div>
+          <div class="water-stream" id="water-stream"></div>
+          <div class="drip" id="drip"></div>
+          <div class="cup-area" id="cup-area">
+            <div class="cup" id="cup">
+              <div class="cup-inner" id="cup-inner"></div>
+            </div>
+            <div class="cup-scale">
+              <div class="marker-highlight"></div>
+              <div class="mark m500"><span>500</span></div>
+              <div class="mark m550"><span>550</span></div>
+              <div class="mark m600"><span>600</span></div>
+              <div class="mark m650"><span>650</span></div>
+            </div>
+            <div class="magnifier" id="magnifier"><div class="magnifier-handle"></div></div>
+          </div>
+          <div class="machine-shadow"></div>
+        </div>
+
+        <div class="measure-box">
+          <div class="measure-value" id="measure-value">0.000</div>
+          <div class="measure-unit">현재 물의 양 (ml)</div>
+        </div>
+
+        <div class="controls">
+          <button class="game-btn" id="faucet-btn" onclick="toggleFaucet()">수도꼭지 열기</button>
+          <button class="game-btn" id="flow-btn" onclick="toggleFlowMode()">물줄기: 보통</button>
+          <button class="game-btn danger" id="reset-btn" onclick="resetWater()">물 버리기</button>
+          <button class="game-btn primary" id="submit-btn" onclick="submitMeasurement()">제출</button>
+        </div>
+
+        <div class="status-box" id="status-box">
+          <div class="status-title">SYSTEM</div>
+          <div id="status-text">수도꼭지를 열어 물을 받으세요</div>
+        </div>
+
+        <div id="login-lock" class="notice hidden" style="margin-top:8px;margin-bottom:0;text-align:center;">
+          게임 보상과 장비를 사용하려면 로그인이 필요합니다<br>
+          <button class="auth-btn" onclick="openModal('loginModal')" style="margin-top:5px;">로그인</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">HOW TO PLAY</div>
+      <div class="section-body">
+        목표 수치에 맞춰 물을 받은 뒤 수도꼭지를 닫고 <b>제출</b>하세요
+        <br>단계가 올라갈수록 허용 오차가 줄어듭니다
+        <br><span class="small">정확한 물리 시뮬레이션이 아니라 브라우저에서 시간에 따라 수위를 계산하는 게임입니다</span>
+      </div>
+    </div>
+
+  <div class="section">
+      <div class="section-title">TOOLS</div>
+      <div class="section-body">
+        <div class="tools-grid">
+          <div class="tool">
+            <div class="tool-name">🔍 돋보기</div>
+            <div class="tool-desc">계량컵의 눈금을 확대합니다. 정밀한 단계에서 특히 유용합니다.</div>
+            <div class="tool-row">
+              <span class="tool-level" id="magnifier-level">Lv.0</span>
+              <button class="buy-btn" id="magnifier-buy" onclick="buyMagnifier()">구매 — 500 CHX</button>
+            </div>
+          </div>
+          <div class="tool">
+            <div class="tool-name">기본 수도꼭지</div>
+            <div class="tool-desc">현재 사용 중인 기본 장비입니다. 나중에 더 안정적인 장비로 교체할 수 있습니다.</div>
+            <div class="tool-row"><span class="tool-level">Lv.0</span><span class="small">준비됨</span></div>
+          </div>
+        </div>
+        <div class="footer-note">도구는 PLACE 전체 공용 CHX를 사용합니다. 게임에서 지급되는 보상도 같은 지갑으로 들어갑니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer">
+    PLACE © 2026
+    <span style="margin:0 8px;color:#aaa;">|</span>
+    <a href="terms.html">이용약관</a>
+    <span style="margin:0 8px;color:#aaa;">|</span>
+    <a href="privacy.html">개인정보처리방침</a>
+    <span style="margin:0 8px;color:#aaa;">|</span>
+    <a href="accessibility.html">접근성 안내</a>
+  </div>
+</div>
+
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">🔑 로그인</div>
+    <div class="form-group"><label>아이디</label><input id="loginUsername" type="text" placeholder="영어, 숫자, 언더바(_)" autocomplete="username"></div>
+    <div class="form-group"><label>비밀번호</label><input id="loginPassword" type="password" autocomplete="current-password"></div>
+    <div id="login-error" class="small" style="padding:5px 10px;color:#9a3333;"></div>
+    <div class="modal-buttons"><button class="auth-btn" onclick="handleLogin()">로그인</button><button class="auth-btn" onclick="closeModal('loginModal')">취소</button></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL="https://exeoqvfidmtmnwqejyvg.supabase.co";
+const SUPABASE_KEY="sb_publishable_JFih0DSDJuYbePmte7BgEQ_Lt-0PFaV";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let currentUser=null;
+let currentProfile=null;
+let faucetOpen=false;
+let waterMl=0;
+let flowMode="normal";
+let animationFrame=null;
+let lastFrameTime=0;
+let stage=1;
+let magnifierLevel=0;
+let cupMaxMl=700;
+
+const stages={
+  1:{target:550, decimals:0, tolerance:2.0, reward:100},
+  2:{target:550, decimals:1, tolerance:0.4, reward:200},
+  3:{target:550, decimals:2, tolerance:0.04, reward:400},
+  4:{target:550, decimals:3, tolerance:0.005, reward:800}
+};
+const flowRates={normal:120,fine:18,drip:3};
+const flowLabels={normal:"보통",fine:"미세",drip:"점적"};
+
+function openModal(id){const el=document.getElementById(id);if(el)el.style.display="block"}
+function closeModal(id){const el=document.getElementById(id);if(el)el.style.display="none"}
+function goSignup(){window.location.href="index.html"}
+function goProfile(){window.location.href="index.html"}
+
+async function refreshChxHeader(){
+  const el=document.getElementById("chx-header");
+  const balanceEl=document.getElementById("chx-header-balance");
+  if(!el||!balanceEl)return;
+  if(!currentUser){el.style.display="none";return}
+  const {data,error}=await supabaseClient.rpc("chx_get_balance");
+  balanceEl.textContent=error?"0":Number(data||0).toLocaleString("ko-KR");
+  el.style.display="inline-block";
+}
+
+function updateAuthUI(){
+  const userInfo=document.getElementById("user-info");
+  const loginBtn=document.getElementById("login-btn");
+  const signupBtn=document.getElementById("signup-btn");
+  const logoutBtn=document.getElementById("logout-btn");
+  const lock=document.getElementById("login-lock");
+  if(currentUser){
+    userInfo.textContent="👤 "+(currentProfile?.nickname||currentProfile?.username||"사용자")+"님";
+    loginBtn.style.display="none";
+    signupBtn.style.display="none";
+    logoutBtn.style.display="inline-block";
+    lock.classList.add("hidden");
+  }else{
+    userInfo.textContent="로그인 필요";
+    loginBtn.style.display="inline-block";
+    signupBtn.style.display="inline-block";
+    logoutBtn.style.display="none";
+    lock.classList.remove("hidden");
+  }
+}
+
+async function checkAuthStatus(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  currentUser=session?.user||null;
+  currentProfile=null;
+  if(currentUser){
+    const {data:profile}=await supabaseClient.from("profiles").select("id,username,nickname").eq("id",currentUser.id).maybeSingle();
+    currentProfile=profile||null;
+  }
+  updateAuthUI();
+  await refreshChxHeader();
+  if(currentUser)await loadGameState();
+}
+
+async function handleLogin(){
+  const username=document.getElementById("loginUsername").value.trim().toLowerCase();
+  const password=document.getElementById("loginPassword").value;
+  const errorEl=document.getElementById("login-error");
+  errorEl.textContent="";
+  if(!username||!password){errorEl.textContent="아이디와 비밀번호를 입력해 주세요";return}
+  const {error}=await supabaseClient.auth.signInWithPassword({email:username+"@place.local",password});
+  if(error){errorEl.textContent="로그인 실패: 아이디 또는 비밀번호를 확인해 주세요";return}
+  closeModal("loginModal");
+  document.getElementById("loginPassword").value="";
+  await checkAuthStatus();
+  setStatus("로그인되었습니다. 수도꼭지를 열어 시작하세요","info");
+}
+
+async function handleLogout(){
+  await supabaseClient.auth.signOut();
+  stopFaucet();
+  currentUser=null;
+  currentProfile=null;
+  updateAuthUI();
+  await refreshChxHeader();
+  setStatus("로그아웃되었습니다. 게임 보상은 로그인 후 사용할 수 있습니다","info");
+}
+
+supabaseClient.auth.onAuthStateChange(async()=>{await checkAuthStatus()});
+
+function setStatus(text,type="info"){
+  const box=document.getElementById("status-box");
+  const textEl=document.getElementById("status-text");
+  textEl.textContent=text;
+  textEl.className=type==="ok"?"status-ok":type==="bad"?"status-bad":"status-info";
+  box.querySelector(".status-title").textContent=type==="ok"?"SUCCESS":type==="bad"?"NOTICE":"SYSTEM";
+}
+
+function stageInfo(){return stages[stage]}
+function formatMl(value){
+  const d=stageInfo().decimals;
+  return Number(value).toFixed(Math.max(3,d));
+}
+function updateStageUI(){
+  const info=stageInfo();
+  document.getElementById("stage-label").textContent="Lv."+stage;
+  document.getElementById("target-number").textContent=info.target.toFixed(info.decimals);
+  document.getElementById("tolerance-label").textContent="±"+info.tolerance.toFixed(3);
+  document.getElementById("reward-label").textContent=info.reward.toLocaleString("ko-KR")+" CHX";
+  document.querySelectorAll(".step").forEach((el,i)=>{
+    el.classList.remove("active","done");
+    if(i+1<stage)el.classList.add("done");
+    if(i+1===stage)el.classList.add("active");
+  });
+  document.getElementById("measure-value").textContent=formatMl(waterMl);
+  updateCup();
+  updateToolUI();
+}
+
+function updateCup(){
+  const pct=Math.min(waterMl/cupMaxMl,1)*100;
+  document.getElementById("cup-inner").style.height=pct+"%";
+  document.getElementById("cup").classList.toggle("overflow",waterMl>cupMaxMl);
+  if(waterMl>cupMaxMl){setStatus("물이 넘쳤습니다. 물을 버리고 다시 도전하세요","bad");}
+}
+
+function toggleFaucet(){
+  if(!currentUser){openModal("loginModal");return}
+  if(waterMl>cupMaxMl){setStatus("먼저 물을 버려 주세요","bad");return}
+  faucetOpen=!faucetOpen;
+  const faucet=document.getElementById("faucet");
+  const btn=document.getElementById("faucet-btn");
+  faucet.classList.toggle("open",faucetOpen);
+  btn.textContent=faucetOpen?"수도꼭지 닫기":"수도꼭지 열기";
+  if(faucetOpen){startFlow();setStatus("물이 흐르고 있습니다. 눈금과 현재 수치를 확인하세요","info")}
+  else{stopFaucet();setStatus("수도꼭지를 닫았습니다. 제출하거나 다시 열 수 있습니다","info");maybeDrip()}
+}
+
+function startFlow(){
+  if(animationFrame)return;
+  lastFrameTime=performance.now();
+  const tick=(now)=>{
+    if(!faucetOpen){animationFrame=null;return}
+    const dt=Math.min((now-lastFrameTime)/1000,0.08);
+    lastFrameTime=now;
+    const rate=flowRates[flowMode];
+    waterMl+=rate*dt;
+    document.getElementById("measure-value").textContent=formatMl(waterMl);
+    updateCup();
+    if(waterMl>cupMaxMl){faucetOpen=false;document.getElementById("faucet").classList.remove("open");document.getElementById("faucet-btn").textContent="수도꼭지 열기";animationFrame=null;return}
+    animationFrame=requestAnimationFrame(tick);
+  };
+  animationFrame=requestAnimationFrame(tick);
+}
+
+function stopFaucet(){
+  faucetOpen=false;
+  if(animationFrame){cancelAnimationFrame(animationFrame);animationFrame=null}
+  document.getElementById("faucet").classList.remove("open");
+  document.getElementById("faucet-btn").textContent="수도꼭지 열기";
+}
+
+function maybeDrip(){
+  const d=document.getElementById("drip");
+  d.style.opacity="1";
+  d.style.transition="top .38s ease,opacity .38s ease";
+  d.style.top="218px";
+  setTimeout(()=>{d.style.opacity="0";d.style.top="205px"},380);
+}
+
+function toggleFlowMode(){
+  const modes=["normal","fine","drip"];
+  const idx=modes.indexOf(flowMode);
+  flowMode=modes[(idx+1)%modes.length];
+  document.getElementById("flow-btn").textContent="물줄기: "+flowLabels[flowMode];
+  if(faucetOpen){setStatus("물줄기 세기를 "+flowLabels[flowMode]+"으로 변경했습니다","info")}
+}
+
+document.addEventListener("keydown",(e)=>{
+  if(e.key===" " && currentUser && !e.repeat){
+    e.preventDefault();
+    toggleFaucet();
+  }
+  if(e.key==="Enter" && currentUser){
+    e.preventDefault();
+    submitMeasurement();
+  }
+});
+
+function resetWater(){
+  stopFaucet();
+  waterMl=0;
+  document.getElementById("measure-value").textContent=formatMl(0);
+  document.getElementById("cup-inner").style.height="0%";
+  setStatus("물을 비웠습니다. 다시 천천히 받아 보세요","info");
+}
+
+async function submitMeasurement(){
+  if(!currentUser){openModal("loginModal");return}
+  stopFaucet();
+  const info=stageInfo();
+  const difference=waterMl-info.target;
+  const abs=Math.abs(difference);
+  if(abs>info.tolerance){
+    const direction=difference>0?"초과":"부족";
+    setStatus(formatMl(waterMl)+" ml · 목표보다 "+formatMl(abs)+" ml "+direction+"합니다. 물을 버리고 다시 도전하세요","bad");
+    return;
+  }
+  setStatus("판정 중...","info");
+  document.getElementById("submit-btn").disabled=true;
+  const {data,error}=await supabaseClient.rpc("world_ramen_reward",{
+    p_measured_ml: Number(waterMl),
+    p_stage: Number(stage)
+  });
+  document.getElementById("submit-btn").disabled=false;
+  if(error){
+    console.error("world_ramen_reward RPC 오류:", error);
+    setStatus("CHX 보상 처리 실패: "+error.message,"bad");
+    return;
+  }
+  if(!data||data.success!==true){
+    setStatus((data&&data.message)||"아쉽게 실패했습니다","bad");
+    return;
+  }
+  setStatus("성공! +"+Number(data.reward||info.reward).toLocaleString("ko-KR")+" CHX · 다음 단계로 이동합니다","ok");
+  waterMl=0;
+  stage=Number(data.next_stage||((stage%4)+1));
+  await refreshChxHeader();
+  updateStageUI();
+}
+
+async function loadGameState(){
+  const {data,error}=await supabaseClient.rpc("world_ramen_get_state");
+  if(!error&&data){
+    stage=Number(data.stage||1);
+    magnifierLevel=Number(data.magnifier_level||0);
+  }
+  updateStageUI();
+}
+
+function updateToolUI(){
+  const levelEl=document.getElementById("magnifier-level");
+  const buy=document.getElementById("magnifier-buy");
+  levelEl.textContent="Lv."+magnifierLevel;
+  if(magnifierLevel>=2){buy.textContent="최대 레벨";buy.disabled=true}
+  else if(magnifierLevel===1){buy.textContent="업그레이드 — 1,200 CHX";buy.disabled=false}
+  else {buy.textContent="구매 — 500 CHX";buy.disabled=false}
+  document.getElementById("magnifier").style.display=magnifierLevel>0?"block":"none";
+  const scale=document.querySelector(".cup-scale");
+  if(scale){scale.style.transform=magnifierLevel===2?"scale(1.32) translateX(-10px)":"scale(1)";scale.style.transformOrigin="right center"}
+}
+
+async function buyMagnifier(){
+  if(!currentUser){openModal("loginModal");return}
+  const cost=magnifierLevel===0?500:1200;
+  if(!confirm("돋보기 "+(magnifierLevel===0?"Lv.1":"Lv.2")+"을 "+cost.toLocaleString("ko-KR")+" CHX로 구매하시겠습니까?"))return;
+  const {data,error}=await supabaseClient.rpc("world_ramen_buy_magnifier",{p_target_level:magnifierLevel+1});
+  if(error){setStatus("구매 실패: "+error.message,"bad");return}
+  if(!data||data.success!==true){setStatus((data&&data.message)||"구매할 수 없습니다","bad");return}
+  magnifierLevel=Number(data.magnifier_level||magnifierLevel+1);
+  updateToolUI();
+  await refreshChxHeader();
+  setStatus("돋보기 Lv."+magnifierLevel+" 구매 완료","ok");
+}
+
+window.addEventListener("load",async()=>{
+  updateStageUI();
+  await checkAuthStatus();
+});
+</script>
+</body>
+</html>
