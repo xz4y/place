@@ -20,6 +20,24 @@ body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90d
 #menu{height:27px;background:#eee;border-bottom:1px solid #999;padding-left:8px}
 .menu-button{display:inline-block;margin-top:4px;margin-right:3px;padding:3px 12px;color:#222;text-decoration:none;background:linear-gradient(#fff,#cfcfcf);border:1px solid #777;border-radius:2px;box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 #aaa;cursor:pointer}
 .menu-button:hover{background:linear-gradient(#eee,#ccc)}
+#notice{padding:6px 10px;border-bottom:1px solid #999;background:#fffde6;display:none}
+#banner-container{width:100%;box-sizing:border-box}
+.site-banner{padding:4px 2px;color:#333;line-height:1.5;box-sizing:border-box}
+.site-banner + .site-banner{margin-top:4px;padding-top:6px;border-top:1px dotted #d4c98f}
+#suspension-screen{position:fixed;z-index:5000;left:0;top:0;width:100%;height:100%;box-sizing:border-box;padding:105px 14px 20px;background:rgba(0,0,0,.55);overflow:auto}
+.suspension-window{width:min(560px,100%);margin:0 auto;background:#f4f4f4;border:2px outset #eee;box-shadow:5px 5px 0 rgba(0,0,0,.28)}
+.suspension-header{padding:7px 9px;color:#fff;font-weight:bold;background:linear-gradient(#6f9bc2,#3c6b99);border-bottom:1px solid #345979}
+.suspension-body{padding:16px}
+.suspension-title{font-weight:bold;font-size:15px;color:#7d2e2e;margin-bottom:7px}
+.suspension-text{line-height:1.6;margin-bottom:12px}
+.suspension-info{border:1px solid #aaa;background:#fff;margin-bottom:12px}
+.suspension-row{display:flex;gap:14px;padding:7px 8px;border-bottom:1px dotted #ccc;line-height:1.5}
+.suspension-row:last-child{border-bottom:0}
+.suspension-row span{width:72px;color:#777;flex:0 0 72px}
+.suspension-row b{font-weight:normal;word-break:break-word}
+.suspension-bottom{padding:7px 9px;border:1px solid #aaa;background:#fff;font-weight:bold;text-align:center}
+.suspension-note{margin-top:9px;font-size:10px;color:#777;text-align:center}
+
 #main{padding:10px}
 .section{margin-bottom:10px;border:1px solid #999;background:#f7f7f7}
 .section-title{height:22px;line-height:22px;padding-left:8px;color:#fff;font-weight:bold;background:linear-gradient(#6f9bc2,#3c6b99);border:1px solid #345979}
@@ -60,10 +78,10 @@ body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90d
 .faucet-spout{position:absolute;right:25px;top:88px;width:21px;height:16px;border:2px solid #666;border-top:0;border-radius:0 0 8px 8px;background:#aaa}
 .faucet-handle{position:absolute;left:24px;top:9px;width:48px;height:18px;background:linear-gradient(#eee,#aaa);border:2px solid #666;border-radius:5px;transform-origin:left center;transition:transform .15s}
 .faucet.open .faucet-handle{transform:rotate(-26deg)}
-.water-stream{position:absolute;right:33px;top:100px;width:15px;height:112px;opacity:0;transform-origin:top center;background:repeating-linear-gradient(90deg,rgba(228,244,255,.85) 0 4px,rgba(146,201,235,.65) 4px 7px);filter:drop-shadow(0 0 2px rgba(80,150,200,.35));animation:stream .18s infinite alternate ease-in-out}
+.water-stream{position:absolute;left:calc(50% + 65px);right:auto;top:134px;width:15px;height:112px;opacity:0;transform-origin:top center;background:repeating-linear-gradient(90deg,rgba(228,244,255,.85) 0 4px,rgba(146,201,235,.65) 4px 7px);filter:drop-shadow(0 0 2px rgba(80,150,200,.35));animation:stream .18s infinite alternate ease-in-out}
 .faucet.open~.water-stream{opacity:1}
 @keyframes stream{from{transform:translateX(-2px)}to{transform:translateX(2px)}}
-.drip{position:absolute;right:36px;top:205px;width:5px;height:9px;background:#c9ebff;border-radius:50%;opacity:0}
+.drip{position:absolute;left:calc(50% + 70px);right:auto;top:205px;width:5px;height:9px;background:#c9ebff;border-radius:50%;opacity:0}
 .faucet.open~.drip{opacity:0}
 .cup-area{position:absolute;left:50%;bottom:42px;width:280px;height:190px;transform:translateX(-50%)}
 .cup{position:absolute;left:50%;bottom:0;width:150px;height:166px;transform:translateX(-50%);background:rgba(242,247,247,.55);border:4px solid #666;border-top-width:5px;border-radius:8px 8px 18px 18px;overflow:hidden;box-shadow:inset 8px 0 0 rgba(255,255,255,.45),inset -8px 0 0 rgba(120,140,140,.1)}
@@ -71,20 +89,27 @@ body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90d
 .cup.overflow{border-color:#a33;box-shadow:inset 8px 0 0 rgba(255,255,255,.45),inset -8px 0 0 rgba(120,140,140,.1),0 0 0 2px #d77}.cup-inner:before,.cup-inner:after{content:"";position:absolute;left:8%;right:8%;height:8px;border-radius:50%;border-top:2px solid rgba(255,255,255,.45);animation:wave 1.05s infinite ease-in-out}
 .cup-inner:before{top:4px}.cup-inner:after{top:18px;animation-delay:-.45s;opacity:.6}
 @keyframes wave{0%,100%{transform:translateX(-2%)}50%{transform:translateX(2%)}}
-.cup-scale{position:absolute;right:42px;top:3px;height:160px;width:58px;font-family:"Courier New",monospace;color:#4c5a63;font-size:10px}
+.cup-scale{position:absolute;right:42px;top:16px;height:166px;width:58px;font-family:"Courier New",monospace;color:#4c5a63;font-size:10px}
 .mark{position:absolute;right:0;width:28px;border-top:1px solid #5d6870}.mark span{position:absolute;right:32px;top:-6px;white-space:nowrap}
-.mark.m500{top:96px}.mark.m550{top:70px}.mark.m600{top:44px}.mark.m650{top:18px}
-.marker-highlight{position:absolute;right:0;top:70px;width:42px;border-top:1px dotted #315d8b;opacity:.65}.magnifier{position:absolute;right:18px;top:48px;width:82px;height:82px;border:3px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(255,255,255,.08);box-shadow:0 0 0 2px #6c777b, inset 0 0 10px rgba(255,255,255,.2);display:none;pointer-events:none}.magnifier-handle{position:absolute;right:-22px;bottom:-12px;width:34px;height:11px;background:#666;border:2px solid #444;transform:rotate(48deg)}
+.mark.m500{top:47.43px}.mark.m550{top:35.43px}.mark.m600{top:23.43px}.mark.m650{top:11.86px}
+.marker-highlight{position:absolute;right:0;top:70px;width:42px;border-top:1px dotted #315d8b;opacity:.65}
 .measure-box{text-align:center;margin-top:10px}.measure-value{font-family:"Courier New",monospace;font-size:25px;font-weight:bold;color:#222;letter-spacing:1px}.measure-unit{font-size:10px;color:#777}
 .controls{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:8px}.game-btn{padding:6px 14px;background:linear-gradient(#fff,#ccc);border:2px outset #eee;font-size:11px;cursor:pointer;color:#222}.game-btn:active{border-style:inset}.game-btn.primary{background:linear-gradient(#6f9bc2,#3c6b99);color:#fff;border-color:#345979}.game-btn.danger{background:linear-gradient(#fff,#e7b8b8)}.game-btn:disabled{opacity:.5;cursor:not-allowed}
 .status-box{margin-top:8px;border:1px solid #999;background:#f7f7f7;min-height:38px;padding:7px 9px;box-sizing:border-box;line-height:1.5;text-align:left}.status-title{font-weight:bold}.status-ok{color:#2d6b2d}.status-bad{color:#8b3434}.status-info{color:#315d8b}
 
-/* TOOLS */
-.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tool{border:1px solid #aaa;background:#fff;padding:8px}.tool-name{font-weight:bold}.tool-desc{font-size:10px;color:#777;line-height:1.5;margin-top:3px}.tool-row{display:flex;justify-content:space-between;align-items:center;margin-top:7px}.tool-level{font-size:10px;color:#315d8b;font-weight:bold}.buy-btn{padding:4px 8px;background:linear-gradient(#fff,#ccc);border:1px outset #eee;font-size:10px;cursor:pointer}.buy-btn:disabled{opacity:.5;cursor:not-allowed}
+/* CHX EQUIPMENT SHOP */
+.equipment-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.equipment-card{border:1px solid #aaa;background:#fff;padding:9px;min-width:0}
+.equipment-name{font-weight:bold;color:#315d8b}
+.equipment-desc{font-size:10px;color:#666;line-height:1.6;margin-top:5px;min-height:48px}
+.equipment-meta{font-size:10px;color:#777;margin-top:7px;line-height:1.5}
+.equipment-status{font-weight:bold;color:#3b7135;margin-top:6px}
+.equipment-buy{margin-top:7px;padding:5px 9px;background:linear-gradient(#fff,#ccc);border:1px outset #eee;font-size:10px;cursor:pointer;color:#222}
+.equipment-buy:disabled{opacity:.5;cursor:not-allowed}.speed-shop-title{font-weight:bold;color:#315d8b;margin-top:16px;padding-top:10px;border-top:1px solid #bbb}.speed-shop-caption{margin:5px 0 8px}.speed-equipment-list{margin-top:7px}
 .footer-note{font-size:10px;color:#777;margin-top:7px;line-height:1.5}
 #footer{padding:12px;text-align:center;border-top:1px solid #999;background:#eee;color:#666;font-size:11px}#footer a{color:#666;text-decoration:none}#footer a:hover{text-decoration:underline}
 
-@media(max-width:800px){#site{width:calc(100% - 20px);margin:10px auto}#auth-bar{right:8px}.auth-name{display:none}.tools-grid{grid-template-columns:1fr}.machine{height:340px}}
+@media(max-width:800px){#site{width:calc(100% - 20px);margin:10px auto}#auth-bar{right:8px}.auth-name{display:none}.machine{height:340px}.equipment-list{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -107,6 +132,26 @@ body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90d
     <a href="message.html" class="menu-button">MESSAGE</a>
     <span class="menu-button" onclick="goProfile()">PROFILE</span>
     <a href="index.html#about" class="menu-button">ABOUT</a>
+  </div>
+
+  <div id="notice" style="display:none;">
+    <div id="banner-container"></div>
+  </div>
+
+  <div id="suspension-screen" aria-live="assertive" style="display:none;">
+    <div class="suspension-window">
+      <div class="suspension-header">ACCOUNT STATUS</div>
+      <div class="suspension-body">
+        <div class="suspension-title" id="suspension-title">회원님의 계정은 정지 처리되었습니다</div>
+        <div class="suspension-text" id="suspension-description">PLACE 이용이 제한되었습니다</div>
+        <div class="suspension-info">
+          <div class="suspension-row"><span>처리 일시</span><b id="suspension-date">-</b></div>
+          <div class="suspension-row"><span>처리 사유</span><b id="suspension-reason">사유 미작성</b></div>
+        </div>
+        <div class="suspension-bottom" id="suspension-until">-</div>
+        <div class="suspension-note">현재 진행 중인 게임도 즉시 종료됩니다</div>
+      </div>
+    </div>
   </div>
 
   <div id="main">
@@ -159,7 +204,6 @@ body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90d
               <div class="mark m600"><span>600</span></div>
               <div class="mark m650"><span>650</span></div>
             </div>
-            <div class="magnifier" id="magnifier"><div class="magnifier-handle"></div></div>
           </div>
           <div class="machine-shadow"></div>
         </div>
@@ -182,7 +226,7 @@ body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90d
         </div>
 
         <div id="login-lock" class="notice hidden" style="margin-top:8px;margin-bottom:0;text-align:center;">
-          게임 보상과 장비를 사용하려면 로그인이 필요합니다<br>
+          게임을 플레이하고 보상을 받으려면 로그인이 필요합니다<br>
           <button class="auth-btn" onclick="openModal('loginModal')" style="margin-top:5px;">로그인</button>
         </div>
       </div>
@@ -198,24 +242,49 @@ body{background:linear-gradient(#eeeeee 1px,transparent 1px),linear-gradient(90d
     </div>
 
   <div class="section">
-      <div class="section-title">TOOLS</div>
+      <div class="section-title">WATER FLOW / 물줄기 및 배속</div>
       <div class="section-body">
-        <div class="tools-grid">
-          <div class="tool">
-            <div class="tool-name">🔍 돋보기</div>
-            <div class="tool-desc">계량컵의 눈금을 확대합니다. 정밀한 단계에서 특히 유용합니다.</div>
-            <div class="tool-row">
-              <span class="tool-level" id="magnifier-level">Lv.0</span>
-              <button class="buy-btn" id="magnifier-buy" onclick="buyMagnifier()">구매 — 500 CHX</button>
-            </div>
-          </div>
-          <div class="tool">
-            <div class="tool-name">기본 수도꼭지</div>
-            <div class="tool-desc">현재 사용 중인 기본 장비입니다. 나중에 더 안정적인 장비로 교체할 수 있습니다.</div>
-            <div class="tool-row"><span class="tool-level">Lv.0</span><span class="small">준비됨</span></div>
+        <div class="equipment-list">
+          <div class="equipment-card">
+            <div class="equipment-name">물줄기 세기 · 무료</div>
+            <div class="equipment-desc">보통 / 미세 / 점적 모드는 모든 이용자가 무료로 사용할 수 있습니다. 게임 화면의 ‘물줄기’ 버튼으로 자유롭게 전환하세요.</div>
+            <div class="equipment-meta">추가 비용 없음 · 영구 해금</div>
+            <div class="equipment-status">모든 이용자 사용 가능</div>
           </div>
         </div>
-        <div class="footer-note">도구는 PLACE 전체 공용 CHX를 사용합니다. 게임에서 지급되는 보상도 같은 지갑으로 들어갑니다.</div>
+        <div class="speed-shop-title">FLOW SPEED / 유료 배속 상점</div>
+        <div class="small speed-shop-caption">배속은 구매 후 영구 보유합니다. 배속을 바꾸면 보통·미세·점적 물줄기 모두에 적용됩니다.</div>
+        <div class="equipment-list speed-equipment-list">
+          <div class="equipment-card">
+            <div class="equipment-name">기본 배속 · 1x</div>
+            <div class="equipment-desc">물줄기 속도를 원래대로 사용합니다. 별도 구매 없이 언제든 선택할 수 있습니다.</div>
+            <div class="equipment-meta">비용: 무료</div>
+            <div class="equipment-status" id="speed-1x-status">기본 배속</div>
+            <button class="equipment-buy" id="speed-1x-buy" onclick="selectFlowSpeed('1x')">사용 중</button>
+          </div>
+          <div class="equipment-card">
+            <div class="equipment-name">저속 배속 · 0.5x</div>
+            <div class="equipment-desc">기존 속도의 절반으로 물이 들어옵니다. 일반 물줄기와 함께 사용하면 더 천천히 조절할 수 있습니다.</div>
+            <div class="equipment-meta">필요 비용: 150 CHX</div>
+            <div class="equipment-status" id="speed-05x-status">미보유</div>
+            <button class="equipment-buy" id="speed-05x-buy" onclick="buyOrSelectFlowSpeed('0.5x')">구매 — 150 CHX</button>
+          </div>
+          <div class="equipment-card">
+            <div class="equipment-name">정밀 배속 · 0.1x</div>
+            <div class="equipment-desc">기존 속도의 10%로 물이 들어옵니다. 목표에 가까워졌을 때 수위를 더욱 세밀하게 맞출 수 있습니다.</div>
+            <div class="equipment-meta">필요 비용: 200 CHX</div>
+            <div class="equipment-status" id="speed-01x-status">미보유</div>
+            <button class="equipment-buy" id="speed-01x-buy" onclick="buyOrSelectFlowSpeed('0.1x')">구매 — 200 CHX</button>
+          </div>
+          <div class="equipment-card">
+            <div class="equipment-name">초정밀 배속 · 0.05x</div>
+            <div class="equipment-desc">기존 속도의 5%로 물이 들어오는 최저 배속입니다. 고난도 단계에서 가장 세밀하게 물을 받을 수 있습니다.</div>
+            <div class="equipment-meta">필요 비용: 300 CHX</div>
+            <div class="equipment-status" id="speed-005x-status">미보유</div>
+            <button class="equipment-buy" id="speed-005x-buy" onclick="buyOrSelectFlowSpeed('0.05x')">구매 — 300 CHX</button>
+          </div>
+        </div>
+        <div class="footer-note">장비와 배속 구매 비용은 PLACE 공용 CHX에서 차감되며 거래 내역에 기록됩니다. 보유한 배속은 이 페이지에서 자유롭게 바꿀 수 있습니다.</div>
       </div>
     </div>
   </div>
@@ -254,8 +323,13 @@ let flowMode="normal";
 let animationFrame=null;
 let lastFrameTime=0;
 let stage=1;
-let magnifierLevel=0;
+let purchaseInProgress=false;
 let cupMaxMl=700;
+let bannerPollTimer=null;
+let profilePollTimer=null;
+let profileRealtimeChannel=null;
+let bannerRealtimeChannel=null;
+let gameSuspended=false;
 
 const stages={
   1:{target:550, decimals:0, tolerance:2.0, reward:100},
@@ -263,8 +337,15 @@ const stages={
   3:{target:550, decimals:2, tolerance:0.04, reward:400},
   4:{target:550, decimals:3, tolerance:0.005, reward:800}
 };
-const flowRates={normal:120,fine:18,drip:3};
+const flowRates={normal:120,fine:18,drip:0.5};
 const flowLabels={normal:"보통",fine:"미세",drip:"점적"};
+const flowSpeedOptions={
+  "0.5x":{multiplier:0.5,cost:150,ownedKey:"owns_speed_05x",statusId:"speed-05x-status",buttonId:"speed-05x-buy",suffix:"05x"},
+  "0.1x":{multiplier:0.1,cost:200,ownedKey:"owns_speed_01x",statusId:"speed-01x-status",buttonId:"speed-01x-buy",suffix:"01x"},
+  "0.05x":{multiplier:0.05,cost:300,ownedKey:"owns_speed_005x",statusId:"speed-005x-status",buttonId:"speed-005x-buy",suffix:"005x"}
+};
+let selectedFlowSpeed="1x";
+let flowSpeedOwnership={"0.5x":false,"0.1x":false,"0.05x":false};
 
 function openModal(id){const el=document.getElementById(id);if(el)el.style.display="block"}
 function closeModal(id){const el=document.getElementById(id);if(el)el.style.display="none"}
@@ -304,15 +385,33 @@ function updateAuthUI(){
 
 async function checkAuthStatus(){
   const {data:{session}}=await supabaseClient.auth.getSession();
-  currentUser=session?.user||null;
-  currentProfile=null;
-  if(currentUser){
-    const {data:profile}=await supabaseClient.from("profiles").select("id,username,nickname").eq("id",currentUser.id).maybeSingle();
-    currentProfile=profile||null;
+  const nextUser=session?.user||null;
+
+  if(!nextUser){
+    stopMonitoringUserState();
+    startBannerMonitoring();
+    stopFaucet();
+    currentUser=null;
+    currentProfile=null;
+    hideSuspensionScreen();
+    updateAuthUI();
+    await refreshChxHeader();
+    return;
   }
+
+  const userChanged=!currentUser||currentUser.id!==nextUser.id;
+  currentUser=nextUser;
+
+  await refreshCurrentProfile();
   updateAuthUI();
   await refreshChxHeader();
-  if(currentUser)await loadGameState();
+
+  if(userChanged){
+    startMonitoringUserState();
+    await loadGameState();
+  }
+
+  await enforceGameAccess();
 }
 
 async function handleLogin(){
@@ -331,15 +430,193 @@ async function handleLogin(){
 
 async function handleLogout(){
   await supabaseClient.auth.signOut();
+  stopMonitoringUserState();
+  startBannerMonitoring();
   stopFaucet();
   currentUser=null;
   currentProfile=null;
+  hideSuspensionScreen();
+  gameSuspended=false;
+  updateGameButtons();
   updateAuthUI();
   await refreshChxHeader();
   setStatus("로그아웃되었습니다. 게임 보상은 로그인 후 사용할 수 있습니다","info");
 }
 
 supabaseClient.auth.onAuthStateChange(async()=>{await checkAuthStatus()});
+
+async function loadBanners(){
+  const notice=document.getElementById("notice");
+  const container=document.getElementById("banner-container");
+  if(!notice||!container)return;
+
+  const now=new Date().toISOString();
+  const {data,error}=await supabaseClient
+    .from("banners")
+    .select("id,message,starts_at,ends_at")
+    .lte("starts_at",now)
+    .or("ends_at.is.null,ends_at.gt."+now)
+    .order("created_at",{ascending:true})
+    .limit(3);
+
+  if(error){
+    console.error("WORLD 배너 불러오기 오류:",error);
+    return;
+  }
+
+  container.innerHTML="";
+  if(!data||data.length===0){
+    notice.style.display="none";
+    return;
+  }
+
+  data.forEach(banner=>{
+    const el=document.createElement("div");
+    el.className="site-banner";
+    el.textContent="📢 "+(banner.message||"");
+    container.appendChild(el);
+  });
+  notice.style.display="block";
+}
+
+function startBannerMonitoring(){
+  stopBannerMonitoring();
+  loadBanners();
+  bannerPollTimer=setInterval(loadBanners,5000);
+  bannerRealtimeChannel=supabaseClient
+    .channel("world-banners")
+    .on("postgres_changes",{event:"*",schema:"public",table:"banners"},()=>loadBanners())
+    .subscribe();
+}
+
+function stopBannerMonitoring(){
+  if(bannerPollTimer){clearInterval(bannerPollTimer);bannerPollTimer=null}
+  if(bannerRealtimeChannel){supabaseClient.removeChannel(bannerRealtimeChannel);bannerRealtimeChannel=null}
+}
+
+function formatSuspensionDate(value){
+  if(!value)return "-";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return "-";
+  return date.toLocaleString("ko-KR");
+}
+
+function getSuspensionPeriodText(type,until){
+  if(type==="idban")return "영구 정지";
+  if(type==="ban")return until?"1일 정지 · "+formatSuspensionDate(until):"1일 정지";
+  if(type==="softban")return until?"7일 정지 · "+formatSuspensionDate(until):"7일 정지";
+  if(type==="hardban")return until?"30일 정지 · "+formatSuspensionDate(until):"30일 정지";
+  return "계정 이용 제한";
+}
+
+function isActiveBan(profile){
+  if(!profile)return false;
+  const type=profile.ban_type;
+  if(!["ban","softban","hardban","idban"].includes(type))return false;
+  if(type!=="idban"&&profile.ban_until){
+    const until=new Date(profile.ban_until);
+    if(!Number.isNaN(until.getTime())&&new Date()>=until)return false;
+  }
+  return true;
+}
+
+function updateGameButtons(){
+  const ids=["faucet-btn","flow-btn","reset-btn","submit-btn"];
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.disabled=!currentUser||gameSuspended;
+  });
+  updateEquipmentUI();
+}
+
+function showSuspensionScreen(profile){
+  const screen=document.getElementById("suspension-screen");
+  if(!screen)return;
+  gameSuspended=true;
+  stopFaucet();
+  updateGameButtons();
+
+  document.getElementById("suspension-title").textContent="회원님의 계정은 정지 처리되었습니다";
+  document.getElementById("suspension-description").textContent="PLACE 이용 약관 또는 운영 정책에 따라 WORLD 게임 이용이 제한되었습니다";
+  document.getElementById("suspension-date").textContent=formatSuspensionDate(profile?.ban_started_at);
+  document.getElementById("suspension-reason").textContent=profile?.ban_reason||"사유 미작성";
+  document.getElementById("suspension-until").textContent=getSuspensionPeriodText(profile?.ban_type,profile?.ban_until);
+  screen.style.display="block";
+}
+
+function hideSuspensionScreen(){
+  const screen=document.getElementById("suspension-screen");
+  if(screen)screen.style.display="none";
+  gameSuspended=false;
+  updateGameButtons();
+}
+
+async function refreshCurrentProfile(){
+  if(!currentUser)return null;
+  const {data,error}=await supabaseClient
+    .from("profiles")
+    .select("id,username,nickname,is_admin,ban_type,ban_until,ban_reason,ban_started_at")
+    .eq("id",currentUser.id)
+    .maybeSingle();
+
+  if(error){
+    console.error("WORLD 프로필 확인 오류:",error);
+    return currentProfile;
+  }
+
+  currentProfile=data||null;
+  return currentProfile;
+}
+
+async function enforceGameAccess(){
+  if(!currentUser){hideSuspensionScreen();return false}
+  const profile=await refreshCurrentProfile();
+
+  if(profile&&profile.ban_type&&profile.ban_until){
+    const until=new Date(profile.ban_until);
+    if(!Number.isNaN(until.getTime())&&new Date()>=until){
+      const {error}=await supabaseClient.rpc("admin_unban_self_if_expired");
+      if(!error){
+        profile.ban_type=null;
+        profile.ban_until=null;
+        profile.ban_reason=null;
+        profile.ban_started_at=null;
+      }
+    }
+  }
+
+  if(isActiveBan(profile)){
+    showSuspensionScreen(profile);
+    return true;
+  }
+
+  hideSuspensionScreen();
+  return false;
+}
+
+async function pollCurrentUserState(){
+  if(!currentUser)return;
+  await enforceGameAccess();
+}
+
+function startMonitoringUserState(){
+  if(profilePollTimer||profileRealtimeChannel){return}
+  pollCurrentUserState();
+  profilePollTimer=setInterval(pollCurrentUserState,3000);
+  profileRealtimeChannel=supabaseClient
+    .channel("world-profile-"+currentUser.id)
+    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"profiles",filter:"id=eq."+currentUser.id},async payload=>{
+      currentProfile=payload.new;
+      await enforceGameAccess();
+      updateAuthUI();
+    })
+    .subscribe();
+}
+
+function stopMonitoringUserState(){
+  if(profilePollTimer){clearInterval(profilePollTimer);profilePollTimer=null}
+  if(profileRealtimeChannel){supabaseClient.removeChannel(profileRealtimeChannel);profileRealtimeChannel=null}
+}
 
 function setStatus(text,type="info"){
   const box=document.getElementById("status-box");
@@ -367,7 +644,9 @@ function updateStageUI(){
   });
   document.getElementById("measure-value").textContent=formatMl(waterMl);
   updateCup();
-  updateToolUI();
+  updateCupScaleReading();
+  updateFlowButton();
+  updateEquipmentUI();
 }
 
 function updateCup(){
@@ -377,16 +656,36 @@ function updateCup(){
   if(waterMl>cupMaxMl){setStatus("물이 넘쳤습니다. 물을 버리고 다시 도전하세요","bad");}
 }
 
+function updateCupScaleReading(){
+  const marker=document.querySelector(".marker-highlight");
+  if(!marker)return;
+  // 실제 컵 내부 높이(166px)와 700ml 최대 용량을 기준으로 눈금을 정확히 계산
+  const cupTop=16;
+  const innerHeight=166;
+  const surfaceTop=cupTop+(innerHeight-(Math.min(Math.max(waterMl,0),cupMaxMl)/cupMaxMl)*innerHeight);
+  const scaleTop=16;
+  marker.style.top=(surfaceTop-scaleTop)+"px";
+  marker.style.opacity=waterMl>0?".72":".25";
+  marker.title="현재 물의 실제 수위";
+}
+
 function toggleFaucet(){
-  if(!currentUser){openModal("loginModal");return}
-  if(waterMl>cupMaxMl){setStatus("먼저 물을 버려 주세요","bad");return}
-  faucetOpen=!faucetOpen;
-  const faucet=document.getElementById("faucet");
-  const btn=document.getElementById("faucet-btn");
-  faucet.classList.toggle("open",faucetOpen);
-  btn.textContent=faucetOpen?"수도꼭지 닫기":"수도꼭지 열기";
-  if(faucetOpen){startFlow();setStatus("물이 흐르고 있습니다. 눈금과 현재 수치를 확인하세요","info")}
-  else{stopFaucet();setStatus("수도꼭지를 닫았습니다. 제출하거나 다시 열 수 있습니다","info");maybeDrip()}
+  if(gameSuspended)return;
+  if(!currentUser){openModal("loginModal");return;}
+  if(waterMl>cupMaxMl){setStatus("먼저 물을 버려 주세요","bad");return;}
+
+  if(faucetOpen){
+    stopFaucet(true);
+    setStatus("수도꼭지를 닫았습니다. 제출하거나 다시 열 수 있습니다","info");
+    maybeDrip();
+    return;
+  }
+
+  faucetOpen=true;
+  document.getElementById("faucet").classList.add("open");
+  document.getElementById("faucet-btn").textContent="수도꼭지 닫기";
+  startFlow();
+  setStatus("물이 흐르고 있습니다. 눈금과 현재 수치를 확인하세요","info");
 }
 
 function startFlow(){
@@ -397,20 +696,36 @@ function startFlow(){
     const dt=Math.min((now-lastFrameTime)/1000,0.08);
     lastFrameTime=now;
     const rate=flowRates[flowMode];
-    waterMl+=rate*dt;
+    waterMl+=rate*getFlowSpeedMultiplier()*dt;
     document.getElementById("measure-value").textContent=formatMl(waterMl);
     updateCup();
-    if(waterMl>cupMaxMl){faucetOpen=false;document.getElementById("faucet").classList.remove("open");document.getElementById("faucet-btn").textContent="수도꼭지 열기";animationFrame=null;return}
+    updateCupScaleReading();
+    if(waterMl>cupMaxMl){faucetOpen=false;document.getElementById("faucet").classList.remove("open");document.getElementById("faucet-btn").textContent="수도꼭지 열기";animationFrame=null;updateEquipmentUI();return}
     animationFrame=requestAnimationFrame(tick);
   };
   animationFrame=requestAnimationFrame(tick);
 }
 
-function stopFaucet(){
+function stopFaucet(captureRemainder=false){
+  const wasOpen=faucetOpen;
+  if(animationFrame!==null){
+    if(captureRemainder && wasOpen){
+      // 클릭 순간까지의 흐른 시간을 반영해 느린 장비의 마지막 구간도 계산합니다.
+      const elapsed=Math.max(0,Math.min((performance.now()-lastFrameTime)/1000,0.08));
+      waterMl+=flowRates[flowMode]*getFlowSpeedMultiplier()*elapsed;
+    }
+    cancelAnimationFrame(animationFrame);
+    animationFrame=null;
+  }
   faucetOpen=false;
-  if(animationFrame){cancelAnimationFrame(animationFrame);animationFrame=null}
   document.getElementById("faucet").classList.remove("open");
   document.getElementById("faucet-btn").textContent="수도꼭지 열기";
+  if(captureRemainder && wasOpen){
+    document.getElementById("measure-value").textContent=formatMl(waterMl);
+    updateCup();
+    updateCupScaleReading();
+  }
+  updateEquipmentUI();
 }
 
 function maybeDrip(){
@@ -421,36 +736,147 @@ function maybeDrip(){
   setTimeout(()=>{d.style.opacity="0";d.style.top="205px"},380);
 }
 
+function unlockedFlowModes(){
+  // 보통·미세·점적 물줄기는 모든 이용자에게 무료로 개방합니다.
+  return ["normal","fine","drip"];
+}
+
+function getFlowSpeedMultiplier(){
+  if(selectedFlowSpeed==="1x")return 1;
+  return flowSpeedOptions[selectedFlowSpeed]?.multiplier||1;
+}
+
+function speedLabel(){return selectedFlowSpeed;}
+
+function updateSpeedShopUI(){
+  const defaultStatus=document.getElementById("speed-1x-status");
+  const defaultButton=document.getElementById("speed-1x-buy");
+  if(defaultStatus)defaultStatus.textContent=selectedFlowSpeed==="1x"?"사용 중":"무료 · 선택 가능";
+  if(defaultButton){
+    defaultButton.textContent=selectedFlowSpeed==="1x"?"사용 중":"기본 1x 사용";
+    defaultButton.disabled=!currentUser||gameSuspended||purchaseInProgress||selectedFlowSpeed==="1x";
+  }
+
+  Object.entries(flowSpeedOptions).forEach(([speed,option])=>{
+    const status=document.getElementById(option.statusId);
+    const button=document.getElementById(option.buttonId);
+    const owned=!!flowSpeedOwnership[speed];
+    const active=selectedFlowSpeed===speed;
+    if(status)status.textContent=active?"사용 중":owned?"보유 중 · 선택 가능":"미보유";
+    if(button){
+      button.textContent=active?"사용 중":owned?"사용하기":"구매 — "+option.cost+" CHX";
+      button.disabled=!currentUser||gameSuspended||purchaseInProgress||active;
+    }
+  });
+}
+
+async function selectFlowSpeed(speed){
+  if(gameSuspended)return;
+  if(!currentUser){openModal("loginModal");return;}
+  if(speed!=="1x"&&!flowSpeedOwnership[speed]){
+    setStatus("먼저 해당 배속을 CHX로 구매해 주세요","bad");
+    return;
+  }
+  if(speed===selectedFlowSpeed)return;
+  if(purchaseInProgress)return;
+  purchaseInProgress=true;
+  updateSpeedShopUI();
+  const {data,error}=await supabaseClient.rpc("world_ramen_set_flow_speed",{p_speed:speed});
+  purchaseInProgress=false;
+  if(error||!data||data.success!==true){
+    updateSpeedShopUI();
+    setStatus("배속 변경 실패: "+(error?.message||(data&&data.message)||"알 수 없는 오류"),"bad");
+    return;
+  }
+  selectedFlowSpeed=data.flow_speed||speed;
+  updateSpeedShopUI();
+  setStatus("물 흐름 배속을 "+selectedFlowSpeed+"로 변경했습니다","ok");
+}
+
+async function buyOrSelectFlowSpeed(speed){
+  if(gameSuspended)return;
+  if(!currentUser){openModal("loginModal");return;}
+  const option=flowSpeedOptions[speed];
+  if(!option)return;
+  if(flowSpeedOwnership[speed]){
+    await selectFlowSpeed(speed);
+    return;
+  }
+  if(purchaseInProgress)return;
+  if(!confirm(speed+" 배속을 "+option.cost.toLocaleString("ko-KR")+" CHX로 구매할까요? 구매 후 영구 보유하며 언제든 선택할 수 있습니다."))return;
+
+  purchaseInProgress=true;
+  updateEquipmentUI();
+  const {data,error}=await supabaseClient.rpc("world_ramen_buy_flow_speed",{p_speed:speed});
+  purchaseInProgress=false;
+  if(error){
+    console.error("물 흐름 배속 구매 오류:",error);
+    updateEquipmentUI();
+    setStatus("배속 구매 실패: "+error.message,"bad");
+    return;
+  }
+  if(!data||data.success!==true){
+    updateEquipmentUI();
+    setStatus((data&&data.message)||"배속을 구매할 수 없습니다","bad");
+    return;
+  }
+  selectedFlowSpeed=data.flow_speed||speed;
+  flowSpeedOwnership={
+    "0.5x":!!data.owns_speed_05x,
+    "0.1x":!!data.owns_speed_01x,
+    "0.05x":!!data.owns_speed_005x
+  };
+  updateEquipmentUI();
+  await refreshChxHeader();
+  setStatus(speed+" 배속 구매 완료! 이제 언제든 선택할 수 있습니다","ok");
+}
+
+function updateFlowButton(){
+  const button=document.getElementById("flow-btn");
+  if(button)button.textContent="물줄기: "+flowLabels[flowMode]+" · "+speedLabel();
+  const stream=document.getElementById("water-stream");
+  if(stream){
+    const width=flowMode==="normal"?15:flowMode==="fine"?8:3;
+    stream.style.width=width+"px";
+    stream.style.left="calc(50% + "+(72.5-width/2)+"px)";
+  }
+}
+
 function toggleFlowMode(){
-  const modes=["normal","fine","drip"];
+  if(gameSuspended||!currentUser)return;
+  const modes=unlockedFlowModes();
   const idx=modes.indexOf(flowMode);
   flowMode=modes[(idx+1)%modes.length];
-  document.getElementById("flow-btn").textContent="물줄기: "+flowLabels[flowMode];
-  if(faucetOpen){setStatus("물줄기 세기를 "+flowLabels[flowMode]+"으로 변경했습니다","info")}
+  updateFlowButton();
+  setStatus("물줄기 세기를 "+flowLabels[flowMode]+"으로 변경했습니다","info");
 }
 
 document.addEventListener("keydown",(e)=>{
-  if(e.key===" " && currentUser && !e.repeat){
+  if(e.key===" " && currentUser && !gameSuspended && !e.repeat){
     e.preventDefault();
     toggleFaucet();
   }
-  if(e.key==="Enter" && currentUser){
+  if(e.key==="Enter" && currentUser && !gameSuspended){
     e.preventDefault();
     submitMeasurement();
   }
 });
 
 function resetWater(){
+  if(gameSuspended)return
   stopFaucet();
   waterMl=0;
   document.getElementById("measure-value").textContent=formatMl(0);
   document.getElementById("cup-inner").style.height="0%";
+  updateCupScaleReading();
+  updateEquipmentUI();
   setStatus("물을 비웠습니다. 다시 천천히 받아 보세요","info");
 }
 
 async function submitMeasurement(){
+  if(gameSuspended)return
   if(!currentUser){openModal("loginModal");return}
-  stopFaucet();
+  stopFaucet(true);
   const info=stageInfo();
   const difference=waterMl-info.target;
   const abs=Math.abs(difference);
@@ -484,40 +910,29 @@ async function submitMeasurement(){
 
 async function loadGameState(){
   const {data,error}=await supabaseClient.rpc("world_ramen_get_state");
-  if(!error&&data){
+  if(error){
+    console.error("WORLD 게임 정보 불러오기 오류:",error);
+  }else if(data){
     stage=Number(data.stage||1);
-    magnifierLevel=Number(data.magnifier_level||0);
+    selectedFlowSpeed=["1x","0.5x","0.1x","0.05x"].includes(data.flow_speed)?data.flow_speed:"1x";
+    flowSpeedOwnership={
+      "0.5x":data.owns_speed_05x===true,
+      "0.1x":data.owns_speed_01x===true,
+      "0.05x":data.owns_speed_005x===true
+    };
   }
+  if(!unlockedFlowModes().includes(flowMode))flowMode="normal";
   updateStageUI();
 }
 
-function updateToolUI(){
-  const levelEl=document.getElementById("magnifier-level");
-  const buy=document.getElementById("magnifier-buy");
-  levelEl.textContent="Lv."+magnifierLevel;
-  if(magnifierLevel>=2){buy.textContent="최대 레벨";buy.disabled=true}
-  else if(magnifierLevel===1){buy.textContent="업그레이드 — 1,200 CHX";buy.disabled=false}
-  else {buy.textContent="구매 — 500 CHX";buy.disabled=false}
-  document.getElementById("magnifier").style.display=magnifierLevel>0?"block":"none";
-  const scale=document.querySelector(".cup-scale");
-  if(scale){scale.style.transform=magnifierLevel===2?"scale(1.32) translateX(-10px)":"scale(1)";scale.style.transformOrigin="right center"}
-}
-
-async function buyMagnifier(){
-  if(!currentUser){openModal("loginModal");return}
-  const cost=magnifierLevel===0?500:1200;
-  if(!confirm("돋보기 "+(magnifierLevel===0?"Lv.1":"Lv.2")+"을 "+cost.toLocaleString("ko-KR")+" CHX로 구매하시겠습니까?"))return;
-  const {data,error}=await supabaseClient.rpc("world_ramen_buy_magnifier",{p_target_level:magnifierLevel+1});
-  if(error){setStatus("구매 실패: "+error.message,"bad");return}
-  if(!data||data.success!==true){setStatus((data&&data.message)||"구매할 수 없습니다","bad");return}
-  magnifierLevel=Number(data.magnifier_level||magnifierLevel+1);
-  updateToolUI();
-  await refreshChxHeader();
-  setStatus("돋보기 Lv."+magnifierLevel+" 구매 완료","ok");
+function updateEquipmentUI(){
+  updateFlowButton();
+  updateSpeedShopUI();
 }
 
 window.addEventListener("load",async()=>{
   updateStageUI();
+  startBannerMonitoring();
   await checkAuthStatus();
 });
 </script>
