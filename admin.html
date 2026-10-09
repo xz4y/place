@@ -685,9 +685,14 @@ button:hover {
             placeholder="Chx 지급 또는 차감 사유"
         >
 
+        <div style="margin-top:7px;">
+            <button type="button" onclick="lookupChxBalance()">현재 잔액 확인</button>
+            <span id="chx-current-balance" class="small" aria-live="polite">아이디를 입력한 뒤 잔액을 확인하세요</span>
+        </div>
+
         <div class="admin-action">
 
-            <button onclick="runChxAction('grant')">
+            <button type="button" onclick="runChxAction('grant')">
                 Chx 지급
             </button>
 
@@ -1903,6 +1908,146 @@ async function runUserAction(
 /* =========================
    REPORT MANAGEMENT
 ========================= */
+
+/* =========================
+   CHX MANAGEMENT
+========================= */
+
+async function lookupChxBalance(usernameOverride = "", silent = false) {
+    const input = document.getElementById("chx-target-username");
+    const output = document.getElementById("chx-current-balance");
+    const username = String(usernameOverride || input?.value || "").trim();
+
+    if (!isAdmin || !currentUser) {
+        if (output) output.textContent = "관리자 권한을 확인할 수 없습니다";
+        if (!silent) showMessage("관리자 권한이 필요합니다.", "error");
+        return null;
+    }
+    if (!username) {
+        if (output) output.textContent = "사용자 아이디를 입력해주세요";
+        if (!silent) showMessage("잔액을 확인할 사용자 아이디를 입력해주세요.", "error");
+        return null;
+    }
+
+    if (output) output.textContent = "잔액 확인 중...";
+
+    const { data, error } = await supabaseClient.rpc("chx_admin_get_balance", {
+        p_username: username
+    });
+
+    if (error) {
+        console.error("CHX BALANCE LOOKUP ERROR:", error);
+        if (output) output.textContent = "잔액 확인 실패: " + error.message;
+        if (!silent) showMessage("CHX 잔액 확인 실패: " + error.message, "error");
+        return null;
+    }
+
+    if (!data || data.success !== true || !Number.isFinite(Number(data.balance))) {
+        const message = data?.message || "잔액 정보를 확인하지 못했습니다";
+        if (output) output.textContent = message;
+        if (!silent) showMessage(message, "error");
+        return null;
+    }
+
+    const displayName = data.username || data.nickname || username;
+    if (output) {
+        output.textContent = displayName + " 현재 잔액: " + Number(data.balance).toLocaleString("ko-KR") + " CHX";
+    }
+    return data;
+}
+
+async function runChxAction(action) {
+    if (!isAdmin || !currentUser) {
+        showMessage("관리자 권한이 필요합니다.", "error");
+        return;
+    }
+
+    if (action !== "grant" && action !== "deduct") {
+        showMessage("알 수 없는 CHX 명령입니다.", "error");
+        return;
+    }
+
+    const username = document.getElementById("chx-target-username").value.trim();
+    const amountRaw = document.getElementById("chx-amount").value.trim();
+    const amount = Number(amountRaw);
+    const reason = document.getElementById("chx-reason").value.trim();
+
+    if (!username) {
+        showMessage("대상 사용자 아이디를 입력해주세요.", "error");
+        return;
+    }
+    if (!amountRaw || !Number.isSafeInteger(amount) || amount <= 0) {
+        showMessage("CHX 수량은 1 이상의 정수여야 합니다.", "error");
+        return;
+    }
+    if (!reason) {
+        showMessage("CHX 지급/차감 사유를 입력해주세요.", "error");
+        return;
+    }
+
+    const label = action === "grant" ? "지급" : "차감";
+    if (!confirm(username + " 사용자에게 " + amount.toLocaleString("ko-KR") +
+        " CHX를 " + label + "하시겠습니까?\n\n사유: " + reason)) {
+        return;
+    }
+
+    const buttons = document.querySelectorAll("button[onclick^=\"runChxAction\"]");
+    buttons.forEach(button => button.disabled = true);
+
+    try {
+        const rpc = action === "grant" ? "chx_admin_grant" : "chx_admin_deduct";
+        const { data, error } = await supabaseClient.rpc(rpc, {
+            p_username: username,
+            p_amount: amount,
+            p_reason: reason
+        });
+
+        if (error) {
+            console.error("CHX " + action.toUpperCase() + " ERROR:", error);
+            showMessage("CHX " + label + " 실패: " + error.message, "error");
+            return;
+        }
+
+        // JSONB functions can return success:false without a PostgREST error.
+        // Do not show a success state unless the database explicitly confirms the adjustment.
+        if (!data || data.success !== true || !Number.isFinite(Number(data.balance))) {
+            const message = data?.message || "데이터베이스가 CHX 변경을 완료했다고 확인하지 않았습니다";
+            showMessage("CHX " + label + " 실패: " + message, "error");
+            return;
+        }
+
+        document.getElementById("chx-amount").value = "";
+        document.getElementById("chx-reason").value = "";
+
+        const actualAmount = Number(data.amount ?? amount);
+        const previousBalance = Number(data.previous_balance);
+        const newBalance = Number(data.balance);
+        let detail = username + " 사용자에게 " + actualAmount.toLocaleString("ko-KR") +
+            " CHX " + label + " 완료. 새 잔액: " + newBalance.toLocaleString("ko-KR") + " CHX";
+        if (action === "deduct" && actualAmount < amount) {
+            detail += " (보유 잔액 " + actualAmount.toLocaleString("ko-KR") + " CHX만 차감됨)";
+        }
+        if (Number.isFinite(previousBalance) && previousBalance >= 0) {
+            console.log("CHX balance verified:", {
+                username,
+                previousBalance,
+                actualAmount,
+                newBalance,
+                transactionType: data.transaction_type
+            });
+        }
+
+        // Refresh the visible balance directly from the database after mutation.
+        await lookupChxBalance(username, true);
+        showMessage(detail, "success");
+    } catch (err) {
+        console.error("CHX ACTION UNEXPECTED ERROR:", err);
+        showMessage("CHX " + label + " 중 예상하지 못한 오류가 발생했습니다: " + (err?.message || String(err)), "error");
+    } finally {
+        buttons.forEach(button => button.disabled = false);
+    }
+}
+
 
 function formatReportDate(value) {
 
